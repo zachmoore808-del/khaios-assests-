@@ -141,10 +141,6 @@ new THREE.GLTFLoader().load(BASE+'warrior_angel.glb',function(g){
     if(n.isMesh)n.material=new THREE.MeshStandardMaterial({color:0x0044ff,emissive:0x0055ff,emissiveIntensity:3,transparent:true,opacity:0.92});
   });
   scene.add(angel);
-  var box2=new THREE.Box3().setFromObject(angel);
-  var top=box2.max.y;
-  camera.position.set(0,top*0.4,6);
-  camera.lookAt(0,top*0.4,0);
   angelBaseY=angel.position.y;
   angelBaseScale=angel.scale.x;
 });
