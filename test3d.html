@@ -221,6 +221,10 @@ var t=0;
     }
     angel.traverse(function(n){if(n.isMesh&&n.material)n.material.emissiveIntensity=2.5+Math.sin(t*2)*1;});
   }
+  // Debug portal visibility every 3 seconds
+  if(Math.floor(t*60)%180===0){
+    console.log('Portal visible:', portalGroup.visible, 'children:', portalGroup.children.length, 'angel:', angel?'loaded':'null');
+  }
   renderer.render(scene,camera);
 })();
 
