@@ -192,9 +192,9 @@ function initBootThree(){
     if(modelsLoaded>=3){bootPhase=1;bootAnim=0;console.log('Boot models ready - starting sequence');}
   }
   var loader=new THREE.GLTFLoader();
-  loader.load('https://drive.google.com/uc?export=download&id=1XJFrskKUZ9b8nHVzZGcsKST9hMeoxN06',function(g){darkModel=g.scene;fitModel(darkModel,-4.0);applyHolo(darkModel);darkModel.rotation.y=0.3;bootScene.add(darkModel);loaded();},null,loaded);
-  loader.load('https://drive.google.com/uc?export=download&id=1HAPw89uFDn0cgZOYbK2Pk9gMbr4ZM82t',function(g){lightModel=g.scene;fitModel(lightModel,4.0);applyHolo(lightModel);lightModel.rotation.y=0;bootScene.add(lightModel);loaded();},null,loaded);
-  loader.load('https://drive.google.com/uc?export=download&id=1TtyZQTpQ4qcskf8oHr2zz1cHoH6dtU1T',function(g){mainModel=g.scene;fitModel(mainModel,0);applyHolo(mainModel);mainModel.visible=false;bootScene.add(mainModel);loaded();},null,loaded);
+  loader.load('https://drive.usercontent.google.com/download?id=1XJFrskKUZ9b8nHVzZGcsKST9hMeoxN06&export=download&authuser=0&confirm=t',function(g){darkModel=g.scene;fitModel(darkModel,-4.0);applyHolo(darkModel);darkModel.rotation.y=0.3;bootScene.add(darkModel);loaded();},null,loaded);
+  loader.load('https://drive.usercontent.google.com/download?id=1HAPw89uFDn0cgZOYbK2Pk9gMbr4ZM82t&export=download&authuser=0&confirm=t',function(g){lightModel=g.scene;fitModel(lightModel,4.0);applyHolo(lightModel);lightModel.rotation.y=0;bootScene.add(lightModel);loaded();},null,loaded);
+  loader.load('https://drive.usercontent.google.com/download?id=1TtyZQTpQ4qcskf8oHr2zz1cHoH6dtU1T&export=download&authuser=0&confirm=t',function(g){mainModel=g.scene;fitModel(mainModel,0);applyHolo(mainModel);mainModel.visible=false;bootScene.add(mainModel);loaded();},null,loaded);
 }
 
 // Lightning/charge particle system
@@ -516,7 +516,7 @@ function initStage(){
   var dl=new THREE.DirectionalLight(0xffffff,2);dl.position.set(2,4,3);stageScene.add(dl);
   var bl=new THREE.PointLight(0x00aaff,5,10);bl.position.set(0,2,3);stageScene.add(bl);
 
-  new THREE.GLTFLoader().load('https://drive.google.com/uc?export=download&id=1TtyZQTpQ4qcskf8oHr2zz1cHoH6dtU1T',function(g){
+  new THREE.GLTFLoader().load('https://drive.usercontent.google.com/download?id=1TtyZQTpQ4qcskf8oHr2zz1cHoH6dtU1T&export=download&authuser=0&confirm=t',function(g){
     stageModel=g.scene;
     var box=new THREE.Box3().setFromObject(stageModel);
     var sz=box.getSize(new THREE.Vector3());
