@@ -22,7 +22,7 @@ scene.add(new THREE.AmbientLight(0xffffff,1.5));
 var dl=new THREE.DirectionalLight(0xffffff,2);dl.position.set(2,4,3);scene.add(dl);
 var bl=new THREE.PointLight(0x00aaff,6,12);bl.position.set(0,2,3);scene.add(bl);
 
-new THREE.GLTFLoader().load('https://drive.usercontent.google.com/download?id=1TtyZQTpQ4qcskf8oHr2zz1cHoH6dtU1T&export=download&authuser=0&confirm=t',function(g){
+new THREE.GLTFLoader().load('https://khaios-assests-py-24-7.onrender.com/warrior_angel.glb',function(g){
   var model=g.scene;
   var box=new THREE.Box3().setFromObject(model);
   var sz=box.getSize(new THREE.Vector3());
