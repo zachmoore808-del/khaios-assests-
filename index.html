@@ -52,14 +52,12 @@ html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-fami
 .sbtn:disabled{opacity:0.3;cursor:not-allowed;}
 .stage{flex-shrink:0;height:300px;position:relative;overflow:hidden;}
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
 <canvas id="matrixCanvas"></canvas>
 <div id="boot">
-  <canvas id="bootCanvas"></canvas>
   <div id="bootTitle">K H A I O S</div>
-  <div id="bootText">PRIMORDIAL INTELLIGENCE ONLINE</div>
+  <div id="bootText">AIOS MULTITOOL</div>
 </div>
 <div id="app">
   <div class="topbar">
@@ -122,220 +120,13 @@ if('serviceWorker' in navigator){window.addEventListener('load',function(){navig
   resize();requestAnimationFrame(draw);
 })();
 
-// ── BOOT THREE.JS ─────────────────────────────────────────────────────────────
-var bootRenderer,bootScene,bootCamera,bootAnim=0,bootPhase=0,bootDone=false;
-var chargeParticles=[],arcLines=[];
-
-function spawnCharge(x,y,z,count){
-  for(var i=0;i<count;i++){
-    var geo=new THREE.SphereGeometry(0.04+Math.random()*0.04,4,4);
-    var mat=new THREE.MeshBasicMaterial({color:Math.random()<0.5?0x00ffff:Math.random()<0.5?0xffffff:0x4499ff,transparent:true,opacity:1});
-    var p=new THREE.Mesh(geo,mat);
-    p.position.set(x+(Math.random()-0.5)*1.8,y+(Math.random()-0.5)*2.8,z+(Math.random()-0.5)*1.0);
-    p.userData.vx=(Math.random()-0.5)*0.1;p.userData.vy=(Math.random()-0.5)*0.1;p.userData.vz=(Math.random()-0.5)*0.05;
-    p.userData.life=1;p.userData.decay=0.03+Math.random()*0.04;
-    bootScene.add(p);chargeParticles.push(p);
-  }
-}
-function updateCharge(){
-  for(var i=chargeParticles.length-1;i>=0;i--){
-    var p=chargeParticles[i];
-    p.position.x+=p.userData.vx;p.position.y+=p.userData.vy;if(p.userData.vz)p.position.z+=p.userData.vz;
-    p.userData.life-=p.userData.decay;p.material.opacity=p.userData.life;
-    if(p.userData.life<=0){bootScene.remove(p);chargeParticles.splice(i,1);}
-  }
-}
-function spawnArc(x1,y1,x2,y2){
-  var pts=[],steps=8;
-  for(var i=0;i<=steps;i++){var t2=i/steps,px=x1+(x2-x1)*t2+(Math.random()-0.5)*(1-Math.abs(t2-0.5)*2)*1.5,py=y1+(y2-y1)*t2+(Math.random()-0.5)*0.8;pts.push(new THREE.Vector3(px,py,0));}
-  var geo=new THREE.BufferGeometry().setFromPoints(pts);
-  var mat=new THREE.LineBasicMaterial({color:0x00eeff,transparent:true,opacity:0.9});
-  var line=new THREE.Line(geo,mat);line.userData.life=0.5+Math.random()*0.3;line.userData.decay=0.08;
-  bootScene.add(line);arcLines.push(line);
-}
-function updateArcs(){
-  for(var i=arcLines.length-1;i>=0;i--){var l=arcLines[i];l.userData.life-=l.userData.decay;l.material.opacity=l.userData.life*0.9;if(l.userData.life<=0){bootScene.remove(l);arcLines.splice(i,1);}}
-}
-
-function makeHoloAngel(x,scale,rotY){
-  var g=new THREE.Group();
-  // Body
-  var body=new THREE.Mesh(new THREE.CylinderGeometry(0.15,0.2,0.8,8),new THREE.MeshBasicMaterial({color:0x0044ff,transparent:true,opacity:0.85,wireframe:true}));
-  body.position.y=0.4;g.add(body);
-  // Head
-  var head=new THREE.Mesh(new THREE.SphereGeometry(0.18,8,8),new THREE.MeshBasicMaterial({color:0x0066ff,transparent:true,opacity:0.9,wireframe:true}));
-  head.position.y=1.05;g.add(head);
-  // Wings
-  var wShape=new THREE.Shape();
-  wShape.moveTo(0,0);wShape.lineTo(1.2,0.6);wShape.lineTo(1.0,1.2);wShape.lineTo(0.3,0.8);wShape.lineTo(0,0);
-  var wGeo=new THREE.ShapeGeometry(wShape);
-  var wMat=new THREE.MeshBasicMaterial({color:0x0055ff,transparent:true,opacity:0.6,side:THREE.DoubleSide});
-  var wL=new THREE.Mesh(wGeo,wMat);wL.position.set(-0.15,0.5,0);wL.rotation.y=0.3;g.add(wL);
-  var wR=new THREE.Mesh(wGeo,wMat.clone());wR.scale.x=-1;wR.position.set(0.15,0.5,0);wR.rotation.y=-0.3;g.add(wR);
-  // Glow
-  var glow=new THREE.Mesh(new THREE.SphereGeometry(0.7,8,8),new THREE.MeshBasicMaterial({color:0x0033ff,transparent:true,opacity:0.08,side:THREE.BackSide}));
-  glow.position.y=0.6;g.add(glow);
-  g.scale.setScalar(scale);g.position.set(x,0,0);g.rotation.y=rotY;
-  return g;
-}
-
+// ── BOOT ─────────────────────────────────────────────────────────────────────
 function initBootThree(){
-  var c=document.getElementById('bootCanvas');
-  if(!c)return;
-  bootRenderer=new THREE.WebGLRenderer({canvas:c,alpha:true,antialias:true});
-  bootRenderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
-  bootRenderer.setSize(window.innerWidth,window.innerHeight);
-  bootScene=new THREE.Scene();
-  bootCamera=new THREE.PerspectiveCamera(55,window.innerWidth/window.innerHeight,0.01,100);
-  bootCamera.position.set(0,1.5,7);bootCamera.lookAt(0,1.5,0);
-  bootScene.add(new THREE.AmbientLight(0x2255ff,2));
-  var l1=new THREE.PointLight(0x00ccff,10,20);l1.position.set(-3,3,4);bootScene.add(l1);
-  var l2=new THREE.PointLight(0x00ccff,10,20);l2.position.set(3,3,4);bootScene.add(l2);
-  window.darkModel=makeHoloAngel(-4.0,1.0,0.3);bootScene.add(window.darkModel);
-  window.lightModel=makeHoloAngel(4.0,1.0,-Math.PI/2);bootScene.add(window.lightModel);
-  window.mainModel=makeHoloAngel(0,1.0,0);window.mainModel.visible=false;bootScene.add(window.mainModel);
-  bootPhase=1;
+  // Show title immediately
+  setTimeout(function(){document.getElementById('bootTitle').style.opacity=1;},500);
+  setTimeout(function(){document.getElementById('bootText').style.opacity=1;},1000);
+  setTimeout(function(){completeBoot();},4000);
 }
-
-function bootLoop(){
-  if(!bootRenderer)return;
-  bootAnim++;var t=bootAnim*0.016;var bob=Math.sin(t*2)*0.08;
-  updateCharge();updateArcs();
-  var darkModel=window.darkModel,lightModel=window.lightModel,mainModel=window.mainModel;
-  if(bootPhase===1){
-    var charge=Math.min(1,bootAnim/220);
-    if(darkModel){darkModel.visible=true;darkModel.position.x=-4.0+charge*0.8;darkModel.position.y=bob;darkModel.rotation.y=0.3+Math.sin(t*0.8)*0.15;if(bootAnim%3===0&&charge>0.15)spawnCharge(darkModel.position.x,1.5,0,2);}
-    if(lightModel){lightModel.visible=true;lightModel.position.x=4.0-charge*0.8;lightModel.position.y=bob*0.8;lightModel.rotation.y=-Math.PI/2+Math.sin(t*0.8+1)*0.1;if(bootAnim%3===0&&charge>0.15)spawnCharge(lightModel.position.x,1.5,0,2);}
-    if(mainModel)mainModel.visible=false;
-    if(charge>0.5&&bootAnim%4===0&&darkModel&&lightModel)spawnArc(darkModel.position.x,1.5,lightModel.position.x,1.5);
-    bootScene.children.forEach(function(c){if(c.isPointLight)c.intensity=8+Math.sin(t*5)*charge*6;});
-    if(bootAnim===80){document.getElementById('bootTitle').style.opacity=1;}
-    if(bootAnim===110){document.getElementById('bootText').style.opacity=1;}
-    if(bootAnim>260)bootPhase=2;
-  }
-  if(bootPhase===2){
-    var p=Math.min(1,(bootAnim-260)/70);var ease=p*p*(3-2*p);
-    var darkModel=window.darkModel,lightModel=window.lightModel;
-    if(darkModel){darkModel.position.x=(-4.0+0.8)+ease*(-(-4.0+0.8));darkModel.position.y=bob*(1-ease);darkModel.rotation.y=0.3+ease*Math.PI;spawnCharge(darkModel.position.x,1.5,0,3);}
-    if(lightModel){lightModel.position.x=(4.0-0.8)-ease*(4.0-0.8);lightModel.position.y=bob*(1-ease)*0.8;lightModel.rotation.y=-Math.PI/2-ease*Math.PI;spawnCharge(lightModel.position.x,1.5,0,3);}
-    if(bootAnim%2===0&&darkModel&&lightModel)spawnArc(darkModel.position.x,1.5,lightModel.position.x,1.5);
-    bootScene.children.forEach(function(c){if(c.isPointLight)c.intensity=20+ease*30;});
-    if(p>=1)bootPhase=3;
-  }
-  if(bootPhase===3){
-    var phase3Start=330;var ep=bootAnim-phase3Start;
-    if(window.darkModel)window.darkModel.visible=false;if(window.lightModel)window.lightModel.visible=false;
-    if(ep<60){
-      var fi=Math.max(0,1-ep/60);bootScene.background=new THREE.Color(fi*0.1,fi*0.3,fi*0.8);
-      if(ep<30){for(var ex=0;ex<8;ex++){var angle=Math.random()*Math.PI*2,speed=0.15+Math.random()*0.25;var geo2=new THREE.SphereGeometry(0.06+Math.random()*0.08,4,4);var mat2=new THREE.MeshBasicMaterial({color:Math.random()<0.5?0x00ffff:0xffffff,transparent:true,opacity:1});var pp=new THREE.Mesh(geo2,mat2);pp.position.set((Math.random()-0.5)*0.5,1.0+Math.random()*2,(Math.random()-0.5)*0.5);pp.userData.vx=Math.cos(angle)*speed*(1+Math.random()*2);pp.userData.vy=(Math.random()-0.3)*speed*2;pp.userData.vz=Math.sin(angle)*speed*(1+Math.random()*2);pp.userData.life=1;pp.userData.decay=0.012+Math.random()*0.015;pp.userData.gravity=-0.003;bootScene.add(pp);chargeParticles.push(pp);}if(ep%2===0){for(var aa=0;aa<4;aa++){var ang2=aa*Math.PI/2+Math.random()*0.5;spawnArc(0,1.5,Math.cos(ang2)*3,1.5+Math.sin(ang2)*2);}}}
-      bootScene.children.forEach(function(c){if(c.isPointLight)c.intensity=50*(1-ep/60)+8;});
-    } else {bootScene.background=null;bootScene.children.forEach(function(c){if(c.isPointLight)c.intensity=8+Math.sin(t*3)*3;});}
-    if(ep>40&&window.mainModel){
-      window.mainModel.visible=true;
-      if(!window.mainModel.userData.bigFitted){
-        window.mainModel.userData.bigFitted=true;
-        window.mainModel.scale.setScalar(3.5);
-        window.mainModel.position.set(0,0,0);
-        window.mainModel.userData.bigBaseY=0;
-        bootCamera.position.set(0,1.5,9);bootCamera.lookAt(0,1.5,0);bootCamera.updateProjectionMatrix();
-      }
-      var blink;var p4=bootAnim-330-40;
-      if(p4<60)blink=Math.floor(p4/4)%2===0;
-      else if(p4<120)blink=Math.floor(p4/8)%2===0;
-      else if(p4<180)blink=Math.floor(p4/16)%2===0;
-      else blink=true;
-      window.mainModel.visible=blink;
-      window.mainModel.position.y=bob*0.3;
-      if(bootAnim%2===0)spawnCharge(0,1.5,0,2);
-    }
-    if(ep>100){bootScene.background=null;bootPhase=4;}
-  }
-  if(bootPhase===4){
-    var p4b=bootAnim-430;
-    if(window.mainModel){window.mainModel.visible=true;window.mainModel.position.y=bob*0.3;var blink2;if(p4b<150){var br=Math.max(4,15-Math.floor(p4b/10));blink2=Math.floor(p4b/br)%2===0;}else blink2=true;window.mainModel.visible=blink2;if(p4b%5===0)spawnCharge(0,1.5,0,1);}
-    bootScene.background=null;
-    if(bootAnim>710)completeBoot();
-  }
-  for(var ei=chargeParticles.length-1;ei>=0;ei--){var ep2=chargeParticles[ei];if(ep2.userData.vz!==undefined){ep2.position.x+=ep2.userData.vx;ep2.position.y+=ep2.userData.vy;ep2.position.z+=ep2.userData.vz;ep2.userData.vy+=ep2.userData.gravity||0;}}
-  bootRenderer.render(bootScene,bootCamera);
-}
-
-function completeBoot(){
-  if(bootDone)return;bootDone=true;
-  var el=document.getElementById('boot');
-  el.style.transition='opacity 1.2s';el.style.opacity='0';
-  setTimeout(function(){
-    el.style.display='none';
-    document.getElementById('app').style.display='flex';
-    sendGreeting();
-  },1200);
-}
-
-var bootInterval=setInterval(bootLoop,33);
-setTimeout(function(){if(!bootDone)completeBoot();},30000);
-
-// ── SPEECH ────────────────────────────────────────────────────────────────────
-var cachedVoice=null,userInteracted=false,pendingSpeech=null,msgStore={},msgCounter=0;
-function getVoice(){if(cachedVoice)return cachedVoice;var voices=speechSynthesis.getVoices();var v=voices.find(function(x){return x.name.includes('Zira');})||voices.find(function(x){return x.name.includes('Samantha');})||voices.find(function(x){return x.name.toLowerCase().includes('female');})||null;if(v)cachedVoice=v;return v;}
-if(window.speechSynthesis){speechSynthesis.getVoices();speechSynthesis.onvoiceschanged=function(){getVoice();};}
-function onInteract(){if(userInteracted)return;userInteracted=true;if(pendingSpeech){speak(pendingSpeech);pendingSpeech=null;}}
-document.addEventListener('click',onInteract,{once:true});document.addEventListener('keydown',onInteract,{once:true});
-function speak(text){
-  if(!window.speechSynthesis)return;
-  if(!userInteracted){pendingSpeech=text;return;}
-  speechSynthesis.cancel();
-  var sentences=text.match(/[^.!?]+[.!?]+[\s]*/g)||[text];
-  var chunks=[],cur='';
-  sentences.forEach(function(s){if((cur+s).length>180){if(cur)chunks.push(cur.trim());cur=s;}else cur+=s;});
-  if(cur.trim())chunks.push(cur.trim());
-  var voice=getVoice();
-  function sc(i){if(i>=chunks.length)return;var u=new SpeechSynthesisUtterance(chunks[i]);u.rate=0.9;u.pitch=1.15;u.volume=1;if(voice)u.voice=voice;var kl=setInterval(function(){if(!speechSynthesis.speaking){clearInterval(kl);return;}speechSynthesis.pause();speechSynthesis.resume();},10000);u.onend=function(){clearInterval(kl);sc(i+1);};speechSynthesis.speak(u);}
-  sc(0);
-}
-function replayMsg(btn,mid){speechSynthesis.cancel();document.querySelectorAll('.playbtn').forEach(function(b){b.classList.remove('playing');b.innerHTML='&#9654;';});var text=msgStore[mid];if(!text)return;speak(text);}
-
-// ── CHAT ──────────────────────────────────────────────────────────────────────
-var chatHistory=[],busy=false;
-function sendToStage(msg){var frame=document.getElementById('stageFrame');if(frame&&frame.contentWindow)frame.contentWindow.postMessage(msg,'*');}
-function addMsg(role,text){
-  var mid='m'+(msgCounter++);
-  var d=document.createElement('div');d.className='msg '+(role==='ai'?'ai':'user');
-  if(role==='ai'){msgStore[mid]=text;d.innerHTML='<div class="mlabel">KHAIOS</div><div class="mbubble"><span class="mtext">'+text+'</span><button class="playbtn" id="pb'+mid+'" onclick="replayMsg(this,\''+mid+'\')" title="Play">&#9654;</button></div>';}
-  else{d.innerHTML='<div class="mlabel">COMMANDER</div><div class="mbubble">'+text+'</div>';}
-  document.getElementById('chat').appendChild(d);d.scrollIntoView({behavior:'smooth'});
-  return d;
-}
-function addThinking(){var d=document.createElement('div');d.className='thinking';d.innerHTML='KHAIOS <span class="tdots"><span>.</span><span>.</span><span>.</span></span>';document.getElementById('chat').appendChild(d);d.scrollIntoView({behavior:'smooth'});return d;}
-async function callAPI(messages){
-  var res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:messages})});
-  var data=await res.json();
-  document.getElementById('providerBadge').textContent=(data.provider||'AI').toUpperCase();
-  return data.content;
-}
-async function sendMsg(text){
-  if(busy||!text.trim())return;busy=true;
-  document.getElementById('sbtn').disabled=true;
-  addMsg('user',text);sendToStage('dive');
-  var thinking=addThinking();
-  chatHistory.push({role:'user',content:text});
-  try{
-    var response=await callAPI([{role:'system',content:SYSTEM}].concat(chatHistory));
-    chatHistory.push({role:'assistant',content:response});
-    thinking.remove();
-    sendToStage('return');
-    setTimeout(function(){addMsg('ai',response);speak(response);busy=false;document.getElementById('sbtn').disabled=false;},900);
-  }catch(e){
-    thinking.remove();var em='Systems recalibrating, Commander.';addMsg('ai',em);speak(em);
-    sendToStage('return');busy=false;document.getElementById('sbtn').disabled=false;
-  }
-}
-async function sendGreeting(){var g='Systems online, Commander.';addMsg('ai',g);speak(g);}
-
-// ── INPUT ─────────────────────────────────────────────────────────────────────
-document.getElementById('sbtn').addEventListener('click',function(){var f=document.getElementById('ifield');sendMsg(f.value.trim());f.value='';f.style.height='';});
-document.getElementById('ifield').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();var f=document.getElementById('ifield');sendMsg(f.value.trim());f.value='';f.style.height='';}});
-document.getElementById('ifield').addEventListener('input',function(){this.style.height='';this.style.height=Math.min(this.scrollHeight,80)+'px';});
-initBootThree();
-</script>
+initBootThree();</script>
 </body>
 </html>
