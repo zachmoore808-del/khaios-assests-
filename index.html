@@ -12,10 +12,10 @@
 html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-family:'Exo 2',sans-serif;}
 
 /* BG VIDEO */
-#bgVideo{position:fixed;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:0.75;}
+#bgVideo{position:fixed;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:0;transition:opacity 1s;}
 
 /* MATRIX */
-#matrixCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none;opacity:0.25;}
+#matrixCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none;opacity:0;transition:opacity 1s;}
 
 /* BOOT */
 #boot{position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,5,20,0.6);}
@@ -381,12 +381,18 @@ function completeBoot(){
   el.style.transition='opacity 1.5s';el.style.opacity='0';
   setTimeout(function(){
     el.style.display='none';
+    // Switch: fade out video, fade in matrix
+    document.getElementById('bgVideo').style.opacity='0';
+    setTimeout(function(){document.getElementById('matrixCanvas').style.opacity='0.4';},800);
     document.getElementById('cockpit').style.display='flex';
     sendGreeting();
     animateBars();
   },1500);
 }
 (function(){
+  // Boot: fade in video, keep matrix hidden
+  setTimeout(function(){document.getElementById('bgVideo').style.opacity='0.85';},100);
+  document.getElementById('matrixCanvas').style.opacity='0';
   setTimeout(function(){document.getElementById('bootTitle').style.opacity=1;},300);
   setTimeout(function(){document.getElementById('bootSub').style.opacity=1;},800);
   setTimeout(function(){
