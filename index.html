@@ -136,7 +136,7 @@ html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-fami
   <div id="bootTitle">K H A I O S</div>
   <div id="bootSub">A.I.O.S. &nbsp; MULTITOOL</div>
   <div id="bootBar"><div id="bootBarFill"></div></div>
-  <div id="tapBtn" onclick="bootTap()" style="opacity:0;pointer-events:none;position:absolute;"></div>
+
 </div>
 
 <!-- COCKPIT FRAME -->
@@ -399,15 +399,7 @@ function speakBoot(text){
 }
 
 // ── BOOT ──────────────────────────────────────────────────────────────────
-var bootTapped=false;
-function bootTap(){
-  if(bootTapped)return;bootTapped=true;
-  document.getElementById('tapBtn').style.display='none';
-  speakBoot('Welcome back, Commander.');
-  // Start progress bar NOW
-  setTimeout(function(){document.getElementById('bootBarFill').style.width='100%';},100);
-  setTimeout(completeBoot,10000);
-}
+
 function enterCockpit(){
   var el=document.getElementById('matrixEnter');
   el.style.transition='opacity 0.8s';el.style.opacity='0';
