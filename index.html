@@ -50,7 +50,6 @@ html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-fami
 .sbtn{width:38px;height:38px;border:1px solid #3366aa;border-radius:2px;background:rgba(0,20,80,0.6);cursor:pointer;color:#66aaff;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .2s;align-self:flex-end;flex-shrink:0;}
 .sbtn:hover{background:rgba(0,50,180,0.5);}
 .sbtn:disabled{opacity:0.3;cursor:not-allowed;}
-.stage{flex-shrink:0;height:300px;position:relative;overflow:hidden;}
 </style>
 </head>
 <body>
@@ -72,9 +71,7 @@ html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-fami
     <textarea class="ifield" id="ifield" placeholder="Commander..." rows="1"></textarea>
     <button class="sbtn" id="sbtn">&#9654;</button>
   </div>
-  <div class="stage" id="stage">
-    <iframe id="stageFrame" src="test3d.html" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;" scrolling="no"></iframe>
-  </div>
+
 </div>
 
 <script>
@@ -135,7 +132,7 @@ function completeBoot(){
 function initBootThree(){
   setTimeout(function(){document.getElementById('bootTitle').style.opacity=1;},200);
   setTimeout(function(){document.getElementById('bootText').style.opacity=1;},600);
-  setTimeout(function(){completeBoot();},2500);
+  setTimeout(function(){completeBoot();},10000);
 }
 initBootThree();</script>
 </body>
