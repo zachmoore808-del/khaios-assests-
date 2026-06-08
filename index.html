@@ -373,6 +373,23 @@ setInterval(function(){
   window.addEventListener('resize',resize);resize();requestAnimationFrame(draw);
 })();
 
+// ── BOOT SPEECH ──────────────────────────────────────────────────────────────
+function speakBoot(text){
+  if(!window.speechSynthesis)return;
+  var trySpeak=function(){
+    var voices=speechSynthesis.getVoices();
+    var v=voices.find(function(x){return x.name.includes('Zira');})||
+          voices.find(function(x){return x.name.includes('Samantha');})||
+          voices.find(function(x){return x.name.toLowerCase().includes('female');})||null;
+    var u=new SpeechSynthesisUtterance(text);
+    u.rate=0.88;u.pitch=1.15;u.volume=1;
+    if(v)u.voice=v;
+    speechSynthesis.speak(u);
+  };
+  if(speechSynthesis.getVoices().length>0){trySpeak();}
+  else{speechSynthesis.onvoiceschanged=function(){trySpeak();};}
+}
+
 // ── BOOT ──────────────────────────────────────────────────────────────────
 var bootDone=false;
 function completeBoot(){
@@ -393,7 +410,10 @@ function completeBoot(){
   // Boot: fade in video, keep matrix hidden
   setTimeout(function(){document.getElementById('bgVideo').style.opacity='0.85';},100);
   document.getElementById('matrixCanvas').style.opacity='0';
-  setTimeout(function(){document.getElementById('bootTitle').style.opacity=1;},300);
+  setTimeout(function(){document.getElementById("bootTitle").style.opacity=1;},300);
+  setTimeout(function(){speakBoot("Welcome back, Commander.");},800);
+  // Speak welcome on boot
+  setTimeout(function(){speakBoot('Welcome back, Commander.');},800);
   setTimeout(function(){document.getElementById('bootSub').style.opacity=1;},800);
   setTimeout(function(){
     var bar=document.getElementById('bootBar');
