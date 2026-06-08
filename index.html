@@ -121,6 +121,17 @@ if('serviceWorker' in navigator){window.addEventListener('load',function(){navig
 })();
 
 // ── BOOT ─────────────────────────────────────────────────────────────────────
+var bootDone=false;
+function completeBoot(){
+  if(bootDone)return;bootDone=true;
+  var el=document.getElementById('boot');
+  el.style.transition='opacity 1s';el.style.opacity='0';
+  setTimeout(function(){
+    el.style.display='none';
+    document.getElementById('app').style.display='flex';
+    sendGreeting();
+  },1000);
+}
 function initBootThree(){
   setTimeout(function(){document.getElementById('bootTitle').style.opacity=1;},200);
   setTimeout(function(){document.getElementById('bootText').style.opacity=1;},600);
