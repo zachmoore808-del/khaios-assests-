@@ -125,12 +125,18 @@ html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-fami
 <!-- MATRIX -->
 <canvas id="matrixCanvas"></canvas>
 
+<!-- MATRIX ENTER SCREEN -->
+<div id="matrixEnter" style="display:none;position:fixed;inset:0;z-index:150;display:none;flex-direction:column;align-items:center;justify-content:center;">
+  <div style="font-family:'Orbitron',monospace;font-size:13px;letter-spacing:6px;color:#4488cc;margin-bottom:30px;text-shadow:0 0 15px #0066ff;opacity:0.7;">SYSTEM INITIALIZED</div>
+  <button id="enterBtn" onclick="enterCockpit()" style="font-family:'Orbitron',monospace;font-size:14px;letter-spacing:8px;color:#88ccff;background:rgba(0,10,40,0.7);border:1px solid #1a4488;padding:14px 40px;cursor:pointer;animation:blink2 1.5s infinite;text-shadow:0 0 10px #0066ff;box-shadow:0 0 20px rgba(0,50,200,0.3);">[ ENTER ]</button>
+</div>
+
 <!-- BOOT -->
 <div id="boot">
   <div id="bootTitle">K H A I O S</div>
   <div id="bootSub">A.I.O.S. &nbsp; MULTITOOL</div>
   <div id="bootBar"><div id="bootBarFill"></div></div>
-  <div id="tapBtn" onclick="bootTap()" style="margin-top:30px;font-family:'Orbitron',monospace;font-size:11px;letter-spacing:6px;color:#4488cc;opacity:0;transition:opacity 1s;cursor:pointer;padding:10px 24px;border:1px solid #1a4488;animation:blink2 1.5s infinite;">[ TAP TO ENTER ]</div>
+  <div id="tapBtn" onclick="bootTap()" style="opacity:0;pointer-events:none;position:absolute;"></div>
 </div>
 
 <!-- COCKPIT FRAME -->
@@ -398,9 +404,20 @@ function bootTap(){
   if(bootTapped)return;bootTapped=true;
   document.getElementById('tapBtn').style.display='none';
   speakBoot('Welcome back, Commander.');
-  // Start progress bar
-  document.getElementById('bootBarFill').style.width='100%';
+  // Start progress bar NOW
+  setTimeout(function(){document.getElementById('bootBarFill').style.width='100%';},100);
   setTimeout(completeBoot,10000);
+}
+function enterCockpit(){
+  var el=document.getElementById('matrixEnter');
+  el.style.transition='opacity 0.8s';el.style.opacity='0';
+  setTimeout(function(){
+    el.style.display='none';
+    document.getElementById('matrixCanvas').style.opacity='0.4';
+    document.getElementById('cockpit').style.display='flex';
+    sendGreeting();
+    animateBars();
+  },800);
 }
 var bootDone=false;
 function completeBoot(){
@@ -409,12 +426,13 @@ function completeBoot(){
   el.style.transition='opacity 1.5s';el.style.opacity='0';
   setTimeout(function(){
     el.style.display='none';
-    // Switch: fade out video, fade in matrix
+    // Show matrix enter screen
     document.getElementById('bgVideo').style.opacity='0';
-    setTimeout(function(){document.getElementById('matrixCanvas').style.opacity='0.4';},800);
-    document.getElementById('cockpit').style.display='flex';
-    sendGreeting();
-    animateBars();
+    document.getElementById('matrixCanvas').style.opacity='0.4';
+    var me=document.getElementById('matrixEnter');
+    me.style.display='flex';me.style.opacity='1';
+    // Speak welcome
+    speakBoot('Welcome back, Commander.');
   },1500);
 }
 (function(){
@@ -425,11 +443,8 @@ function completeBoot(){
   // Speak welcome on boot
   setTimeout(function(){speakBoot('Welcome back, Commander.');},800);
   setTimeout(function(){document.getElementById('bootSub').style.opacity=1;},800);
-  setTimeout(function(){document.getElementById('tapBtn').style.opacity=1;},1200);
   setTimeout(function(){
-    var bar=document.getElementById('bootBar');
-    bar.style.opacity=1;
-    setTimeout(function(){document.getElementById('bootBarFill').style.width='100%';},100);
+    document.getElementById('bootBar').style.opacity=1;
   },1200);
 })();
 
