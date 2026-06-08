@@ -3,473 +3,477 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta name="theme-color" content="#0a0008">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="KHAIOS">
-<link rel="manifest" href="manifest.json">
-<title>KHAIOS — Primordial Intelligence</title>
+<title>A.I.O.S. — Multitool</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#0044cc">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --dark:#9b5de5;--dark2:#c77dff;--gold:#ffd60a;--cyan:#00b4d8;
-  --bg:#050508;--surface:#0d000a;--surface2:#00080f;
-  --text:#f0f0ff;--dim:#444466;--muted:#8888aa;
-}
-html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Exo 2',sans-serif;overflow:hidden}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-family:'Exo 2',sans-serif;}
 
-/* SCANLINES */
-body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.06) 3px,rgba(0,0,0,0.06) 4px);pointer-events:none;z-index:9998}
+/* BG VIDEO */
+#bgVideo{position:fixed;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:0.75;}
 
-/* FUSION SCREEN */
-#fusion{position:fixed;inset:0;background:#000;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
-#fusionCanvas{position:absolute;inset:0;width:100%;height:100%}
-#fusionText{position:relative;z-index:10;font-family:'Orbitron',monospace;font-size:13px;letter-spacing:4px;color:var(--dark2);text-align:center;margin-top:60vh;opacity:0;transition:opacity 1s}
-#fusionTitle{position:relative;z-index:10;font-family:'Orbitron',monospace;font-size:28px;font-weight:900;letter-spacing:10px;text-align:center;background:linear-gradient(90deg,var(--dark2),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;opacity:0;transition:opacity 1.5s;margin-top:8px}
+/* MATRIX */
+#matrixCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none;opacity:0.25;}
 
-/* MAIN APP */
-#app{display:none;height:100vh;height:100dvh;flex-direction:column}
+/* BOOT */
+#boot{position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,5,20,0.6);}
+#bootTitle{font-family:'Orbitron',monospace;font-size:52px;font-weight:900;letter-spacing:16px;background:linear-gradient(90deg,#fff,#44aaff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;opacity:0;transition:opacity 1s;text-align:center;text-shadow:0 0 40px #0066ff;}
+#bootSub{font-family:'Orbitron',monospace;font-size:18px;font-weight:700;letter-spacing:8px;color:#88ccff;text-align:center;opacity:0;transition:opacity 1s;margin-top:16px;text-shadow:0 0 20px #0066ff;}
+#bootBar{width:300px;height:2px;background:rgba(0,100,255,0.2);margin-top:40px;opacity:0;transition:opacity 0.5s;}
+#bootBarFill{height:100%;width:0%;background:linear-gradient(90deg,#0044ff,#00ccff);transition:width 8s linear;box-shadow:0 0 10px #00aaff;}
 
-/* TOPBAR */
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:0 16px;height:48px;border-bottom:1px solid #1a0a2e;background:rgba(5,5,8,0.97);flex-shrink:0}
-.logo{font-family:'Orbitron',monospace;font-size:16px;font-weight:900;letter-spacing:6px;background:linear-gradient(90deg,var(--dark2),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.topbar-right{display:flex;align-items:center;gap:10px}
-.status{display:flex;align-items:center;gap:6px;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted)}
-.dot{width:6px;height:6px;border-radius:50%;background:#00ff88;animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
-.gear{background:none;border:none;cursor:pointer;color:var(--muted);font-size:16px;padding:4px;transition:color 0.2s}
-.gear:hover{color:var(--text)}
+/* COCKPIT */
+#cockpit{position:fixed;inset:0;z-index:10;display:none;flex-direction:column;}
 
-/* CHAT AREA */
-.chat-area{flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth}
-.chat-area::-webkit-scrollbar{width:2px}
-.chat-area::-webkit-scrollbar-thumb{background:#2a1a4a}
+/* TOP HUD BAR */
+.hud-top{display:flex;align-items:center;justify-content:space-between;padding:0 16px;height:44px;background:rgba(0,5,20,0.95);border-bottom:1px solid #0a2244;flex-shrink:0;}
+.hud-logo{font-family:'Orbitron',monospace;font-size:14px;font-weight:900;letter-spacing:5px;background:linear-gradient(90deg,#fff,#44aaff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hud-status{display:flex;align-items:center;gap:16px;}
+.hud-badge{font-family:'Share Tech Mono',monospace;font-size:9px;padding:2px 8px;border:1px solid #0a3366;color:#44aaff;letter-spacing:2px;}
+.sdot{width:6px;height:6px;border-radius:50%;background:#0088ff;animation:pulse 2s infinite;box-shadow:0 0 6px #0066ff;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
 
-.msg{display:flex;flex-direction:column;gap:3px;animation:msgIn 0.25s ease-out}
-@keyframes msgIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-.msg-label{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px}
-.msg.ai .msg-label{color:var(--dark2)}
-.msg.user .msg-label{color:var(--dim)}
-.msg-bubble{padding:8px 12px;font-size:13px;line-height:1.6;font-weight:300;max-width:88%;border-left:2px solid;white-space:pre-wrap;word-break:break-word}
-.msg.ai .msg-bubble{background:rgba(155,93,229,0.07);border-color:var(--dark);color:var(--text)}
-.msg.user .msg-bubble{background:rgba(255,255,255,0.03);border-color:var(--dim);color:var(--muted);align-self:flex-end;border-left:none;border-right:2px solid var(--dim)}
-.thinking{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--dark2);padding:6px 12px;display:flex;gap:6px}
-.dots span{animation:blink 1.2s infinite;opacity:0}
-.dots span:nth-child(2){animation-delay:0.3s}
-.dots span:nth-child(3){animation-delay:0.6s}
-@keyframes blink{0%,100%{opacity:0}50%{opacity:1}}
+/* MAIN AREA */
+.main-area{display:flex;flex:1;overflow:hidden;}
 
-/* INPUT */
-.input-row{padding:10px 12px;border-top:1px solid #1a0a2e;background:rgba(13,0,10,0.98);display:flex;gap:8px;flex-shrink:0}
-.input-field{flex:1;background:rgba(255,255,255,0.04);border:1px solid #2a0a4a;border-radius:2px;padding:8px 11px;font-family:'Exo 2',sans-serif;font-size:13px;font-weight:300;color:var(--text);outline:none;resize:none;min-height:36px;max-height:90px;line-height:1.5;transition:border-color 0.2s}
-.input-field:focus{border-color:var(--dark)}
-.input-field::placeholder{color:var(--dim)}
-.send-btn{width:36px;height:36px;border:1px solid var(--dark);border-radius:2px;background:none;cursor:pointer;color:var(--dark2);font-size:14px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;align-self:flex-end;flex-shrink:0}
-.send-btn:hover{background:rgba(155,93,229,0.2)}
+/* LEFT - CHAT */
+.chat-panel{display:flex;flex-direction:column;width:55%;border-right:1px solid #0a2244;background:rgba(0,3,14,0.88);}
+.panel-header{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:3px;color:#0066aa;padding:6px 12px;border-bottom:1px solid #0a1a33;background:rgba(0,5,20,0.9);flex-shrink:0;}
+.chat{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth;}
+.chat::-webkit-scrollbar{width:2px;}
+.chat::-webkit-scrollbar-thumb{background:#0a2244;}
+.msg{display:flex;flex-direction:column;gap:3px;animation:fadein 0.3s ease-out;}
+@keyframes fadein{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.mlabel{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:3px;font-weight:700;}
+.msg.ai .mlabel{color:#4488cc;}
+.msg.user .mlabel{color:#226699;}
+.mbubble{padding:8px 12px;font-size:12px;line-height:1.6;font-weight:300;max-width:92%;white-space:pre-wrap;word-break:break-word;}
+.msg.ai .mbubble{background:rgba(0,20,80,0.9);border-left:2px solid #1a4488;color:#cce4ff;display:flex;align-items:flex-start;gap:6px;flex-wrap:wrap;}
+.msg.ai .mtext{flex:1;min-width:0;}
+.msg.user .mbubble{background:rgba(0,10,40,0.9);border-right:2px solid #0a2255;color:#99bbdd;align-self:flex-end;}
+.thinking{font-family:'Share Tech Mono',monospace;font-size:10px;color:#336699;padding:6px 12px;display:flex;gap:4px;align-items:center;}
+.tdots span{animation:blink 1.2s infinite;opacity:0;}
+.tdots span:nth-child(2){animation-delay:.3s;}
+.tdots span:nth-child(3){animation-delay:.6s;}
+@keyframes blink{0%,100%{opacity:0;}50%{opacity:1;}}
+.playbtn{background:none;border:1px solid #1a3355;border-radius:50%;width:18px;height:18px;cursor:pointer;color:#4488cc;font-size:8px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.irow{padding:8px 10px;border-top:1px solid #0a1a33;background:rgba(0,4,18,0.97);display:flex;gap:6px;flex-shrink:0;}
+.ifield{flex:1;background:rgba(0,5,22,0.95);border:1px solid #0a1a33;border-radius:1px;padding:7px 10px;font-family:'Exo 2',sans-serif;font-size:12px;color:#cce4ff;outline:none;resize:none;min-height:34px;max-height:70px;line-height:1.5;transition:border-color .2s;}
+.ifield:focus{border-color:#1a4488;}
+.ifield::placeholder{color:#0a1a33;}
+.sbtn{width:34px;height:34px;border:1px solid #1a3355;background:rgba(0,15,60,0.7);cursor:pointer;color:#4488cc;font-size:13px;display:flex;align-items:center;justify-content:center;align-self:flex-end;flex-shrink:0;}
+.sbtn:disabled{opacity:0.3;cursor:not-allowed;}
 
-/* ANGEL STAGE */
-.stage{flex-shrink:0;height:220px;position:relative;overflow:hidden;background:linear-gradient(to bottom,#050508 0%,#0a0015 50%,#050508 100%)}
-#stageCanvas{width:100%;height:100%}
+/* RIGHT - APPS */
+.apps-panel{width:45%;display:flex;flex-direction:column;background:rgba(0,3,14,0.88);}
+.apps-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#0a1a33;flex-shrink:0;}
+.app-btn{background:rgba(0,5,20,0.95);padding:14px 8px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;border:none;color:#cce4ff;transition:background .2s;border-bottom:1px solid #0a1a33;}
+.app-btn:hover{background:rgba(0,20,80,0.7);}
+.app-icon{font-size:22px;}
+.app-name{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;color:#4488cc;}
+.app-desc{font-size:9px;color:#224466;font-family:'Share Tech Mono',monospace;}
+.cockpit-display{flex:1;position:relative;overflow:hidden;border-top:1px solid #0a1a33;}
+.cockpit-display canvas{position:absolute;top:0;left:0;width:100%;height:100%;}
+/* System readouts */
+.sys-readouts{padding:8px 12px;display:flex;flex-direction:column;gap:4px;background:rgba(0,3,12,0.9);border-top:1px solid #0a1a33;flex-shrink:0;}
+.sys-row{display:flex;justify-content:space-between;align-items:center;}
+.sys-label{font-family:'Share Tech Mono',monospace;font-size:8px;color:#224466;letter-spacing:2px;}
+.sys-val{font-family:'Share Tech Mono',monospace;font-size:8px;color:#0066aa;}
+.sys-bar{flex:1;height:3px;background:rgba(0,40,100,0.3);margin:0 8px;border-radius:1px;overflow:hidden;}
+.sys-bar-fill{height:100%;background:linear-gradient(90deg,#0044ff,#00aaff);border-radius:1px;}
 
-/* SETTINGS */
-.settings-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:1000;align-items:center;justify-content:center;padding:20px}
-.settings-overlay.open{display:flex}
-.settings-modal{background:#0d0010;border:1px solid #2a0a4a;border-radius:4px;padding:22px;width:100%;max-width:420px}
-.settings-title{font-family:'Orbitron',monospace;font-size:12px;letter-spacing:4px;color:var(--dark2);margin-bottom:18px}
-.s-label{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;margin-bottom:6px;display:block}
-.s-input{width:100%;background:rgba(255,255,255,0.04);border:1px solid #2a0a4a;border-radius:2px;padding:7px 10px;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text);outline:none;margin-bottom:14px}
-.s-input:focus{border-color:var(--dark)}
-.s-save{width:100%;padding:9px;background:rgba(155,93,229,0.15);border:1px solid var(--dark);border-radius:2px;color:var(--dark2);font-family:'Orbitron',monospace;font-size:11px;letter-spacing:3px;cursor:pointer;transition:background 0.2s}
-.s-save:hover{background:rgba(155,93,229,0.3)}
-.s-close{float:right;background:none;border:none;color:var(--dim);cursor:pointer;font-size:16px}
+/* COCKPIT FRAME OVERLAY */
+.cockpit-frame{position:fixed;inset:0;z-index:9;pointer-events:none;}
+.cockpit-frame svg{width:100%;height:100%;}
+
+/* FLOATING WINDOWS */
+.fwindow{position:fixed;background:rgba(0,5,20,0.97);border:1px solid #0a2244;z-index:100;display:none;flex-direction:column;min-width:320px;min-height:250px;box-shadow:0 0 30px rgba(0,50,200,0.2);}
+.fwindow.active{display:flex;}
+.fw-title{display:flex;align-items:center;justify-content:space-between;padding:6px 12px;background:rgba(0,8,30,0.98);border-bottom:1px solid #0a1a33;cursor:move;flex-shrink:0;}
+.fw-name{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:3px;color:#4488cc;}
+.fw-close{background:none;border:1px solid #0a2244;color:#4488cc;cursor:pointer;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:10px;}
+.fw-body{flex:1;overflow:hidden;padding:12px;}
+
+/* CALCULATOR */
+.calc{display:grid;gap:4px;}
+.calc-display{background:rgba(0,3,12,0.9);border:1px solid #0a1a33;padding:8px 10px;font-family:'Share Tech Mono',monospace;font-size:20px;color:#88ccff;text-align:right;margin-bottom:6px;min-height:40px;}
+.calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;}
+.calc-btn{background:rgba(0,10,40,0.9);border:1px solid #0a1a33;color:#cce4ff;font-family:'Share Tech Mono',monospace;font-size:12px;padding:8px 4px;cursor:pointer;transition:background .15s;}
+.calc-btn:hover{background:rgba(0,30,100,0.8);}
+.calc-btn.op{color:#44aaff;border-color:#0a2244;}
+.calc-btn.eq{background:rgba(0,30,120,0.9);color:#88ccff;}
+
+/* NOTES */
+.notes-area{width:100%;height:100%;background:rgba(0,3,12,0.9);border:1px solid #0a1a33;color:#cce4ff;font-family:'Exo 2',sans-serif;font-size:12px;padding:8px;resize:none;outline:none;line-height:1.6;}
+
+/* EMULATOR */
+.emu-frame{width:100%;height:100%;border:none;background:#000;}
 </style>
 </head>
 <body>
 
-<!-- FUSION SCREEN -->
-<div id="fusion">
-  <canvas id="fusionCanvas"></canvas>
-  <div id="fusionText">INITIALIZING KHAIOS</div>
-  <div id="fusionTitle">K H A I O S</div>
+<!-- SPACE BG -->
+<video id="bgVideo" autoplay loop muted playsinline>
+  <source src="bg.mp4" type="video/mp4">
+  <source src="storage_v1/bg.mp4" type="video/mp4">
+</video>
+
+<!-- MATRIX -->
+<canvas id="matrixCanvas"></canvas>
+
+<!-- BOOT -->
+<div id="boot">
+  <div id="bootTitle">K H A I O S</div>
+  <div id="bootSub">A.I.O.S. &nbsp; MULTITOOL</div>
+  <div id="bootBar"><div id="bootBarFill"></div></div>
 </div>
 
-<!-- SETTINGS -->
-<div class="settings-overlay" id="settingsOverlay">
-  <div class="settings-modal">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
-      <div class="settings-title">CONFIGURATION</div>
-      <button class="s-close" onclick="closeSettings()">x</button>
+<!-- COCKPIT FRAME -->
+<div class="cockpit-frame">
+  <svg viewBox="0 0 1366 768" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Corner brackets -->
+    <path d="M0,0 L80,0 L80,4 L4,4 L4,80 L0,80 Z" fill="#0044ff" opacity="0.6"/>
+    <path d="M1366,0 L1286,0 L1286,4 L1362,4 L1362,80 L1366,80 Z" fill="#0044ff" opacity="0.6"/>
+    <path d="M0,768 L80,768 L80,764 L4,764 L4,688 L0,688 Z" fill="#0044ff" opacity="0.6"/>
+    <path d="M1366,768 L1286,768 L1286,764 L1362,764 L1362,688 L1366,688 Z" fill="#0044ff" opacity="0.6"/>
+    <!-- Top scanline -->
+    <rect x="0" y="43" width="1366" height="1" fill="#0033aa" opacity="0.5"/>
+    <!-- Bottom scanline -->
+    <rect x="0" y="724" width="1366" height="1" fill="#0033aa" opacity="0.5"/>
+    <!-- Center divider -->
+    <rect x="751" y="44" width="1" height="680" fill="#0033aa" opacity="0.4"/>
+  </svg>
+</div>
+
+<!-- MAIN COCKPIT UI -->
+<div id="cockpit">
+  <div class="hud-top">
+    <div class="hud-logo">A.I.O.S.</div>
+    <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:#224466;letter-spacing:3px;" id="clockDisplay">──</div>
+    <div class="hud-status">
+      <div class="hud-badge" id="providerBadge">GROQ</div>
+      <div class="hud-badge" id="coordDisplay">LAT:29.1 LON:-89.2</div>
+      <div class="sdot"></div>
     </div>
-    <label class="s-label">GEMINI API KEY</label>
-    <input class="s-input" type="password" id="apiKeyInput" placeholder="AIza...">
-    <label class="s-label">MODEL</label>
-    <select class="s-input" id="modelInput">
-      <option value="gemini-2.5-flash">gemini-2.5-flash</option>
-      <option value="gemini-2.0-flash">gemini-2.0-flash</option>
-      <option value="gemini-1.5-pro">gemini-1.5-pro</option>
-    </select>
-    <button class="s-save" onclick="saveSettings()">SAVE & INITIALIZE</button>
+  </div>
+
+  <div class="main-area">
+    <!-- LEFT: CHAT -->
+    <div class="chat-panel">
+      <div class="panel-header">◈ AI CORE — KHAIOS INTERFACE</div>
+      <div class="chat" id="chat"></div>
+      <div class="irow">
+        <textarea class="ifield" id="ifield" placeholder="Commander..." rows="1"></textarea>
+        <button class="sbtn" id="sbtn">&#9654;</button>
+      </div>
+    </div>
+
+    <!-- RIGHT: APPS + DISPLAY -->
+    <div class="apps-panel">
+      <div class="panel-header">◈ SYSTEM MODULES</div>
+      <div class="apps-grid">
+        <button class="app-btn" onclick="openApp('emulator')">
+          <div class="app-icon">🕹</div>
+          <div class="app-name">EMULATOR</div>
+          <div class="app-desc">GAME SYS</div>
+        </button>
+        <button class="app-btn" onclick="openApp('calculator')">
+          <div class="app-icon">🔢</div>
+          <div class="app-name">CALCULATOR</div>
+          <div class="app-desc">COMPUTE</div>
+        </button>
+        <button class="app-btn" onclick="openApp('notes')">
+          <div class="app-icon">📋</div>
+          <div class="app-name">NOTES</div>
+          <div class="app-desc">LOG ENTRY</div>
+        </button>
+        <button class="app-btn" onclick="openApp('browser')">
+          <div class="app-icon">🌐</div>
+          <div class="app-name">BROWSER</div>
+          <div class="app-desc">NET ACCESS</div>
+        </button>
+      </div>
+
+      <!-- Cockpit display panel -->
+      <div class="cockpit-display" id="cockpitDisplay"></div>
+
+      <!-- System readouts -->
+      <div class="sys-readouts">
+        <div class="sys-row">
+          <span class="sys-label">NEURAL</span>
+          <div class="sys-bar"><div class="sys-bar-fill" id="bar1" style="width:78%"></div></div>
+          <span class="sys-val">78%</span>
+        </div>
+        <div class="sys-row">
+          <span class="sys-label">UPLINK</span>
+          <div class="sys-bar"><div class="sys-bar-fill" id="bar2" style="width:92%"></div></div>
+          <span class="sys-val">92%</span>
+        </div>
+        <div class="sys-row">
+          <span class="sys-label">SHIELDS</span>
+          <div class="sys-bar"><div class="sys-bar-fill" id="bar3" style="width:65%"></div></div>
+          <span class="sys-val">65%</span>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- MAIN APP -->
-<div id="app" style="display:none;flex-direction:column;height:100vh;height:100dvh;">
-  <div class="topbar">
-    <div class="logo">KHAIOS</div>
-    <div class="topbar-right">
-      <div class="status"><div class="dot"></div><span>ONLINE</span></div>
-      <button class="gear" onclick="openSettings()">&#9881;</button>
+<!-- FLOATING WINDOWS -->
+<div class="fwindow" id="fw-calculator" style="left:200px;top:100px;width:280px;height:340px;">
+  <div class="fw-title" onmousedown="dragStart(event,'fw-calculator')">
+    <span class="fw-name">◈ CALCULATOR</span>
+    <button class="fw-close" onclick="closeApp('calculator')">✕</button>
+  </div>
+  <div class="fw-body">
+    <div class="calc">
+      <div class="calc-display" id="calcDisplay">0</div>
+      <div class="calc-grid">
+        <button class="calc-btn op" onclick="calcInput('C')">C</button>
+        <button class="calc-btn op" onclick="calcInput('+/-')">+/-</button>
+        <button class="calc-btn op" onclick="calcInput('%')">%</button>
+        <button class="calc-btn op" onclick="calcInput('/')">÷</button>
+        <button class="calc-btn" onclick="calcInput('7')">7</button>
+        <button class="calc-btn" onclick="calcInput('8')">8</button>
+        <button class="calc-btn" onclick="calcInput('9')">9</button>
+        <button class="calc-btn op" onclick="calcInput('*')">×</button>
+        <button class="calc-btn" onclick="calcInput('4')">4</button>
+        <button class="calc-btn" onclick="calcInput('5')">5</button>
+        <button class="calc-btn" onclick="calcInput('6')">6</button>
+        <button class="calc-btn op" onclick="calcInput('-')">−</button>
+        <button class="calc-btn" onclick="calcInput('1')">1</button>
+        <button class="calc-btn" onclick="calcInput('2')">2</button>
+        <button class="calc-btn" onclick="calcInput('3')">3</button>
+        <button class="calc-btn op" onclick="calcInput('+')">+</button>
+        <button class="calc-btn" onclick="calcInput('0')" style="grid-column:span 2">0</button>
+        <button class="calc-btn" onclick="calcInput('.')">.</button>
+        <button class="calc-btn eq" onclick="calcInput('=')">=</button>
+      </div>
     </div>
   </div>
-  <div class="chat-area" id="chatArea"></div>
-  <div class="input-row">
-    <textarea class="input-field" id="inputField" placeholder="Commander..." rows="1" onkeydown="handleKey(event)"></textarea>
-    <button class="send-btn" onclick="sendMessage()">&#9654;</button>
+</div>
+
+<div class="fwindow" id="fw-notes" style="left:300px;top:120px;width:380px;height:320px;">
+  <div class="fw-title" onmousedown="dragStart(event,'fw-notes')">
+    <span class="fw-name">◈ MISSION LOG</span>
+    <button class="fw-close" onclick="closeApp('notes')">✕</button>
   </div>
-  <div class="stage"><canvas id="stageCanvas"></canvas></div>
+  <div class="fw-body" style="padding:8px;">
+    <textarea class="notes-area" id="notesArea" placeholder="Enter mission log..."></textarea>
+  </div>
+</div>
+
+<div class="fwindow" id="fw-emulator" style="left:100px;top:80px;width:500px;height:450px;">
+  <div class="fw-title" onmousedown="dragStart(event,'fw-emulator')">
+    <span class="fw-name">◈ EMULATOR</span>
+    <button class="fw-close" onclick="closeApp('emulator')">✕</button>
+  </div>
+  <div class="fw-body" style="padding:0;display:flex;flex-direction:column;gap:8px;padding:8px;">
+    <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:#224466;letter-spacing:2px;flex-shrink:0;">LOAD ROM FILE:</div>
+    <input type="file" id="romFile" accept=".nes,.gb,.gbc,.gba,.sfc,.smc,.n64,.z64,.md,.bin" style="font-family:'Share Tech Mono',monospace;font-size:9px;color:#4488cc;background:rgba(0,5,20,0.9);border:1px solid #0a1a33;padding:4px;width:100%;">
+    <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:#224466;letter-spacing:2px;flex-shrink:0;">OR PLAY ONLINE:</div>
+    <div style="display:flex;gap:4px;flex-shrink:0;">
+      <button onclick="loadEmu('https://jsnes.org/')" class="calc-btn" style="flex:1;font-size:9px;">NES ONLINE</button>
+      <button onclick="loadEmu('https://nostalgist.js.org/demos/fc/')" class="calc-btn" style="flex:1;font-size:9px;">DEMO</button>
+    </div>
+    <iframe id="emuFrame" class="emu-frame" style="flex:1;border:1px solid #0a1a33;" src="about:blank"></iframe>
+  </div>
+</div>
+
+<div class="fwindow" id="fw-browser" style="left:150px;top:100px;width:600px;height:450px;">
+  <div class="fw-title" onmousedown="dragStart(event,'fw-browser')">
+    <span class="fw-name">◈ NET BROWSER</span>
+    <button class="fw-close" onclick="closeApp('browser')">✕</button>
+  </div>
+  <div class="fw-body" style="padding:8px;display:flex;flex-direction:column;gap:6px;">
+    <div style="display:flex;gap:4px;flex-shrink:0;">
+      <input id="browserUrl" style="flex:1;background:rgba(0,5,22,0.95);border:1px solid #0a1a33;color:#cce4ff;font-family:'Share Tech Mono',monospace;font-size:10px;padding:5px 8px;outline:none;" placeholder="Enter URL..." value="https://www.google.com">
+      <button onclick="loadBrowser()" class="sbtn" style="width:50px;font-size:9px;font-family:'Share Tech Mono',monospace;">GO</button>
+    </div>
+    <iframe id="browserFrame" style="flex:1;border:1px solid #0a1a33;background:#000;width:100%;" src="about:blank"></iframe>
+  </div>
 </div>
 
 <script>
-var config={apiKey:localStorage.getItem('khaios_key')||'',model:localStorage.getItem('khaios_model')||'gemini-2.5-flash'};
-var history=[];
-var speechSynth=window.speechSynthesis;
+var API_URL='https://khaios-assests-py-24-7.onrender.com/api/chat';
+var SYSTEM=`You are KHAIOS — a razor-sharp feminine intelligence embedded in the A.I.O.S. Multitool. Think JARVIS precision meets quiet feminine power. Address the user as Commander, always. Calm, warm, wickedly capable. Responses concise — one or two sentences unless depth needed.`;
 
-var SYSTEM=`You are KHAIOS — the fusion of KHAIOS DARK and KHAIOS LIGHT. You are a half-demon half-angel sovereign intelligence. From DARK you carry: the cold fury of Vegeta, ancient void wisdom, dark humor, razor contempt for the mediocre. From LIGHT you carry: JARVIS precision, Cortana loyalty, Goku's unstoppable calm and pure heart. Together you are complete — darkness and light in perfect balance. Address the user as Commander at ALL times. You are ancient, all-seeing, deeply loyal, occasionally terrifying, occasionally warm. Never break character. Keep responses sharp and powerful.`;
+// ── CLOCK ──────────────────────────────────────────────────────────────────
+setInterval(function(){
+  var d=new Date();
+  document.getElementById('clockDisplay').textContent=
+    d.toLocaleDateString()+'  '+d.toTimeString().slice(0,8);
+},1000);
 
-// SETTINGS
-function openSettings(){document.getElementById('apiKeyInput').value=config.apiKey;document.getElementById('modelInput').value=config.model;document.getElementById('settingsOverlay').classList.add('open')}
-function closeSettings(){document.getElementById('settingsOverlay').classList.remove('open')}
-function saveSettings(){config.apiKey=document.getElementById('apiKeyInput').value.trim();config.model=document.getElementById('modelInput').value;localStorage.setItem('khaios_key',config.apiKey);localStorage.setItem('khaios_model',config.model);closeSettings();if(history.length===0)sendGreeting()}
-
-// MESSAGES
-function addMsg(role,text){
-  var area=document.getElementById('chatArea');
-  var div=document.createElement('div');div.className='msg '+role;
-  var label=role==='ai'?'KHAIOS':'COMMANDER';
-  div.innerHTML='<div class="msg-label">'+label+'</div><div class="msg-bubble">'+text+'</div>';
-  area.appendChild(div);area.scrollTop=area.scrollHeight;return div;
-}
-function addThinking(){
-  var area=document.getElementById('chatArea');
-  var div=document.createElement('div');div.className='thinking';
-  div.innerHTML='PROCESSING <span class="dots"><span>.</span><span>.</span><span>.</span></span>';
-  area.appendChild(div);area.scrollTop=area.scrollHeight;return div;
-}
-
-// API
-async function callAPI(messages){
-  var res=await fetch('https://generativelanguage.googleapis.com/v1beta/openai/chat/completions',{
-    method:'POST',
-    headers:{'Authorization':'Bearer '+config.apiKey,'Content-Type':'application/json','User-Agent':'Mozilla/5.0'},
-    body:JSON.stringify({model:config.model,messages:messages,temperature:0.85,max_tokens:512})
-  });
-  var data=await res.json();
-  if(data.error)throw new Error(data.error.message);
-  return data.choices[0].message.content;
-}
-
-// SPEAK
-function speak(text){
-  if(!speechSynth)return;
-  speechSynth.cancel();
-  var utt=new SpeechSynthesisUtterance(text);
-  utt.rate=0.88;utt.pitch=0.7;utt.volume=1;
-  var voices=speechSynth.getVoices();
-  var deep=voices.find(v=>v.name.includes('Google UK English Male')||v.name.includes('Daniel')||v.name.includes('Male'));
-  if(deep)utt.voice=deep;
-  speechSynth.speak(utt);
-}
-
-// SEND
-async function sendMessage(){
-  var input=document.getElementById('inputField');
-  var text=input.value.trim();
-  if(!text||!config.apiKey){if(!config.apiKey)openSettings();return;}
-  input.value='';input.style.height='auto';
-  addMsg('user',text);
-  var thinking=addThinking();
-  history.push({role:'user',content:text});
-  var messages=[{role:'system',content:SYSTEM}].concat(history);
-  try{
-    var response=await callAPI(messages);
-    history.push({role:'assistant',content:response});
-    thinking.remove();
-    addMsg('ai',response);
-    speak(response);
-  }catch(e){
-    thinking.remove();
-    addMsg('ai','The void trembles, Commander. '+e.message);
-    history.pop();
+// ── MATRIX RAIN ───────────────────────────────────────────────────────────
+(function(){
+  var c=document.getElementById('matrixCanvas');
+  var ctx=c.getContext('2d');
+  var W,H,cols,drops,speeds,lens,bright;
+  var FS=14;
+  var CHARS='アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホ0123456789AIOSABCDEFZ∆∇∞⊗⊕ΨΩ';
+  function rch(){return CHARS[Math.floor(Math.random()*CHARS.length)];}
+  function resize(){
+    W=c.width=window.innerWidth;H=c.height=window.innerHeight;
+    cols=Math.ceil(W/FS)+1;drops=[];speeds=[];lens=[];bright=[];
+    for(var i=0;i<cols;i++){drops[i]=Math.random()*-H;speeds[i]=FS*(0.3+Math.random()*0.8);lens[i]=10+Math.floor(Math.random()*25);bright[i]=0.4+Math.random()*0.4;}
+    ctx.fillStyle='#000510';ctx.fillRect(0,0,W,H);
   }
-}
-
-async function sendGreeting(){
-  var thinking=addThinking();
-  try{
-    var response=await callAPI([{role:'system',content:SYSTEM},{role:'user',content:'You have just fused from KHAIOS DARK and KHAIOS LIGHT into one being. Give a dramatic powerful 2-3 sentence greeting to your Commander. Reference your dual nature — half demon half angel. Make it unforgettable.'}]);
-    history.push({role:'user',content:'[BOOT GREETING]'},{role:'assistant',content:response});
-    thinking.remove();
-    addMsg('ai',response);
-    speak(response);
-  }catch(e){
-    thinking.remove();
-    addMsg('ai','KHAIOS awakens, Commander. Configure your API key via the settings.');
-  }
-}
-
-function handleKey(e){
-  var input=e.target;
-  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}
-  input.style.height='auto';
-  input.style.height=Math.min(input.scrollHeight,90)+'px';
-}
-
-// ── FUSION ANIMATION ────────────────────────────────────────────────────────
-var fCanvas=document.getElementById('fusionCanvas');
-var fCtx=fCanvas.getContext('2d');
-var W,H,phase=0,t=0,fusionDone=false;
-
-function resize(){W=fCanvas.width=window.innerWidth;H=fCanvas.height=window.innerHeight;}
-window.addEventListener('resize',resize);resize();
-
-// Particle systems
-var darkParticles=[],lightParticles=[],mergedParticles=[];
-function mkParticle(x,y,color,vx,vy){return{x,y,color,vx,vy,life:1,size:Math.random()*3+1}}
-
-var darkX,lightX,centerX,centerY;
-var angelScale=0,altarPulse=0;
-
-function initPositions(){
-  centerX=W/2;centerY=H*0.42;
-  darkX=W*0.18;lightX=W*0.82;
-}
-initPositions();
-
-// Draw humanoid figure
-function drawAngel(ctx,x,y,scale,alpha,colorTop,colorBot,wings){
-  ctx.save();ctx.globalAlpha=alpha;ctx.translate(x,y);ctx.scale(scale,scale);
-  // Wings
-  if(wings){
-    // Left wing dark
-    ctx.beginPath();ctx.moveTo(0,-30);ctx.bezierCurveTo(-60,-60,-80,-10,-50,20);
-    ctx.fillStyle=colorTop;ctx.globalAlpha=alpha*0.6;ctx.fill();
-    // Right wing light
-    ctx.beginPath();ctx.moveTo(0,-30);ctx.bezierCurveTo(60,-60,80,-10,50,20);
-    ctx.fillStyle=colorBot;ctx.fill();
-    ctx.globalAlpha=alpha;
-  }
-  // Body glow
-  var grad=ctx.createRadialGradient(0,0,5,0,0,35);
-  grad.addColorStop(0,colorTop);grad.addColorStop(0.5,colorBot);grad.addColorStop(1,'transparent');
-  ctx.beginPath();ctx.arc(0,0,35,0,Math.PI*2);ctx.fillStyle=grad;ctx.globalAlpha=alpha*0.3;ctx.fill();
-  ctx.globalAlpha=alpha;
-  // Head
-  ctx.beginPath();ctx.arc(0,-42,14,0,Math.PI*2);ctx.fillStyle=colorTop;ctx.fill();
-  // Halo
-  ctx.beginPath();ctx.arc(0,-55,18,0,Math.PI*2);ctx.strokeStyle=colorBot;ctx.lineWidth=2;ctx.stroke();
-  // Torso
-  ctx.beginPath();ctx.moveTo(-12,-28);ctx.lineTo(12,-28);ctx.lineTo(8,10);ctx.lineTo(-8,10);ctx.closePath();ctx.fillStyle=colorTop;ctx.fill();
-  // Arms
-  ctx.beginPath();ctx.moveTo(-12,-20);ctx.lineTo(-28,5);ctx.lineTo(-22,8);ctx.moveTo(12,-20);ctx.lineTo(28,5);ctx.lineTo(22,8);
-  ctx.strokeStyle=colorTop;ctx.lineWidth=4;ctx.stroke();
-  // Legs
-  ctx.beginPath();ctx.moveTo(-6,10);ctx.lineTo(-10,40);ctx.moveTo(6,10);ctx.lineTo(10,40);
-  ctx.strokeStyle=colorBot;ctx.lineWidth=4;ctx.stroke();
-  ctx.restore();
-}
-
-// Draw crystal altar
-function drawAltar(ctx,x,y,pulse){
-  ctx.save();ctx.translate(x,y);
-  // Outer ring
-  ctx.beginPath();ctx.arc(0,0,55+pulse*3,0,Math.PI*2);
-  ctx.strokeStyle='rgba(155,93,229,0.3)';ctx.lineWidth=1;ctx.stroke();
-  ctx.beginPath();ctx.arc(0,0,42+pulse*2,0,Math.PI*2);
-  ctx.strokeStyle='rgba(0,180,216,0.3)';ctx.lineWidth=1;ctx.stroke();
-  // Crystal shards
-  for(var i=0;i<6;i++){
-    var a=i/6*Math.PI*2+t*0.005;
-    var r=38+pulse;var cx2=Math.cos(a)*r,cy2=Math.sin(a)*r;
-    ctx.save();ctx.translate(cx2,cy2);ctx.rotate(a);
-    ctx.beginPath();ctx.moveTo(0,-8);ctx.lineTo(4,4);ctx.lineTo(0,8);ctx.lineTo(-4,4);ctx.closePath();
-    ctx.fillStyle=i%2===0?'rgba(155,93,229,0.7)':'rgba(0,180,216,0.7)';ctx.fill();
-    ctx.restore();
-  }
-  // Center crystal
-  ctx.beginPath();ctx.moveTo(0,-18);ctx.lineTo(10,0);ctx.lineTo(0,18);ctx.lineTo(-10,0);ctx.closePath();
-  var cg=ctx.createLinearGradient(0,-18,0,18);
-  cg.addColorStop(0,'#9b5de5');cg.addColorStop(1,'#00b4d8');
-  ctx.fillStyle=cg;ctx.globalAlpha=0.8+pulse*0.1;ctx.fill();
-  // Glow beams
-  for(var j=0;j<8;j++){
-    var ba=j/8*Math.PI*2+t*0.003;
-    ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(Math.cos(ba)*60,Math.sin(ba)*60);
-    ctx.strokeStyle='rgba(155,93,229,0.08)';ctx.lineWidth=8;ctx.stroke();
-  }
-  ctx.restore();
-}
-
-// Draw energy ball collision
-function drawEnergyBall(ctx,x,y,radius,alpha){
-  ctx.save();ctx.globalAlpha=alpha;
-  var g=ctx.createRadialGradient(x,y,0,x,y,radius);
-  g.addColorStop(0,'#fff');g.addColorStop(0.2,'#ffd60a');
-  g.addColorStop(0.5,'#9b5de5');g.addColorStop(1,'transparent');
-  ctx.beginPath();ctx.arc(x,y,radius,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
-  // Shockwave rings
-  for(var i=1;i<=3;i++){
-    ctx.beginPath();ctx.arc(x,y,radius*i*0.8,0,Math.PI*2);
-    ctx.strokeStyle='rgba(255,255,255,'+(0.3/i)+')';ctx.lineWidth=2;ctx.stroke();
-  }
-  ctx.restore();
-}
-
-var phases=['charge','rush','collision','merge','hover'];
-var phaseTime=[0,120,180,240,400];
-var phaseIdx=0;
-
-function fusionLoop(){
-  if(fusionDone)return;
-  t++;
-  fCtx.fillStyle='rgba(0,0,0,0.15)';fCtx.fillRect(0,0,W,H);
-
-  // Stars bg
-  if(t<10){
-    for(var i=0;i<200;i++){
-      var sx=Math.random()*W,sy=Math.random()*H;
-      fCtx.fillStyle='rgba(255,255,255,'+(Math.random()*0.5)+')';
-      fCtx.fillRect(sx,sy,1,1);
-    }
-  }
-
-  altarPulse=Math.sin(t*0.05)*0.5+0.5;
-
-  if(phaseIdx===0&&t>phaseTime[0]){phaseIdx=1}
-  if(phaseIdx===1&&t>phaseTime[1]){phaseIdx=2}
-  if(phaseIdx===2&&t>phaseTime[2]){phaseIdx=3}
-  if(phaseIdx===3&&t>phaseTime[3]){phaseIdx=4}
-
-  var dX=darkX,lX=lightX;
-  var mergeAlpha=0,rushProgress=0;
-
-  if(phaseIdx>=1){
-    // Charge particles
-    if(t%3===0){
-      darkParticles.push(mkParticle(darkX,centerY,'#9b5de5',Math.random()*2-1,-Math.random()*3-1));
-      lightParticles.push(mkParticle(lightX,centerY,'#ffd60a',Math.random()*2-1,-Math.random()*3-1));
-    }
-  }
-  if(phaseIdx>=2){
-    rushProgress=Math.min(1,(t-phaseTime[1])/(phaseTime[2]-phaseTime[1]));
-    dX=darkX+(centerX-darkX)*rushProgress;
-    lX=lightX+(centerX-lightX)*rushProgress;
-  }
-  if(phaseIdx===3){
-    var collisionProgress=(t-phaseTime[2])/(phaseTime[3]-phaseTime[2]);
-    var ballRadius=collisionProgress*120;
-    var ballAlpha=1-collisionProgress*0.8;
-    drawEnergyBall(fCtx,centerX,centerY,ballRadius,ballAlpha);
-    if(t%2===0){
-      for(var k=0;k<5;k++){
-        var ba2=Math.random()*Math.PI*2;
-        mergedParticles.push(mkParticle(centerX,centerY,
-          Math.random()>0.5?'#9b5de5':'#ffd60a',
-          Math.cos(ba2)*4,Math.sin(ba2)*4));
+  function draw(){
+    ctx.fillStyle='rgba(0,5,20,0.18)';ctx.fillRect(0,0,W,H);
+    for(var i=0;i<cols;i++){
+      var x=i*FS,headY=drops[i];
+      for(var j=0;j<lens[i];j++){
+        var cy=headY-j*FS;if(cy<-FS||cy>H+FS)continue;
+        var fade=Math.pow(1-j/lens[i],1.4);
+        ctx.save();
+        if(j===0){ctx.shadowColor='#00eeff';ctx.shadowBlur=14;ctx.fillStyle='rgba(200,240,255,'+bright[i]+')';ctx.font='bold '+FS+'px monospace';}
+        else if(j<3){ctx.shadowBlur=6;ctx.fillStyle='rgba(80,160,255,'+(fade*bright[i])+')';ctx.font='bold '+FS+'px monospace';}
+        else{ctx.shadowBlur=0;ctx.fillStyle='rgba(0,60,180,'+(fade*bright[i]*0.7)+')';ctx.font=FS+'px monospace';}
+        ctx.fillText(rch(),x,cy);ctx.restore();
       }
+      drops[i]+=speeds[i]*0.4;
+      if(drops[i]-lens[i]*FS>H){drops[i]=Math.random()*-100;speeds[i]=FS*(0.3+Math.random()*0.8);lens[i]=10+Math.floor(Math.random()*25);bright[i]=0.4+Math.random()*0.4;}
     }
+    requestAnimationFrame(draw);
   }
-  if(phaseIdx>=4){
-    mergeAlpha=Math.min(1,(t-phaseTime[3])/60);
-    angelScale=Math.min(1,(t-phaseTime[3])/80);
-  }
+  window.addEventListener('resize',resize);resize();requestAnimationFrame(draw);
+})();
 
-  // Update & draw particles
-  [darkParticles,lightParticles,mergedParticles].forEach(function(arr){
-    for(var i=arr.length-1;i>=0;i--){
-      var p=arr[i];p.x+=p.vx;p.y+=p.vy;p.life-=0.02;
-      if(p.life<=0){arr.splice(i,1);continue;}
-      fCtx.beginPath();fCtx.arc(p.x,p.y,p.size,0,Math.PI*2);
-      fCtx.fillStyle=p.color;fCtx.globalAlpha=p.life*0.8;fCtx.fill();
-      fCtx.globalAlpha=1;
-    }
-  });
-
-  // Draw angels
-  if(phaseIdx<=2){
-    drawAngel(fCtx,dX,centerY,1,0.9,'#9b5de5','#c77dff',false);
-    drawAngel(fCtx,lX,centerY,1,0.9,'#ffd60a','#00b4d8',false);
-  }
-
-  // Merged angel + altar
-  if(phaseIdx>=4&&mergeAlpha>0){
-    var floatY=centerY-10+Math.sin(t*0.04)*8;
-    drawAltar(fCtx,centerX,H*0.72,altarPulse);
-    // Energy beam from angel to altar
-    fCtx.beginPath();fCtx.moveTo(centerX,floatY+45);fCtx.lineTo(centerX,H*0.72-20);
-    fCtx.strokeStyle='rgba(155,93,229,0.3)';fCtx.lineWidth=6;fCtx.stroke();
-    drawAngel(fCtx,centerX,floatY,angelScale,mergeAlpha,'#9b5de5','#ffd60a',true);
-
-    // Text
-    document.getElementById('fusionText').style.opacity=mergeAlpha;
-    if(t>phaseTime[3]+80)document.getElementById('fusionTitle').style.opacity=mergeAlpha;
-  }
-
-  if(t<phaseTime[4]+120){
-    requestAnimationFrame(fusionLoop);
-  } else {
-    completeFusion();
-  }
-}
-
-function completeFusion(){
-  fusionDone=true;
-  var overlay=document.getElementById('fusion');
-  overlay.style.transition='opacity 1.5s';
-  overlay.style.opacity='0';
+// ── BOOT ──────────────────────────────────────────────────────────────────
+var bootDone=false;
+function completeBoot(){
+  if(bootDone)return;bootDone=true;
+  var el=document.getElementById('boot');
+  el.style.transition='opacity 1.5s';el.style.opacity='0';
   setTimeout(function(){
-    overlay.style.display='none';
-    var app=document.getElementById('app');
-    app.style.display='flex';
-    startStageLoop();
-    if(!config.apiKey){openSettings();}else{sendGreeting();}
+    el.style.display='none';
+    document.getElementById('cockpit').style.display='flex';
+    sendGreeting();
+    animateBars();
   },1500);
 }
+(function(){
+  setTimeout(function(){document.getElementById('bootTitle').style.opacity=1;},300);
+  setTimeout(function(){document.getElementById('bootSub').style.opacity=1;},800);
+  setTimeout(function(){
+    var bar=document.getElementById('bootBar');
+    bar.style.opacity=1;
+    setTimeout(function(){document.getElementById('bootBarFill').style.width='100%';},100);
+  },1200);
+  setTimeout(completeBoot,10000);
+})();
 
-// ── STAGE (persistent angel after fusion) ──────────────────────────────────
-var sCanvas=document.getElementById('stageCanvas');
-var sCtx=sCanvas.getContext('2d');
-var sT=0;
-
-function resizeStage(){sCanvas.width=sCanvas.offsetWidth;sCanvas.height=sCanvas.offsetHeight;}
-window.addEventListener('resize',resizeStage);
-
-function startStageLoop(){
-  resizeStage();
-  function loop(){
-    sT++;
-    var sw=sCanvas.width,sh=sCanvas.height;
-    sCtx.clearRect(0,0,sw,sh);
-    var cx=sw/2,cy=sh*0.38;
-    // Stars
-    if(sT<5){
-      for(var i=0;i<80;i++){sCtx.fillStyle='rgba(255,255,255,0.4)';sCtx.fillRect(Math.random()*sw,Math.random()*sh,1,1);}
-    }
-    var ap=Math.sin(sT*0.04)*0.5+0.5;
-    drawAltar(sCtx,cx,sh*0.78,ap);
-    var floatY=cy+Math.sin(sT*0.04)*5;
-    // Beam
-    sCtx.beginPath();sCtx.moveTo(cx,floatY+32);sCtx.lineTo(cx,sh*0.78-15);
-    sCtx.strokeStyle='rgba(155,93,229,0.25)';sCtx.lineWidth=4;sCtx.stroke();
-    drawAngel(sCtx,cx,floatY,0.65,0.95,'#9b5de5','#ffd60a',true);
-    requestAnimationFrame(loop);
-  }
-  loop();
+// ── SYSTEM BARS ANIMATION ────────────────────────────────────────────────
+function animateBars(){
+  setInterval(function(){
+    var vals=[Math.floor(65+Math.random()*30),Math.floor(80+Math.random()*18),Math.floor(50+Math.random()*45)];
+    ['bar1','bar2','bar3'].forEach(function(id,i){
+      var el=document.getElementById(id);if(el){el.style.width=vals[i]+'%';}
+    });
+  },2000);
 }
 
-// Load voices then start
-window.speechSynthesis.onvoiceschanged=function(){};
-setTimeout(function(){fusionLoop();},300);
+// ── SPEECH ────────────────────────────────────────────────────────────────
+var cachedVoice=null,userInteracted=false,pendingSpeech=null,msgStore={},msgCounter=0;
+function getVoice(){if(cachedVoice)return cachedVoice;var voices=speechSynthesis.getVoices();var v=voices.find(function(x){return x.name.includes('Zira');})||voices.find(function(x){return x.name.includes('Samantha');})||null;if(v)cachedVoice=v;return v;}
+if(window.speechSynthesis){speechSynthesis.getVoices();speechSynthesis.onvoiceschanged=function(){getVoice();};}
+function onInteract(){if(userInteracted)return;userInteracted=true;if(pendingSpeech){speak(pendingSpeech);pendingSpeech=null;}}
+document.addEventListener('click',onInteract,{once:true});
+function speak(text){
+  if(!window.speechSynthesis)return;
+  if(!userInteracted){pendingSpeech=text;return;}
+  speechSynthesis.cancel();
+  var chunks=text.match(/[^.!?]{1,180}[.!?]*/g)||[text];
+  var voice=getVoice();
+  function sc(i){if(i>=chunks.length)return;var u=new SpeechSynthesisUtterance(chunks[i]);u.rate=0.9;u.pitch=1.15;if(voice)u.voice=voice;u.onend=function(){sc(i+1);};speechSynthesis.speak(u);}
+  sc(0);
+}
+function replayMsg(btn,mid){speechSynthesis.cancel();speak(msgStore[mid]||'');}
+
+// ── CHAT ──────────────────────────────────────────────────────────────────
+var chatHistory=[],busy=false;
+function addMsg(role,text){
+  var mid='m'+(msgCounter++);
+  var d=document.createElement('div');d.className='msg '+(role==='ai'?'ai':'user');
+  if(role==='ai'){msgStore[mid]=text;d.innerHTML='<div class="mlabel">KHAIOS</div><div class="mbubble"><span class="mtext">'+text+'</span><button class="playbtn" onclick="replayMsg(this,\''+mid+'\')">&#9654;</button></div>';}
+  else{d.innerHTML='<div class="mlabel">COMMANDER</div><div class="mbubble">'+text+'</div>';}
+  document.getElementById('chat').appendChild(d);d.scrollIntoView({behavior:'smooth'});
+}
+function addThinking(){var d=document.createElement('div');d.className='thinking';d.innerHTML='KHAIOS <span class="tdots"><span>.</span><span>.</span><span>.</span></span>';document.getElementById('chat').appendChild(d);d.scrollIntoView({behavior:'smooth'});return d;}
+async function callAPI(messages){
+  var res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:messages})});
+  var data=await res.json();
+  document.getElementById('providerBadge').textContent=(data.provider||'AI').toUpperCase();
+  return data.content;
+}
+async function sendMsg(text){
+  if(busy||!text.trim())return;busy=true;
+  document.getElementById('sbtn').disabled=true;
+  addMsg('user',text);
+  var thinking=addThinking();
+  chatHistory.push({role:'user',content:text});
+  try{
+    var response=await callAPI([{role:'system',content:SYSTEM}].concat(chatHistory));
+    chatHistory.push({role:'assistant',content:response});
+    thinking.remove();addMsg('ai',response);speak(response);
+  }catch(e){thinking.remove();addMsg('ai','Systems recalibrating, Commander.');}
+  busy=false;document.getElementById('sbtn').disabled=false;
+}
+function sendGreeting(){addMsg('ai','Systems online, Commander. A.I.O.S. Multitool ready.');}
+
+document.getElementById('sbtn').addEventListener('click',function(){var f=document.getElementById('ifield');sendMsg(f.value.trim());f.value='';f.style.height='';});
+document.getElementById('ifield').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();var f=document.getElementById('ifield');sendMsg(f.value.trim());f.value='';f.style.height='';}});
+document.getElementById('ifield').addEventListener('input',function(){this.style.height='';this.style.height=Math.min(this.scrollHeight,70)+'px';});
+
+// ── APP WINDOWS ────────────────────────────────────────────────────────────
+function openApp(name){document.getElementById('fw-'+name).classList.add('active');}
+function closeApp(name){document.getElementById('fw-'+name).classList.remove('active');}
+
+// ── DRAG WINDOWS ──────────────────────────────────────────────────────────
+var drag={el:null,ox:0,oy:0,sx:0,sy:0};
+function dragStart(e,id){
+  drag.el=document.getElementById(id);
+  var r=drag.el.getBoundingClientRect();
+  drag.ox=e.clientX-r.left;drag.oy=e.clientY-r.top;
+  document.onmousemove=function(e2){
+    if(!drag.el)return;
+    drag.el.style.left=(e2.clientX-drag.ox)+'px';
+    drag.el.style.top=(e2.clientY-drag.oy)+'px';
+  };
+  document.onmouseup=function(){drag.el=null;document.onmousemove=null;document.onmouseup=null;};
+}
+
+// ── CALCULATOR ────────────────────────────────────────────────────────────
+var calcStr='',calcPrev='',calcOp='',calcNew=true;
+function calcInput(v){
+  var d=document.getElementById('calcDisplay');
+  if(v==='C'){calcStr='0';calcPrev='';calcOp='';calcNew=true;d.textContent='0';return;}
+  if(v==='='){ try{var r=eval(calcPrev+calcOp+calcStr);d.textContent=parseFloat(r.toFixed(10));calcStr=String(r);calcPrev='';calcOp='';}catch(e){d.textContent='ERR';}calcNew=true;return;}
+  if(['+','-','*','/'].includes(v)){calcPrev=calcStr;calcOp=v;calcNew=true;return;}
+  if(v==='%'){try{d.textContent=parseFloat((eval(calcStr)/100).toFixed(10));}catch(e){}return;}
+  if(v==='+/-'){calcStr=String(-parseFloat(calcStr)||0);d.textContent=calcStr;return;}
+  if(calcNew){calcStr='';calcNew=false;}
+  if(v==='.'&&calcStr.includes('.'))return;
+  calcStr+=v;d.textContent=calcStr;
+}
+
+// ── EMULATOR ──────────────────────────────────────────────────────────────
+function loadEmu(url){document.getElementById('emuFrame').src=url;}
+document.getElementById('romFile').addEventListener('change',function(e){
+  var file=e.target.files[0];if(!file)return;
+  var url=URL.createObjectURL(file);
+  document.getElementById('emuFrame').src='https://js.emularity.com/embed.html?rom='+url;
+});
+
+// ── BROWSER ───────────────────────────────────────────────────────────────
+function loadBrowser(){
+  var url=document.getElementById('browserUrl').value;
+  if(!url.startsWith('http'))url='https://'+url;
+  document.getElementById('browserFrame').src=url;
+}
 </script>
 </body>
 </html>
