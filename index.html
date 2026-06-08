@@ -68,12 +68,13 @@ html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-fami
 
 /* RIGHT - APPS */
 .apps-panel{width:45%;display:flex;flex-direction:column;background:rgba(0,3,14,0.88);}
-.apps-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#0a1a33;flex-shrink:0;}
-.app-btn{background:rgba(0,5,20,0.95);padding:14px 8px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;border:none;color:#cce4ff;transition:background .2s;border-bottom:1px solid #0a1a33;}
-.app-btn:hover{background:rgba(0,20,80,0.7);}
-.app-icon{font-size:22px;}
-.app-name{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;color:#4488cc;}
-.app-desc{font-size:9px;color:#224466;font-family:'Share Tech Mono',monospace;}
+.apps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;background:#020810;padding:4px;flex-shrink:0;}
+.app-btn{background:rgba(0,8,25,0.95);padding:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;cursor:pointer;border:1px solid #0a1a33;color:#cce4ff;transition:all .2s;position:relative;overflow:hidden;height:90px;border-radius:2px;}
+.app-btn:hover{border-color:#1a4488;box-shadow:0 0 12px rgba(0,80,255,0.3);}
+.app-btn:hover .app-tile-bg{opacity:0.9;}
+.app-tile-bg{position:absolute;inset:0;opacity:0.7;transition:opacity .2s;}
+.app-icon{font-size:26px;position:relative;z-index:1;margin-bottom:2px;}
+.app-name{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:2px;color:#88bbdd;position:relative;z-index:1;padding:4px 4px;width:100%;text-align:center;background:rgba(0,0,0,0.5);}
 .cockpit-display{flex:1;position:relative;overflow:hidden;border-top:1px solid #0a1a33;}
 .cockpit-display canvas{position:absolute;top:0;left:0;width:100%;height:100%;}
 /* System readouts */
@@ -175,24 +176,34 @@ html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-fami
       <div class="panel-header">◈ SYSTEM MODULES</div>
       <div class="apps-grid">
         <button class="app-btn" onclick="openApp('emulator')">
+          <div class="app-tile-bg" style="background:linear-gradient(135deg,#0a0a2e,#0d1b4b);"></div>
           <div class="app-icon">🕹</div>
           <div class="app-name">EMULATOR</div>
-          <div class="app-desc">GAME SYS</div>
         </button>
         <button class="app-btn" onclick="openApp('calculator')">
+          <div class="app-tile-bg" style="background:linear-gradient(135deg,#0a1a2e,#0d2b4b);"></div>
           <div class="app-icon">🔢</div>
           <div class="app-name">CALCULATOR</div>
-          <div class="app-desc">COMPUTE</div>
         </button>
         <button class="app-btn" onclick="openApp('notes')">
+          <div class="app-tile-bg" style="background:linear-gradient(135deg,#0a2a1e,#0d3b2b);"></div>
           <div class="app-icon">📋</div>
           <div class="app-name">NOTES</div>
-          <div class="app-desc">LOG ENTRY</div>
         </button>
         <button class="app-btn" onclick="openApp('browser')">
+          <div class="app-tile-bg" style="background:linear-gradient(135deg,#1a0a2e,#2b0d4b);"></div>
           <div class="app-icon">🌐</div>
           <div class="app-name">BROWSER</div>
-          <div class="app-desc">NET ACCESS</div>
+        </button>
+        <button class="app-btn" onclick="openApp('weather')">
+          <div class="app-tile-bg" style="background:linear-gradient(135deg,#0a1a3e,#0d2a5b);"></div>
+          <div class="app-icon">⛅</div>
+          <div class="app-name">WEATHER</div>
+        </button>
+        <button class="app-btn" onclick="openApp('maps')">
+          <div class="app-tile-bg" style="background:linear-gradient(135deg,#1a2a0a,#2b3b0d);"></div>
+          <div class="app-icon">🗺</div>
+          <div class="app-name">MAPS</div>
         </button>
       </div>
 
@@ -293,6 +304,26 @@ html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-fami
       <button onclick="loadBrowser()" class="sbtn" style="width:50px;font-size:9px;font-family:'Share Tech Mono',monospace;">GO</button>
     </div>
     <iframe id="browserFrame" style="flex:1;border:1px solid #0a1a33;background:#000;width:100%;" src="about:blank"></iframe>
+  </div>
+</div>
+
+<div class="fwindow" id="fw-weather" style="left:200px;top:100px;width:340px;height:300px;">
+  <div class="fw-title" onmousedown="dragStart(event,'fw-weather')">
+    <span class="fw-name">◈ WEATHER INTEL</span>
+    <button class="fw-close" onclick="closeApp('weather')">✕</button>
+  </div>
+  <div class="fw-body" style="padding:0;">
+    <iframe src="https://forecast.weather.gov/MapClick.php?CityName=New+Orleans&state=LA&site=LIX&textField1=29.9511&textField2=-90.0715&unit=0&lg=english&&FcstType=text&menu=1" style="width:100%;height:100%;border:none;filter:invert(1) hue-rotate(180deg);"></iframe>
+  </div>
+</div>
+
+<div class="fwindow" id="fw-maps" style="left:200px;top:100px;width:500px;height:400px;">
+  <div class="fw-title" onmousedown="dragStart(event,'fw-maps')">
+    <span class="fw-name">◈ NAV MAPS</span>
+    <button class="fw-close" onclick="closeApp('maps')">✕</button>
+  </div>
+  <div class="fw-body" style="padding:0;">
+    <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=-90.1,29.9,-89.9,30.1&layer=mapnik" style="width:100%;height:100%;border:none;filter:invert(1) hue-rotate(180deg);"></iframe>
   </div>
 </div>
 
