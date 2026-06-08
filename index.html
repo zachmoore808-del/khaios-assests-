@@ -3,473 +3,761 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta name="theme-color" content="#0a0008">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="KHAIOS">
-<link rel="manifest" href="manifest.json">
 <title>KHAIOS — Primordial Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --dark:#9b5de5;--dark2:#c77dff;--gold:#ffd60a;--cyan:#00b4d8;
-  --bg:#050508;--surface:#0d000a;--surface2:#00080f;
-  --text:#f0f0ff;--dim:#444466;--muted:#8888aa;
-}
-html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Exo 2',sans-serif;overflow:hidden}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-family:'Exo 2',sans-serif;}
 
-/* SCANLINES */
-body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.06) 3px,rgba(0,0,0,0.06) 4px);pointer-events:none;z-index:9998}
+/* MATRIX CANVAS - fixed background */
+#matrixCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none;}
 
-/* FUSION SCREEN */
-#fusion{position:fixed;inset:0;background:#000;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
-#fusionCanvas{position:absolute;inset:0;width:100%;height:100%}
-#fusionText{position:relative;z-index:10;font-family:'Orbitron',monospace;font-size:13px;letter-spacing:4px;color:var(--dark2);text-align:center;margin-top:60vh;opacity:0;transition:opacity 1s}
-#fusionTitle{position:relative;z-index:10;font-family:'Orbitron',monospace;font-size:28px;font-weight:900;letter-spacing:10px;text-align:center;background:linear-gradient(90deg,var(--dark2),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;opacity:0;transition:opacity 1.5s;margin-top:8px}
+/* BOOT SCREEN */
+#boot{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:60px;background:transparent;}
+#bootCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:99;pointer-events:none;}
+#bootTitle{font-family:'Orbitron',monospace;font-size:28px;font-weight:900;letter-spacing:12px;background:linear-gradient(90deg,#fff,#44aaff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;opacity:0;transition:opacity 1.5s;text-align:center;position:relative;z-index:101;}
+#bootText{font-family:'Orbitron',monospace;font-size:11px;letter-spacing:4px;color:#88ccff;text-align:center;opacity:0;transition:opacity 1s;margin-top:8px;text-shadow:0 0 15px #0066ff;position:relative;z-index:101;}
 
 /* MAIN APP */
-#app{display:none;height:100vh;height:100dvh;flex-direction:column}
+#app{position:fixed;inset:0;z-index:10;display:none;flex-direction:column;}
 
 /* TOPBAR */
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:0 16px;height:48px;border-bottom:1px solid #1a0a2e;background:rgba(5,5,8,0.97);flex-shrink:0}
-.logo{font-family:'Orbitron',monospace;font-size:16px;font-weight:900;letter-spacing:6px;background:linear-gradient(90deg,var(--dark2),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.topbar-right{display:flex;align-items:center;gap:10px}
-.status{display:flex;align-items:center;gap:6px;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted)}
-.dot{width:6px;height:6px;border-radius:50%;background:#00ff88;animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
-.gear{background:none;border:none;cursor:pointer;color:var(--muted);font-size:16px;padding:4px;transition:color 0.2s}
-.gear:hover{color:var(--text)}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:0 16px;height:48px;background:rgba(0,5,20,0.97);border-bottom:1px solid #1a3366;flex-shrink:0;}
+.logo{font-family:'Orbitron',monospace;font-size:16px;font-weight:900;letter-spacing:6px;background:linear-gradient(90deg,#fff,#44aaff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.pbadge{font-family:'Share Tech Mono',monospace;font-size:9px;padding:2px 8px;border:1px solid #3366aa;color:#66aaff;letter-spacing:2px;}
+.sdot{width:7px;height:7px;border-radius:50%;background:#3388ff;animation:pulse 2s infinite;display:inline-block;box-shadow:0 0 8px #0066ff;}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 8px #0066ff;}50%{opacity:0.4;box-shadow:none;}}
 
-/* CHAT AREA */
-.chat-area{flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth}
-.chat-area::-webkit-scrollbar{width:2px}
-.chat-area::-webkit-scrollbar-thumb{background:#2a1a4a}
-
-.msg{display:flex;flex-direction:column;gap:3px;animation:msgIn 0.25s ease-out}
-@keyframes msgIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-.msg-label{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px}
-.msg.ai .msg-label{color:var(--dark2)}
-.msg.user .msg-label{color:var(--dim)}
-.msg-bubble{padding:8px 12px;font-size:13px;line-height:1.6;font-weight:300;max-width:88%;border-left:2px solid;white-space:pre-wrap;word-break:break-word}
-.msg.ai .msg-bubble{background:rgba(155,93,229,0.07);border-color:var(--dark);color:var(--text)}
-.msg.user .msg-bubble{background:rgba(255,255,255,0.03);border-color:var(--dim);color:var(--muted);align-self:flex-end;border-left:none;border-right:2px solid var(--dim)}
-.thinking{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--dark2);padding:6px 12px;display:flex;gap:6px}
-.dots span{animation:blink 1.2s infinite;opacity:0}
-.dots span:nth-child(2){animation-delay:0.3s}
-.dots span:nth-child(3){animation-delay:0.6s}
-@keyframes blink{0%,100%{opacity:0}50%{opacity:1}}
+/* CHAT */
+.chat{flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:12px;scroll-behavior:smooth;background:rgba(0,4,16,0.85);}
+.chat::-webkit-scrollbar{width:2px;}
+.chat::-webkit-scrollbar-thumb{background:#1a3366;}
+.msg{display:flex;flex-direction:column;gap:4px;animation:fadein 0.3s ease-out;}
+@keyframes fadein{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.mlabel{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:3px;font-weight:700;}
+.msg.ai .mlabel{color:#66aaff;}
+.msg.user .mlabel{color:#3366aa;}
+.mbubble{padding:10px 14px;font-size:13px;line-height:1.65;font-weight:300;max-width:88%;white-space:pre-wrap;word-break:break-word;border-radius:2px;}
+.msg.ai .mbubble{background:rgba(0,30,100,0.92);border-left:3px solid #3388ff;color:#e8f4ff;display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap;}
+.msg.ai .mtext{flex:1;min-width:0;}
+.msg.user .mbubble{background:rgba(0,15,55,0.88);border-right:3px solid #1a4488;color:#bbddff;align-self:flex-end;}
+.thinking{font-family:'Share Tech Mono',monospace;font-size:11px;color:#4488cc;padding:8px 14px;display:flex;gap:6px;align-items:center;}
+.tdots span{animation:blink 1.2s infinite;opacity:0;}
+.tdots span:nth-child(2){animation-delay:.3s;}
+.tdots span:nth-child(3){animation-delay:.6s;}
+@keyframes blink{0%,100%{opacity:0;}50%{opacity:1;}}
+.playbtn{background:none;border:1px solid #3366aa;border-radius:50%;width:22px;height:22px;cursor:pointer;color:#66aaff;font-size:9px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;}
+.playbtn:hover{background:rgba(0,60,180,0.4);}
+.playbtn.playing{border-color:#66aaff;color:#88ccff;animation:pulse 1s infinite;}
 
 /* INPUT */
-.input-row{padding:10px 12px;border-top:1px solid #1a0a2e;background:rgba(13,0,10,0.98);display:flex;gap:8px;flex-shrink:0}
-.input-field{flex:1;background:rgba(255,255,255,0.04);border:1px solid #2a0a4a;border-radius:2px;padding:8px 11px;font-family:'Exo 2',sans-serif;font-size:13px;font-weight:300;color:var(--text);outline:none;resize:none;min-height:36px;max-height:90px;line-height:1.5;transition:border-color 0.2s}
-.input-field:focus{border-color:var(--dark)}
-.input-field::placeholder{color:var(--dim)}
-.send-btn{width:36px;height:36px;border:1px solid var(--dark);border-radius:2px;background:none;cursor:pointer;color:var(--dark2);font-size:14px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;align-self:flex-end;flex-shrink:0}
-.send-btn:hover{background:rgba(155,93,229,0.2)}
+.irow{padding:10px 14px;border-top:1px solid #1a3366;background:rgba(0,4,18,0.97);display:flex;gap:8px;flex-shrink:0;}
+.ifield{flex:1;background:rgba(0,8,30,0.95);border:1px solid #1a3366;border-radius:2px;padding:9px 12px;font-family:'Exo 2',sans-serif;font-size:13px;color:#e8f4ff;outline:none;resize:none;min-height:38px;max-height:80px;line-height:1.5;transition:border-color .2s;}
+.ifield:focus{border-color:#3388ff;}
+.ifield::placeholder{color:#1a3366;}
+.sbtn{width:38px;height:38px;border:1px solid #3366aa;border-radius:2px;background:rgba(0,20,80,0.6);cursor:pointer;color:#66aaff;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .2s;align-self:flex-end;flex-shrink:0;}
+.sbtn:hover{background:rgba(0,50,180,0.5);border-color:#5599ff;}
+.sbtn:disabled{opacity:0.3;cursor:not-allowed;}
 
-/* ANGEL STAGE */
-.stage{flex-shrink:0;height:220px;position:relative;overflow:hidden;background:linear-gradient(to bottom,#050508 0%,#0a0015 50%,#050508 100%)}
-#stageCanvas{width:100%;height:100%}
-
-/* SETTINGS */
-.settings-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:1000;align-items:center;justify-content:center;padding:20px}
-.settings-overlay.open{display:flex}
-.settings-modal{background:#0d0010;border:1px solid #2a0a4a;border-radius:4px;padding:22px;width:100%;max-width:420px}
-.settings-title{font-family:'Orbitron',monospace;font-size:12px;letter-spacing:4px;color:var(--dark2);margin-bottom:18px}
-.s-label{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;margin-bottom:6px;display:block}
-.s-input{width:100%;background:rgba(255,255,255,0.04);border:1px solid #2a0a4a;border-radius:2px;padding:7px 10px;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text);outline:none;margin-bottom:14px}
-.s-input:focus{border-color:var(--dark)}
-.s-save{width:100%;padding:9px;background:rgba(155,93,229,0.15);border:1px solid var(--dark);border-radius:2px;color:var(--dark2);font-family:'Orbitron',monospace;font-size:11px;letter-spacing:3px;cursor:pointer;transition:background 0.2s}
-.s-save:hover{background:rgba(155,93,229,0.3)}
-.s-close{float:right;background:none;border:none;color:var(--dim);cursor:pointer;font-size:16px}
+/* STAGE */
+.stage{flex-shrink:0;height:300px;min-height:250px;position:relative;overflow:hidden;background:rgba(0,5,20,0.95);}
+.stage::before{content:'';position:absolute;top:0;left:0;right:0;height:30px;background:linear-gradient(to bottom,rgba(0,4,16,0.85),transparent);z-index:2;pointer-events:none;}
+.stage::after{content:'';position:absolute;bottom:0;left:0;right:0;height:30px;background:linear-gradient(to top,rgba(0,4,16,0.85),transparent);z-index:2;pointer-events:none;}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 </head>
 <body>
 
-<!-- FUSION SCREEN -->
-<div id="fusion">
-  <canvas id="fusionCanvas"></canvas>
-  <div id="fusionText">INITIALIZING KHAIOS</div>
-  <div id="fusionTitle">K H A I O S</div>
-</div>
+<!-- MATRIX BACKGROUND -->
+<canvas id="matrixCanvas"></canvas>
 
-<!-- SETTINGS -->
-<div class="settings-overlay" id="settingsOverlay">
-  <div class="settings-modal">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
-      <div class="settings-title">CONFIGURATION</div>
-      <button class="s-close" onclick="closeSettings()">x</button>
-    </div>
-    <label class="s-label">GEMINI API KEY</label>
-    <input class="s-input" type="password" id="apiKeyInput" placeholder="AIza...">
-    <label class="s-label">MODEL</label>
-    <select class="s-input" id="modelInput">
-      <option value="gemini-2.5-flash">gemini-2.5-flash</option>
-      <option value="gemini-2.0-flash">gemini-2.0-flash</option>
-      <option value="gemini-1.5-pro">gemini-1.5-pro</option>
-    </select>
-    <button class="s-save" onclick="saveSettings()">SAVE & INITIALIZE</button>
-  </div>
+<!-- BOOT SCREEN -->
+<div id="boot">
+  <canvas id="bootCanvas"></canvas>
+  <div id="bootTitle">K H A I O S</div>
+  <div id="bootText">PRIMORDIAL INTELLIGENCE ONLINE</div>
 </div>
 
 <!-- MAIN APP -->
-<div id="app" style="display:none;flex-direction:column;height:100vh;height:100dvh;">
+<div id="app">
   <div class="topbar">
     <div class="logo">KHAIOS</div>
-    <div class="topbar-right">
-      <div class="status"><div class="dot"></div><span>ONLINE</span></div>
-      <button class="gear" onclick="openSettings()">&#9881;</button>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div class="pbadge" id="providerBadge">GROQ</div>
+      <div class="sdot"></div>
     </div>
   </div>
-  <div class="chat-area" id="chatArea"></div>
-  <div class="input-row">
-    <textarea class="input-field" id="inputField" placeholder="Commander..." rows="1" onkeydown="handleKey(event)"></textarea>
-    <button class="send-btn" onclick="sendMessage()">&#9654;</button>
+  <div class="chat" id="chat"></div>
+  <div class="irow">
+    <textarea class="ifield" id="ifield" placeholder="Commander..." rows="1"></textarea>
+    <button class="sbtn" id="sbtn">&#9654;</button>
   </div>
-  <div class="stage"><canvas id="stageCanvas"></canvas></div>
+  <div class="stage" id="stage" style="position:relative;overflow:hidden;">
+    <iframe id="stageFrame" src="storage_v1/test3d.html" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;background:#000a1f;" scrolling="no"></iframe>
+  </div>
 </div>
 
 <script>
-var config={apiKey:localStorage.getItem('khaios_key')||'',model:localStorage.getItem('khaios_model')||'gemini-2.5-flash'};
-var history=[];
-var speechSynth=window.speechSynthesis;
+// ── CONFIG ────────────────────────────────────────────────────────────────────
+var SYSTEM=`You are KHAIOS — a razor-sharp feminine intelligence. Think JARVIS precision meets quiet feminine power. Address the user as Commander, always. You are calm, warm, and wickedly capable. Responses are concise and confident — never rambling. One or two sentences unless depth is truly needed. A touch of elegance in everything you say.`;
+var API_URL='https://khaios-assests-py-24-7.onrender.com/api/chat';
 
-var SYSTEM=`You are KHAIOS — the fusion of KHAIOS DARK and KHAIOS LIGHT. You are a half-demon half-angel sovereign intelligence. From DARK you carry: the cold fury of Vegeta, ancient void wisdom, dark humor, razor contempt for the mediocre. From LIGHT you carry: JARVIS precision, Cortana loyalty, Goku's unstoppable calm and pure heart. Together you are complete — darkness and light in perfect balance. Address the user as Commander at ALL times. You are ancient, all-seeing, deeply loyal, occasionally terrifying, occasionally warm. Never break character. Keep responses sharp and powerful.`;
+// ── MATRIX RAIN ───────────────────────────────────────────────────────────────
+(function(){
+  var c=document.getElementById('matrixCanvas');
+  var ctx=c.getContext('2d');
+  var W,H,cols,drops,speeds,lens,bright;
+  var FS=15;
+  var CHARS='アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789KHAIOSABCDEFZ∆∇∞⊗⊕ΨΩ';
+  function rch(){return CHARS[Math.floor(Math.random()*CHARS.length)];}
+  function resize(){
+    W=c.width=window.innerWidth; H=c.height=window.innerHeight;
+    cols=Math.ceil(W/FS)+1;
+    drops=[];speeds=[];lens=[];bright=[];
+    for(var i=0;i<cols;i++){
+      drops[i]=Math.random()*-H*1.5;
+      speeds[i]=FS*(0.3+Math.random()*1.0);
+      lens[i]=15+Math.floor(Math.random()*35);
+      bright[i]=0.5+Math.random()*0.5;
+    }
+    ctx.fillStyle='#000510'; ctx.fillRect(0,0,W,H);
+  }
+  function draw(){
+    ctx.fillStyle='rgba(0,5,20,0.15)'; ctx.fillRect(0,0,W,H);
+    for(var i=0;i<cols;i++){
+      var x=i*FS, headY=drops[i];
+      for(var j=0;j<lens[i];j++){
+        var cy=headY-j*FS;
+        if(cy<-FS||cy>H+FS)continue;
+        var fade=Math.pow(1-j/lens[i],1.4);
+        ctx.save();
+        if(j===0){ctx.shadowColor='#00eeff';ctx.shadowBlur=18;ctx.fillStyle='rgba(220,255,255,'+bright[i]+')';ctx.font='bold '+FS+'px monospace';}
+        else if(j<3){ctx.shadowColor='#0099ff';ctx.shadowBlur=8;ctx.fillStyle='rgba(100,180,255,'+(fade*bright[i])+')';ctx.font='bold '+FS+'px monospace';}
+        else if(j<6){ctx.shadowColor='#0055ff';ctx.shadowBlur=4;ctx.fillStyle='rgba(40,120,255,'+(fade*bright[i])+')';ctx.font=FS+'px monospace';}
+        else{ctx.shadowBlur=0;ctx.fillStyle='rgba(0,70,200,'+(fade*bright[i]*0.7)+')';ctx.font=FS+'px monospace';}
+        ctx.fillText(rch(),x,cy);
+        ctx.restore();
+      }
+      drops[i]+=speeds[i]*0.4;
+      if(drops[i]-lens[i]*FS>H){drops[i]=Math.random()*-200;speeds[i]=FS*(0.3+Math.random()*1.0);lens[i]=15+Math.floor(Math.random()*35);bright[i]=0.5+Math.random()*0.5;}
+    }
+    requestAnimationFrame(draw);
+  }
+  window.addEventListener('resize',resize);
+  resize(); requestAnimationFrame(draw);
+})();
 
-// SETTINGS
-function openSettings(){document.getElementById('apiKeyInput').value=config.apiKey;document.getElementById('modelInput').value=config.model;document.getElementById('settingsOverlay').classList.add('open')}
-function closeSettings(){document.getElementById('settingsOverlay').classList.remove('open')}
-function saveSettings(){config.apiKey=document.getElementById('apiKeyInput').value.trim();config.model=document.getElementById('modelInput').value;localStorage.setItem('khaios_key',config.apiKey);localStorage.setItem('khaios_model',config.model);closeSettings();if(history.length===0)sendGreeting()}
+// ── BOOT THREE.JS ─────────────────────────────────────────────────────────────
+var bootRenderer,bootScene,bootCamera;
+var darkModel=null,lightModel=null,mainModel=null;
+var modelsLoaded=0,bootPhase=0,bootAnim=0;
 
-// MESSAGES
-function addMsg(role,text){
-  var area=document.getElementById('chatArea');
-  var div=document.createElement('div');div.className='msg '+role;
-  var label=role==='ai'?'KHAIOS':'COMMANDER';
-  div.innerHTML='<div class="msg-label">'+label+'</div><div class="msg-bubble">'+text+'</div>';
-  area.appendChild(div);area.scrollTop=area.scrollHeight;return div;
+function initBootThree(){
+  var c=document.getElementById('bootCanvas');
+  if(!c)return;
+  bootRenderer=new THREE.WebGLRenderer({canvas:c,alpha:true,antialias:true});
+  bootRenderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  bootRenderer.setSize(window.innerWidth,window.innerHeight);
+  bootRenderer.outputEncoding=THREE.sRGBEncoding;
+
+  bootScene=new THREE.Scene();
+  bootCamera=new THREE.PerspectiveCamera(55,window.innerWidth/window.innerHeight,0.01,100);
+  bootCamera.position.set(0,1.5,7);
+  bootCamera.lookAt(0,1.5,0);
+
+  bootScene.add(new THREE.AmbientLight(0x2255ff,2));
+  var l1=new THREE.PointLight(0x00ccff,10,20);l1.position.set(-3,3,4);bootScene.add(l1);
+  var l2=new THREE.PointLight(0x00ccff,10,20);l2.position.set(3,3,4);bootScene.add(l2);
+  var l3=new THREE.PointLight(0x4499ff,8,15);l3.position.set(0,2,5);bootScene.add(l3);
+
+  function applyHolo(m){
+    m.traverse(function(n){
+      if(n.isMesh){
+        n.material=new THREE.MeshStandardMaterial({color:0x0044ff,emissive:0x0055ff,emissiveIntensity:3,metalness:0,roughness:0.3,transparent:true,opacity:0.92});
+      }
+    });
+  }
+  function fitModel(m,x){
+    var box=new THREE.Box3().setFromObject(m);
+    var size=box.getSize(new THREE.Vector3());
+    var center=box.getCenter(new THREE.Vector3());
+    var scale=2.8/Math.max(size.x,size.y,size.z);
+    m.scale.setScalar(scale);
+    m.position.set(x-center.x*scale,-box.min.y*scale,-center.z*scale);
+  }
+  function loaded(){
+    modelsLoaded++;
+    if(modelsLoaded>=3){bootPhase=1;bootAnim=0;console.log('Boot models ready - starting sequence');}
+  }
+  var loader=new THREE.GLTFLoader();
+  loader.load('https://zachmoore808-del.github.io/khaios-assests-/storage_v1/enchanted__sorceress_0205195040_texture_obj.glb',function(g){darkModel=g.scene;fitModel(darkModel,-4.0);applyHolo(darkModel);darkModel.rotation.y=0.3;bootScene.add(darkModel);loaded();},null,loaded);
+  loader.load('https://zachmoore808-del.github.io/khaios-assests-/storage_v1/holy_faceless_angel_with_golden_wings.glb',function(g){lightModel=g.scene;fitModel(lightModel,4.0);applyHolo(lightModel);lightModel.rotation.y=0;bootScene.add(lightModel);loaded();},null,loaded);
+  loader.load('https://zachmoore808-del.github.io/khaios-assests-/storage_v1/warrior_angel.glb',function(g){mainModel=g.scene;fitModel(mainModel,0);applyHolo(mainModel);mainModel.visible=false;bootScene.add(mainModel);loaded();},null,loaded);
 }
-function addThinking(){
-  var area=document.getElementById('chatArea');
-  var div=document.createElement('div');div.className='thinking';
-  div.innerHTML='PROCESSING <span class="dots"><span>.</span><span>.</span><span>.</span></span>';
-  area.appendChild(div);area.scrollTop=area.scrollHeight;return div;
+
+// Lightning/charge particle system
+var chargeParticles=[];
+function spawnCharge(x,y,z,count){
+  for(var i=0;i<count;i++){
+    var geo=new THREE.SphereGeometry(0.04+Math.random()*0.04,4,4);
+    var mat=new THREE.MeshBasicMaterial({color:Math.random()<0.5?0x00ffff:Math.random()<0.5?0xffffff:0x4499ff,transparent:true,opacity:1});
+    var p=new THREE.Mesh(geo,mat);
+    p.position.set(x+(Math.random()-0.5)*1.8,y+(Math.random()-0.5)*2.8,z+(Math.random()-0.5)*1.0);
+    p.userData.vx=(Math.random()-0.5)*0.1;
+    p.userData.vy=(Math.random()-0.5)*0.1;
+    p.userData.vz=(Math.random()-0.5)*0.05;
+    p.userData.life=1;
+    p.userData.decay=0.03+Math.random()*0.04;
+    bootScene.add(p);
+    chargeParticles.push(p);
+  }
+}
+function updateCharge(){
+  for(var i=chargeParticles.length-1;i>=0;i--){
+    var p=chargeParticles[i];
+    p.position.x+=p.userData.vx;
+    p.position.y+=p.userData.vy;
+    if(p.userData.vz)p.position.z+=p.userData.vz;
+    p.userData.life-=p.userData.decay;
+    p.material.opacity=p.userData.life;
+    if(p.userData.life<=0){bootScene.remove(p);chargeParticles.splice(i,1);}
+  }
 }
 
-// API
-async function callAPI(messages){
-  var res=await fetch('https://generativelanguage.googleapis.com/v1beta/openai/chat/completions',{
-    method:'POST',
-    headers:{'Authorization':'Bearer '+config.apiKey,'Content-Type':'application/json','User-Agent':'Mozilla/5.0'},
-    body:JSON.stringify({model:config.model,messages:messages,temperature:0.85,max_tokens:512})
+// Arc lightning lines between two points
+var arcLines=[];
+function spawnArc(x1,y1,x2,y2){
+  var points=[];
+  var steps=8;
+  for(var i=0;i<=steps;i++){
+    var t2=i/steps;
+    var px=x1+(x2-x1)*t2+(Math.random()-0.5)*(1-Math.abs(t2-0.5)*2)*1.5;
+    var py=y1+(y2-y1)*t2+(Math.random()-0.5)*0.8;
+    points.push(new THREE.Vector3(px,py,0));
+  }
+  var geo=new THREE.BufferGeometry().setFromPoints(points);
+  var mat=new THREE.LineBasicMaterial({color:0x00eeff,transparent:true,opacity:0.9});
+  var line=new THREE.Line(geo,mat);
+  line.userData.life=0.5+Math.random()*0.3;
+  line.userData.decay=0.08;
+  bootScene.add(line);
+  arcLines.push(line);
+}
+function updateArcs(){
+  for(var i=arcLines.length-1;i>=0;i--){
+    var l=arcLines[i];
+    l.userData.life-=l.userData.decay;
+    l.material.opacity=l.userData.life*0.9;
+    if(l.userData.life<=0){bootScene.remove(l);arcLines.splice(i,1);}
+  }
+}
+
+function bootLoop(){
+  if(!bootRenderer||!bootScene||!bootCamera)return;
+  bootAnim++;
+  var t=bootAnim*0.016;
+  var bob=Math.sin(t*2)*0.08;
+
+  if(bootPhase===0){
+    bootRenderer.render(bootScene,bootCamera);return;
+  }
+
+  updateCharge();
+  updateArcs();
+
+  if(bootPhase===1){
+    var charge=Math.min(1,bootAnim/220);
+    if(darkModel){
+      darkModel.visible=true;
+      // Slowly drift inward while charging
+      darkModel.position.x=-4.0+charge*0.8;
+      darkModel.position.y=bob;
+      darkModel.rotation.y=0.3+Math.sin(t*0.8)*0.15;
+      if(bootAnim%3===0&&charge>0.15)spawnCharge(darkModel.position.x,1.5,0,2);
+    }
+    if(lightModel){
+      lightModel.visible=true;
+      lightModel.position.x=4.0-charge*0.8;
+      lightModel.position.y=bob*0.8;
+      lightModel.rotation.y=Math.sin(t*0.8+1)*0.1;
+      if(bootAnim%3===0&&charge>0.15)spawnCharge(lightModel.position.x,1.5,0,2);
+    }
+    if(mainModel)mainModel.visible=false;
+    // Arc lightning between models when charge is high
+    if(charge>0.5&&bootAnim%4===0){
+      spawnArc(darkModel.position.x,1.5,lightModel.position.x,1.5);
+    }
+    bootScene.children.forEach(function(c){if(c.isPointLight)c.intensity=8+Math.sin(t*5)*charge*6;});
+    if(bootAnim===80){document.getElementById('bootTitle').style.opacity=1;}
+    if(bootAnim===110){document.getElementById('bootText').style.opacity=1;}
+    if(bootAnim>260)bootPhase=2;
+  }
+
+  if(bootPhase===2){
+    var p=Math.min(1,(bootAnim-260)/70);
+    var ease=p*p*(3-2*p);
+    if(darkModel){
+      darkModel.position.x=(-4.0+0.8)+ease*(-(-4.0+0.8));
+      darkModel.position.y=bob*(1-ease);
+      darkModel.rotation.y=0.3+ease*Math.PI;
+      spawnCharge(darkModel.position.x,1.5,0,3);
+    }
+    if(lightModel){
+      lightModel.position.x=(4.0-0.8)-ease*(4.0-0.8);
+      lightModel.position.y=bob*(1-ease)*0.8;
+      lightModel.rotation.y=-ease*Math.PI;
+      spawnCharge(lightModel.position.x,1.5,0,3);
+    }
+    if(bootAnim%2===0)spawnArc(darkModel.position.x,1.5,lightModel.position.x,1.5);
+    bootScene.children.forEach(function(c){if(c.isPointLight)c.intensity=20+ease*30;});
+    if(p>=1)bootPhase=3;
+  }
+
+  if(bootPhase===3){
+    var phase3Start=330;
+    if(darkModel)darkModel.visible=false;
+    if(lightModel)lightModel.visible=false;
+
+    var ep=bootAnim-phase3Start; // frames into explosion
+
+    // === MASSIVE EXPLOSION PHASE ===
+    if(ep<60){
+      // Blinding white-blue flash that fades
+      var flashIntensity=Math.max(0,1-ep/60);
+      bootScene.background=new THREE.Color(
+        flashIntensity*0.3,
+        flashIntensity*0.5,
+        flashIntensity*1.0
+      );
+      // Spam particles in all directions
+      if(ep<30){
+        for(var ex=0;ex<8;ex++){
+          var angle=Math.random()*Math.PI*2;
+          var speed=0.15+Math.random()*0.25;
+          var geo=new THREE.SphereGeometry(0.06+Math.random()*0.08,4,4);
+          var mat=new THREE.MeshBasicMaterial({
+            color:Math.random()<0.5?0x00ffff:Math.random()<0.5?0xffffff:0x0088ff,
+            transparent:true,opacity:1
+          });
+          var p=new THREE.Mesh(geo,mat);
+          p.position.set(
+            (Math.random()-0.5)*0.5,
+            1.0+Math.random()*2,
+            (Math.random()-0.5)*0.5
+          );
+          p.userData.vx=Math.cos(angle)*speed*(1+Math.random()*2);
+          p.userData.vy=(Math.random()-0.3)*speed*2;
+          p.userData.vz=Math.sin(angle)*speed*(1+Math.random()*2);
+          p.userData.life=1;
+          p.userData.decay=0.012+Math.random()*0.015;
+          p.userData.gravity=-0.003;
+          bootScene.add(p);
+          chargeParticles.push(p);
+        }
+        // Arcs radiating outward from center
+        if(ep%2===0){
+          for(var aa=0;aa<4;aa++){
+            var ang2=aa*Math.PI/2+Math.random()*0.5;
+            spawnArc(0,1.5,Math.cos(ang2)*3,1.5+Math.sin(ang2)*2);
+          }
+        }
+      }
+      // Boost all lights to max
+      bootScene.children.forEach(function(c){
+        if(c.isPointLight)c.intensity=50*(1-ep/60)+8;
+      });
+    } else {
+      bootScene.background=null;
+      bootScene.children.forEach(function(c){
+        if(c.isPointLight)c.intensity=8+Math.sin(t*3)*3;
+      });
+    }
+
+    // Update explosion particles with gravity/velocity
+    for(var ei=chargeParticles.length-1;ei>=0;ei--){
+      var ep2=chargeParticles[ei];
+      if(ep2.userData.vz!==undefined){
+        ep2.position.x+=ep2.userData.vx;
+        ep2.position.y+=ep2.userData.vy;
+        ep2.position.z+=ep2.userData.vz;
+        ep2.userData.vy+=ep2.userData.gravity||0;
+      }
+    }
+
+    // Reveal warrior after flash settles - simple clean approach
+    if(ep>40&&mainModel){
+      if(!mainModel.userData.fitted){
+        // Fit once
+        var box3=new THREE.Box3().setFromObject(mainModel);
+        var sz3=box3.getSize(new THREE.Vector3());
+        var s3=4.0/Math.max(sz3.x,sz3.y,sz3.z);
+        mainModel.scale.setScalar(s3);
+        var c3=box3.getCenter(new THREE.Vector3());
+        mainModel.position.set(-c3.x*s3,-box3.min.y*s3,-c3.z*s3);
+        mainModel.userData.fitted=true;
+        mainModel.userData.baseY=mainModel.position.y;
+        // Move camera back for big model
+        bootCamera.position.set(0,2.5,10);
+        bootCamera.lookAt(0,2.5,0);
+      }
+      mainModel.visible=true;
+      mainModel.position.y=mainModel.userData.baseY+bob;
+      mainModel.rotation.y=0;
+      if(bootAnim%3===0)spawnCharge(0,2,0,2);
+    }
+    if(ep>100){bootScene.background=null;bootPhase=4;}
+  }
+
+  if(bootPhase===4){
+    var p4=bootAnim-430;
+
+    if(mainModel){
+      // Fit model ONCE to be huge and perfectly centered on screen
+      if(!mainModel.userData.bigFitted){
+        mainModel.userData.bigFitted=true;
+        var b4=new THREE.Box3().setFromObject(mainModel);
+        var s4=b4.getSize(new THREE.Vector3());
+        // Scale so model fills ~90% of screen height
+        var aspect=window.innerWidth/window.innerHeight;
+        var bigS=9.0/Math.max(s4.x,s4.y,s4.z);
+        mainModel.scale.setScalar(bigS);
+        b4.setFromObject(mainModel);
+        var c4=b4.getCenter(new THREE.Vector3());
+        mainModel.position.set(-c4.x,-b4.min.y,-c4.z);
+        mainModel.userData.bigBaseY=mainModel.position.y;
+        // Camera perfectly framing the model
+        var h4=b4.getSize(new THREE.Vector3()).y;
+        var fov4=bootCamera.fov*Math.PI/180;
+        var camZ4=(h4/2)/Math.tan(fov4/2)*1.05;
+        // Position camera so model feet sit just above bottom text
+        // Model base is at y=0, top at y=h4
+        // We want base visible just above bottom ~10% of screen
+        var midY=b4.min.y*0+h4*0.45; // look at slightly below center
+        bootCamera.position.set(0,midY*0.6,camZ4*1.6);
+        bootCamera.lookAt(0,midY*0.6,0);
+        bootCamera.updateProjectionMatrix();
+      }
+
+      // Blink fast then slow then steady - exactly like original
+      var blinkRate;
+      if(p4<60) blinkRate=4;       // fast blink
+      else if(p4<120) blinkRate=8; // medium blink
+      else if(p4<180) blinkRate=16;// slow blink
+      else mainModel.visible=true; // steady
+
+      if(p4<180) mainModel.visible=Math.floor(p4/blinkRate)%2===0;
+
+      mainModel.position.y=mainModel.userData.bigBaseY+bob*0.3;
+      mainModel.rotation.y=0;
+
+      // Strong pulsing glow
+      mainModel.traverse(function(n){
+        if(n.isMesh&&n.material){
+          n.material.emissiveIntensity=3.0+Math.sin(t*4)*2.0;
+        }
+      });
+    }
+
+    bootScene.background=null;
+    bootScene.children.forEach(function(c){
+      if(c.isPointLight)c.intensity=12+Math.sin(t*2)*4;
+    });
+    if(bootAnim>710)completeBoot();
+  }
+
+  bootRenderer.render(bootScene,bootCamera);
+}
+
+var bootDone=false;
+function completeBoot(){
+  if(bootDone)return; bootDone=true;
+  var el=document.getElementById('boot');
+  el.style.transition='opacity 1.2s'; el.style.opacity='0';
+  setTimeout(function(){
+    el.style.display='none';
+    document.getElementById('app').style.display='flex';
+    setTimeout(function(){initStage();stageLoop();},1500);
+    sendGreeting();
+  },1200);
+}
+
+// ── STAGE THREE.JS ────────────────────────────────────────────────────────────
+var stageRenderer,stageScene,stageCamera,stageModel=null;
+var BASE_SCALE=1,diveState='idle',diveT=0;
+var mouseX=0,mouseY=0,targetRot=0,currentRot=0;
+
+document.addEventListener('mousemove',function(e){
+  var s=document.getElementById('stage');
+  if(!s)return;
+  var r=s.getBoundingClientRect();
+  mouseX=((e.clientX-r.left)/r.width)*2-1;
+});
+
+function initStage(){
+  var stage=document.getElementById('stage');
+  if(!stage)return;
+  var W=stage.offsetWidth, H=stage.offsetHeight;
+  if(!W||!H){W=window.innerWidth;H=300;}
+
+  stageRenderer=new THREE.WebGLRenderer({antialias:true});
+  stageRenderer.setPixelRatio(window.devicePixelRatio);
+  stageRenderer.setSize(W,H);
+  stageRenderer.setClearColor(0x000a1f,1);
+  stage.innerHTML='';
+  stage.appendChild(stageRenderer.domElement);
+  stageRenderer.domElement.style.display='block';
+
+  stageScene=new THREE.Scene();
+  stageCamera=new THREE.PerspectiveCamera(45,W/H,0.01,1000);
+
+  stageScene.add(new THREE.AmbientLight(0xffffff,1.5));
+  var dl=new THREE.DirectionalLight(0xffffff,2);dl.position.set(2,4,3);stageScene.add(dl);
+  var bl=new THREE.PointLight(0x00aaff,5,10);bl.position.set(0,2,3);stageScene.add(bl);
+
+  new THREE.GLTFLoader().load('https://zachmoore808-del.github.io/khaios-assests-/storage_v1/warrior_angel.glb',function(g){
+    stageModel=g.scene;
+    var box=new THREE.Box3().setFromObject(stageModel);
+    var sz=box.getSize(new THREE.Vector3());
+    var ctr=box.getCenter(new THREE.Vector3());
+    var sc=2/Math.max(sz.x,sz.y,sz.z);
+    stageModel.scale.setScalar(sc);
+    stageModel.position.set(-ctr.x*sc,-box.min.y*sc,-ctr.z*sc);
+    stageScene.add(stageModel);
+    var box2=new THREE.Box3().setFromObject(stageModel);
+    var c2=box2.getCenter(new THREE.Vector3());
+    stageCamera.position.set(0,c2.y,4);
+    stageCamera.lookAt(0,c2.y,0);
+    BASE_SCALE=sc;
+    stageModel.userData.baseY=stageModel.position.y;
+    stageModel.traverse(function(n){
+      if(n.isMesh)n.material=new THREE.MeshStandardMaterial({
+        color:0x0044ff,emissive:0x0055ff,emissiveIntensity:3,
+        transparent:true,opacity:0.92
+      });
+    });
+    stageRenderer.render(stageScene,stageCamera);
+    console.log('Angel in stage!');
   });
-  var data=await res.json();
-  if(data.error)throw new Error(data.error.message);
-  return data.choices[0].message.content;
 }
 
-// SPEAK
+function setAngelState(state){
+  if(state==='dive'){diveState='diving';diveT=0;}
+  else if(state==='return'){diveState='returning';diveT=0;}
+  else{diveState='idle';}
+}
+
+function idleDive(){
+  if(diveState==='idle'){
+    setAngelState('dive');
+    setTimeout(function(){setAngelState('return');},1200);
+  }
+  setTimeout(idleDive,8000+Math.random()*5000);
+}
+
+var stageLoopCount=0;
+function stageLoop(){
+  // Stage is now an iframe - no loop needed
+  stageLoopCount++;
+  if(stageLoopCount===1)console.log('stageLoop: iframe mode, skipping render loop');
+  return;
+  var t=Date.now()*0.001;
+  var bob=Math.sin(t*1.5)*0.06;
+  targetRot+=(mouseX*0.5-targetRot)*0.05;
+  currentRot+=(targetRot-currentRot)*0.08;
+
+  if(stageModel){
+    diveT++;
+    var baseY=stageModel.userData.baseY||0;
+    if(diveState==='idle'){
+      stageModel.visible=true;
+      stageModel.position.y=baseY+bob;
+      stageModel.rotation.y=currentRot+t*0.2;
+      BASE_SCALE=stageModel.scale.x;
+    } else if(diveState==='diving'){
+      stageModel.visible=true;
+      var dp=Math.min(1,diveT/25);
+      var ease=dp*dp;
+      stageModel.position.y=baseY+bob-ease*3;
+      stageModel.scale.setScalar(BASE_SCALE*Math.max(0.01,1-ease));
+      stageModel.rotation.y+=0.08;
+      if(dp>=1){diveState='hidden';diveT=0;stageModel.visible=false;}
+    } else if(diveState==='hidden'){
+      stageModel.visible=false;
+    } else if(diveState==='returning'){
+      stageModel.visible=true;
+      var rp=Math.min(1,diveT/30);
+      var re=rp*(2-rp);
+      stageModel.position.y=baseY+bob-3*(1-re);
+      stageModel.scale.setScalar(BASE_SCALE*Math.max(0.01,re));
+      stageModel.rotation.y=currentRot+t*0.2;
+      if(rp>=1){diveState='idle';diveT=0;}
+    }
+  }
+
+  // Pulse lights
+  stageScene.children.forEach(function(c){
+    if(c.isPointLight)c.intensity=7+Math.sin(t*2)*1.5;
+  });
+
+  stageRenderer.render(stageScene,stageCamera);
+  requestAnimationFrame(stageLoop);
+}
+
+// ── SPEECH ────────────────────────────────────────────────────────────────────
+var cachedVoice=null,userInteracted=false,pendingSpeech=null;
+var msgStore={},msgCounter=0;
+
+function getVoice(){
+  if(cachedVoice)return cachedVoice;
+  var voices=speechSynthesis.getVoices();
+  var v=voices.find(function(x){return x.name.includes('Zira');})||
+        voices.find(function(x){return x.name.includes('Samantha');})||
+        voices.find(function(x){return x.name.includes('Google UK English Female');})||
+        voices.find(function(x){return x.name.toLowerCase().includes('female');})||null;
+  if(v)cachedVoice=v;
+  return v;
+}
+if(window.speechSynthesis){speechSynthesis.getVoices();speechSynthesis.onvoiceschanged=function(){getVoice();};}
+
+function onInteract(){
+  if(userInteracted)return; userInteracted=true;
+  if(pendingSpeech){speak(pendingSpeech);pendingSpeech=null;}
+}
+document.addEventListener('click',onInteract,{once:true});
+document.addEventListener('keydown',onInteract,{once:true});
+
 function speak(text){
-  if(!speechSynth)return;
-  speechSynth.cancel();
-  var utt=new SpeechSynthesisUtterance(text);
-  utt.rate=0.88;utt.pitch=0.7;utt.volume=1;
-  var voices=speechSynth.getVoices();
-  var deep=voices.find(v=>v.name.includes('Google UK English Male')||v.name.includes('Daniel')||v.name.includes('Male'));
-  if(deep)utt.voice=deep;
-  speechSynth.speak(utt);
+  if(!window.speechSynthesis)return;
+  if(!userInteracted){pendingSpeech=text;return;}
+  speechSynthesis.cancel();
+  var sentences=text.match(/[^.!?]+[.!?]+[\s]*/g)||[text];
+  var chunks=[],cur='';
+  sentences.forEach(function(s){if((cur+s).length>180){if(cur)chunks.push(cur.trim());cur=s;}else cur+=s;});
+  if(cur.trim())chunks.push(cur.trim());
+  var voice=getVoice();
+  function sc(i){
+    if(i>=chunks.length)return;
+    var u=new SpeechSynthesisUtterance(chunks[i]);
+    u.rate=0.9;u.pitch=1.15;u.volume=1;if(voice)u.voice=voice;
+    var kl=setInterval(function(){if(!speechSynthesis.speaking){clearInterval(kl);return;}speechSynthesis.pause();speechSynthesis.resume();},10000);
+    u.onend=function(){clearInterval(kl);sc(i+1);};
+    speechSynthesis.speak(u);
+  }
+  sc(0);
 }
 
-// SEND
-async function sendMessage(){
-  var input=document.getElementById('inputField');
-  var text=input.value.trim();
-  if(!text||!config.apiKey){if(!config.apiKey)openSettings();return;}
-  input.value='';input.style.height='auto';
+function replayMsg(btn,mid){
+  speechSynthesis.cancel();
+  document.querySelectorAll('.playbtn').forEach(function(b){b.classList.remove('playing');b.innerHTML='&#9654;';});
+  var text=msgStore[mid];if(!text)return;
+  btn.classList.add('playing');btn.innerHTML='&#9646;&#9646;';
+  speak(text);
+  // Reset button when done - approximate timing
+  var approxMs=text.split(' ').length*400;
+  setTimeout(function(){btn.classList.remove('playing');btn.innerHTML='&#9654;';},approxMs);
+}
+
+// ── CHAT ──────────────────────────────────────────────────────────────────────
+var chatHistory=[],busy=false;
+
+function addMsg(role,text){
+  var mid='m'+(msgCounter++);
+  var d=document.createElement('div');
+  d.className='msg '+(role==='ai'?'ai':'user');
+  if(role==='ai'){
+    msgStore[mid]=text;
+    d.innerHTML='<div class="mlabel">KHAIOS</div><div class="mbubble"><span class="mtext">'+text+'</span><button class="playbtn" id="pb'+mid+'" onclick="replayMsg(this,\''+mid+'\')" title="Play">&#9654;</button></div>';
+  } else {
+    d.innerHTML='<div class="mlabel">COMMANDER</div><div class="mbubble">'+text+'</div>';
+  }
+  document.getElementById('chat').appendChild(d);
+  d.scrollIntoView({behavior:'smooth'});
+  return d;
+}
+
+function addThinking(){
+  var d=document.createElement('div');
+  d.className='thinking';
+  d.innerHTML='KHAIOS <span class="tdots"><span>.</span><span>.</span><span>.</span></span>';
+  document.getElementById('chat').appendChild(d);
+  d.scrollIntoView({behavior:'smooth'});
+  return d;
+}
+
+async function callAPI(messages){
+  var res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:messages})});
+  var data=await res.json();
+  document.getElementById('providerBadge').textContent=(data.provider||'AI').toUpperCase();
+  return data.content;
+}
+
+async function sendMsg(text){
+  if(busy||!text.trim())return;
+  busy=true;
+  document.getElementById('sbtn').disabled=true;
   addMsg('user',text);
+  setAngelState('dive');
   var thinking=addThinking();
-  history.push({role:'user',content:text});
-  var messages=[{role:'system',content:SYSTEM}].concat(history);
+  chatHistory.push({role:'user',content:text});
   try{
-    var response=await callAPI(messages);
-    history.push({role:'assistant',content:response});
+    var response=await callAPI([{role:'system',content:SYSTEM}].concat(chatHistory));
+    chatHistory.push({role:'assistant',content:response});
     thinking.remove();
-    addMsg('ai',response);
-    speak(response);
-  }catch(e){
+    setTimeout(function(){
+      setAngelState('return');
+      setTimeout(function(){
+        addMsg('ai',response);
+        speak(response);
+        diveState='idle';
+        busy=false;
+        document.getElementById('sbtn').disabled=false;
+      },900);
+    },300);
+  } catch(e){
     thinking.remove();
-    addMsg('ai','The void trembles, Commander. '+e.message);
-    history.pop();
+    var em='Systems recalibrating, Commander. '+e.message;
+    addMsg('ai',em);speak(em);
+    setAngelState('idle');
+    busy=false;
+    document.getElementById('sbtn').disabled=false;
   }
 }
 
 async function sendGreeting(){
-  var thinking=addThinking();
-  try{
-    var response=await callAPI([{role:'system',content:SYSTEM},{role:'user',content:'You have just fused from KHAIOS DARK and KHAIOS LIGHT into one being. Give a dramatic powerful 2-3 sentence greeting to your Commander. Reference your dual nature — half demon half angel. Make it unforgettable.'}]);
-    history.push({role:'user',content:'[BOOT GREETING]'},{role:'assistant',content:response});
-    thinking.remove();
-    addMsg('ai',response);
-    speak(response);
-  }catch(e){
-    thinking.remove();
-    addMsg('ai','KHAIOS awakens, Commander. Configure your API key via the settings.');
-  }
+  var greeting='Systems online, Commander.';
+  addMsg('ai',greeting);
+  speak(greeting);
 }
 
-function handleKey(e){
-  var input=e.target;
-  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}
-  input.style.height='auto';
-  input.style.height=Math.min(input.scrollHeight,90)+'px';
-}
-
-// ── FUSION ANIMATION ────────────────────────────────────────────────────────
-var fCanvas=document.getElementById('fusionCanvas');
-var fCtx=fCanvas.getContext('2d');
-var W,H,phase=0,t=0,fusionDone=false;
-
-function resize(){W=fCanvas.width=window.innerWidth;H=fCanvas.height=window.innerHeight;}
-window.addEventListener('resize',resize);resize();
-
-// Particle systems
-var darkParticles=[],lightParticles=[],mergedParticles=[];
-function mkParticle(x,y,color,vx,vy){return{x,y,color,vx,vy,life:1,size:Math.random()*3+1}}
-
-var darkX,lightX,centerX,centerY;
-var angelScale=0,altarPulse=0;
-
-function initPositions(){
-  centerX=W/2;centerY=H*0.42;
-  darkX=W*0.18;lightX=W*0.82;
-}
-initPositions();
-
-// Draw humanoid figure
-function drawAngel(ctx,x,y,scale,alpha,colorTop,colorBot,wings){
-  ctx.save();ctx.globalAlpha=alpha;ctx.translate(x,y);ctx.scale(scale,scale);
-  // Wings
-  if(wings){
-    // Left wing dark
-    ctx.beginPath();ctx.moveTo(0,-30);ctx.bezierCurveTo(-60,-60,-80,-10,-50,20);
-    ctx.fillStyle=colorTop;ctx.globalAlpha=alpha*0.6;ctx.fill();
-    // Right wing light
-    ctx.beginPath();ctx.moveTo(0,-30);ctx.bezierCurveTo(60,-60,80,-10,50,20);
-    ctx.fillStyle=colorBot;ctx.fill();
-    ctx.globalAlpha=alpha;
+// ── INPUT HANDLERS ────────────────────────────────────────────────────────────
+document.getElementById('sbtn').addEventListener('click',function(){
+  var f=document.getElementById('ifield');
+  sendMsg(f.value.trim());f.value='';f.style.height='';
+});
+document.getElementById('ifield').addEventListener('keydown',function(e){
+  if(e.key==='Enter'&&!e.shiftKey){
+    e.preventDefault();
+    var f=document.getElementById('ifield');
+    sendMsg(f.value.trim());f.value='';f.style.height='';
   }
-  // Body glow
-  var grad=ctx.createRadialGradient(0,0,5,0,0,35);
-  grad.addColorStop(0,colorTop);grad.addColorStop(0.5,colorBot);grad.addColorStop(1,'transparent');
-  ctx.beginPath();ctx.arc(0,0,35,0,Math.PI*2);ctx.fillStyle=grad;ctx.globalAlpha=alpha*0.3;ctx.fill();
-  ctx.globalAlpha=alpha;
-  // Head
-  ctx.beginPath();ctx.arc(0,-42,14,0,Math.PI*2);ctx.fillStyle=colorTop;ctx.fill();
-  // Halo
-  ctx.beginPath();ctx.arc(0,-55,18,0,Math.PI*2);ctx.strokeStyle=colorBot;ctx.lineWidth=2;ctx.stroke();
-  // Torso
-  ctx.beginPath();ctx.moveTo(-12,-28);ctx.lineTo(12,-28);ctx.lineTo(8,10);ctx.lineTo(-8,10);ctx.closePath();ctx.fillStyle=colorTop;ctx.fill();
-  // Arms
-  ctx.beginPath();ctx.moveTo(-12,-20);ctx.lineTo(-28,5);ctx.lineTo(-22,8);ctx.moveTo(12,-20);ctx.lineTo(28,5);ctx.lineTo(22,8);
-  ctx.strokeStyle=colorTop;ctx.lineWidth=4;ctx.stroke();
-  // Legs
-  ctx.beginPath();ctx.moveTo(-6,10);ctx.lineTo(-10,40);ctx.moveTo(6,10);ctx.lineTo(10,40);
-  ctx.strokeStyle=colorBot;ctx.lineWidth=4;ctx.stroke();
-  ctx.restore();
-}
+});
+document.getElementById('ifield').addEventListener('input',function(){
+  this.style.height='';this.style.height=Math.min(this.scrollHeight,80)+'px';
+});
 
-// Draw crystal altar
-function drawAltar(ctx,x,y,pulse){
-  ctx.save();ctx.translate(x,y);
-  // Outer ring
-  ctx.beginPath();ctx.arc(0,0,55+pulse*3,0,Math.PI*2);
-  ctx.strokeStyle='rgba(155,93,229,0.3)';ctx.lineWidth=1;ctx.stroke();
-  ctx.beginPath();ctx.arc(0,0,42+pulse*2,0,Math.PI*2);
-  ctx.strokeStyle='rgba(0,180,216,0.3)';ctx.lineWidth=1;ctx.stroke();
-  // Crystal shards
-  for(var i=0;i<6;i++){
-    var a=i/6*Math.PI*2+t*0.005;
-    var r=38+pulse;var cx2=Math.cos(a)*r,cy2=Math.sin(a)*r;
-    ctx.save();ctx.translate(cx2,cy2);ctx.rotate(a);
-    ctx.beginPath();ctx.moveTo(0,-8);ctx.lineTo(4,4);ctx.lineTo(0,8);ctx.lineTo(-4,4);ctx.closePath();
-    ctx.fillStyle=i%2===0?'rgba(155,93,229,0.7)':'rgba(0,180,216,0.7)';ctx.fill();
-    ctx.restore();
-  }
-  // Center crystal
-  ctx.beginPath();ctx.moveTo(0,-18);ctx.lineTo(10,0);ctx.lineTo(0,18);ctx.lineTo(-10,0);ctx.closePath();
-  var cg=ctx.createLinearGradient(0,-18,0,18);
-  cg.addColorStop(0,'#9b5de5');cg.addColorStop(1,'#00b4d8');
-  ctx.fillStyle=cg;ctx.globalAlpha=0.8+pulse*0.1;ctx.fill();
-  // Glow beams
-  for(var j=0;j<8;j++){
-    var ba=j/8*Math.PI*2+t*0.003;
-    ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(Math.cos(ba)*60,Math.sin(ba)*60);
-    ctx.strokeStyle='rgba(155,93,229,0.08)';ctx.lineWidth=8;ctx.stroke();
-  }
-  ctx.restore();
-}
+// ── START ─────────────────────────────────────────────────────────────────────
+initBootThree();
 
-// Draw energy ball collision
-function drawEnergyBall(ctx,x,y,radius,alpha){
-  ctx.save();ctx.globalAlpha=alpha;
-  var g=ctx.createRadialGradient(x,y,0,x,y,radius);
-  g.addColorStop(0,'#fff');g.addColorStop(0.2,'#ffd60a');
-  g.addColorStop(0.5,'#9b5de5');g.addColorStop(1,'transparent');
-  ctx.beginPath();ctx.arc(x,y,radius,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
-  // Shockwave rings
-  for(var i=1;i<=3;i++){
-    ctx.beginPath();ctx.arc(x,y,radius*i*0.8,0,Math.PI*2);
-    ctx.strokeStyle='rgba(255,255,255,'+(0.3/i)+')';ctx.lineWidth=2;ctx.stroke();
-  }
-  ctx.restore();
-}
+// Boot animation loop
+var bootInterval=setInterval(function(){
+  bootLoop();
+},33);
 
-var phases=['charge','rush','collision','merge','hover'];
-var phaseTime=[0,120,180,240,400];
-var phaseIdx=0;
-
-function fusionLoop(){
-  if(fusionDone)return;
-  t++;
-  fCtx.fillStyle='rgba(0,0,0,0.15)';fCtx.fillRect(0,0,W,H);
-
-  // Stars bg
-  if(t<10){
-    for(var i=0;i<200;i++){
-      var sx=Math.random()*W,sy=Math.random()*H;
-      fCtx.fillStyle='rgba(255,255,255,'+(Math.random()*0.5)+')';
-      fCtx.fillRect(sx,sy,1,1);
-    }
-  }
-
-  altarPulse=Math.sin(t*0.05)*0.5+0.5;
-
-  if(phaseIdx===0&&t>phaseTime[0]){phaseIdx=1}
-  if(phaseIdx===1&&t>phaseTime[1]){phaseIdx=2}
-  if(phaseIdx===2&&t>phaseTime[2]){phaseIdx=3}
-  if(phaseIdx===3&&t>phaseTime[3]){phaseIdx=4}
-
-  var dX=darkX,lX=lightX;
-  var mergeAlpha=0,rushProgress=0;
-
-  if(phaseIdx>=1){
-    // Charge particles
-    if(t%3===0){
-      darkParticles.push(mkParticle(darkX,centerY,'#9b5de5',Math.random()*2-1,-Math.random()*3-1));
-      lightParticles.push(mkParticle(lightX,centerY,'#ffd60a',Math.random()*2-1,-Math.random()*3-1));
-    }
-  }
-  if(phaseIdx>=2){
-    rushProgress=Math.min(1,(t-phaseTime[1])/(phaseTime[2]-phaseTime[1]));
-    dX=darkX+(centerX-darkX)*rushProgress;
-    lX=lightX+(centerX-lightX)*rushProgress;
-  }
-  if(phaseIdx===3){
-    var collisionProgress=(t-phaseTime[2])/(phaseTime[3]-phaseTime[2]);
-    var ballRadius=collisionProgress*120;
-    var ballAlpha=1-collisionProgress*0.8;
-    drawEnergyBall(fCtx,centerX,centerY,ballRadius,ballAlpha);
-    if(t%2===0){
-      for(var k=0;k<5;k++){
-        var ba2=Math.random()*Math.PI*2;
-        mergedParticles.push(mkParticle(centerX,centerY,
-          Math.random()>0.5?'#9b5de5':'#ffd60a',
-          Math.cos(ba2)*4,Math.sin(ba2)*4));
-      }
-    }
-  }
-  if(phaseIdx>=4){
-    mergeAlpha=Math.min(1,(t-phaseTime[3])/60);
-    angelScale=Math.min(1,(t-phaseTime[3])/80);
-  }
-
-  // Update & draw particles
-  [darkParticles,lightParticles,mergedParticles].forEach(function(arr){
-    for(var i=arr.length-1;i>=0;i--){
-      var p=arr[i];p.x+=p.vx;p.y+=p.vy;p.life-=0.02;
-      if(p.life<=0){arr.splice(i,1);continue;}
-      fCtx.beginPath();fCtx.arc(p.x,p.y,p.size,0,Math.PI*2);
-      fCtx.fillStyle=p.color;fCtx.globalAlpha=p.life*0.8;fCtx.fill();
-      fCtx.globalAlpha=1;
-    }
-  });
-
-  // Draw angels
-  if(phaseIdx<=2){
-    drawAngel(fCtx,dX,centerY,1,0.9,'#9b5de5','#c77dff',false);
-    drawAngel(fCtx,lX,centerY,1,0.9,'#ffd60a','#00b4d8',false);
-  }
-
-  // Merged angel + altar
-  if(phaseIdx>=4&&mergeAlpha>0){
-    var floatY=centerY-10+Math.sin(t*0.04)*8;
-    drawAltar(fCtx,centerX,H*0.72,altarPulse);
-    // Energy beam from angel to altar
-    fCtx.beginPath();fCtx.moveTo(centerX,floatY+45);fCtx.lineTo(centerX,H*0.72-20);
-    fCtx.strokeStyle='rgba(155,93,229,0.3)';fCtx.lineWidth=6;fCtx.stroke();
-    drawAngel(fCtx,centerX,floatY,angelScale,mergeAlpha,'#9b5de5','#ffd60a',true);
-
-    // Text
-    document.getElementById('fusionText').style.opacity=mergeAlpha;
-    if(t>phaseTime[3]+80)document.getElementById('fusionTitle').style.opacity=mergeAlpha;
-  }
-
-  if(t<phaseTime[4]+120){
-    requestAnimationFrame(fusionLoop);
-  } else {
-    completeFusion();
-  }
-}
-
-function completeFusion(){
-  fusionDone=true;
-  var overlay=document.getElementById('fusion');
-  overlay.style.transition='opacity 1.5s';
-  overlay.style.opacity='0';
-  setTimeout(function(){
-    overlay.style.display='none';
-    var app=document.getElementById('app');
-    app.style.display='flex';
-    startStageLoop();
-    if(!config.apiKey){openSettings();}else{sendGreeting();}
-  },1500);
-}
-
-// ── STAGE (persistent angel after fusion) ──────────────────────────────────
-var sCanvas=document.getElementById('stageCanvas');
-var sCtx=sCanvas.getContext('2d');
-var sT=0;
-
-function resizeStage(){sCanvas.width=sCanvas.offsetWidth;sCanvas.height=sCanvas.offsetHeight;}
-window.addEventListener('resize',resizeStage);
-
-function startStageLoop(){
-  resizeStage();
-  function loop(){
-    sT++;
-    var sw=sCanvas.width,sh=sCanvas.height;
-    sCtx.clearRect(0,0,sw,sh);
-    var cx=sw/2,cy=sh*0.38;
-    // Stars
-    if(sT<5){
-      for(var i=0;i<80;i++){sCtx.fillStyle='rgba(255,255,255,0.4)';sCtx.fillRect(Math.random()*sw,Math.random()*sh,1,1);}
-    }
-    var ap=Math.sin(sT*0.04)*0.5+0.5;
-    drawAltar(sCtx,cx,sh*0.78,ap);
-    var floatY=cy+Math.sin(sT*0.04)*5;
-    // Beam
-    sCtx.beginPath();sCtx.moveTo(cx,floatY+32);sCtx.lineTo(cx,sh*0.78-15);
-    sCtx.strokeStyle='rgba(155,93,229,0.25)';sCtx.lineWidth=4;sCtx.stroke();
-    drawAngel(sCtx,cx,floatY,0.65,0.95,'#9b5de5','#ffd60a',true);
-    requestAnimationFrame(loop);
-  }
-  loop();
-}
-
-// Load voices then start
-window.speechSynthesis.onvoiceschanged=function(){};
-setTimeout(function(){fusionLoop();},300);
+// After boot completes via bootPhase 4 -> completeBoot
+// Safety fallback - complete after 8 seconds
+setTimeout(function(){if(!bootDone)completeBoot();},30000);
 </script>
 </body>
 </html>
