@@ -34,6 +34,7 @@ html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-fami
 .hud-badge{font-family:'Share Tech Mono',monospace;font-size:9px;padding:2px 8px;border:1px solid #0a3366;color:#44aaff;letter-spacing:2px;}
 .sdot{width:6px;height:6px;border-radius:50%;background:#0088ff;animation:pulse 2s infinite;box-shadow:0 0 6px #0066ff;}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+@keyframes blink2{0%,100%{opacity:1;}50%{opacity:0.3;}}
 
 /* MAIN AREA */
 .main-area{display:flex;flex:1;overflow:hidden;}
@@ -129,6 +130,7 @@ html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-fami
   <div id="bootTitle">K H A I O S</div>
   <div id="bootSub">A.I.O.S. &nbsp; MULTITOOL</div>
   <div id="bootBar"><div id="bootBarFill"></div></div>
+  <div id="tapBtn" onclick="bootTap()" style="margin-top:30px;font-family:'Orbitron',monospace;font-size:11px;letter-spacing:6px;color:#4488cc;opacity:0;transition:opacity 1s;cursor:pointer;padding:10px 24px;border:1px solid #1a4488;animation:blink2 1.5s infinite;">[ TAP TO ENTER ]</div>
 </div>
 
 <!-- COCKPIT FRAME -->
@@ -391,6 +393,15 @@ function speakBoot(text){
 }
 
 // ── BOOT ──────────────────────────────────────────────────────────────────
+var bootTapped=false;
+function bootTap(){
+  if(bootTapped)return;bootTapped=true;
+  document.getElementById('tapBtn').style.display='none';
+  speakBoot('Welcome back, Commander.');
+  // Start progress bar
+  document.getElementById('bootBarFill').style.width='100%';
+  setTimeout(completeBoot,10000);
+}
 var bootDone=false;
 function completeBoot(){
   if(bootDone)return;bootDone=true;
@@ -410,17 +421,16 @@ function completeBoot(){
   // Boot: fade in video, keep matrix hidden
   setTimeout(function(){document.getElementById('bgVideo').style.opacity='0.85';},100);
   document.getElementById('matrixCanvas').style.opacity='0';
-  setTimeout(function(){document.getElementById("bootTitle").style.opacity=1;},300);
-  setTimeout(function(){speakBoot("Welcome back, Commander.");},800);
+  setTimeout(function(){document.getElementById('bootTitle').style.opacity=1;},300);
   // Speak welcome on boot
   setTimeout(function(){speakBoot('Welcome back, Commander.');},800);
   setTimeout(function(){document.getElementById('bootSub').style.opacity=1;},800);
+  setTimeout(function(){document.getElementById('tapBtn').style.opacity=1;},1200);
   setTimeout(function(){
     var bar=document.getElementById('bootBar');
     bar.style.opacity=1;
     setTimeout(function(){document.getElementById('bootBarFill').style.width='100%';},100);
   },1200);
-  setTimeout(completeBoot,10000);
 })();
 
 // ── SYSTEM BARS ANIMATION ────────────────────────────────────────────────
