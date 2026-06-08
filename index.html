@@ -16,8 +16,8 @@ html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-fami
 #matrixCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none;}
 #boot{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:60px;}
 #bootCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:99;pointer-events:none;}
-#bootTitle{font-family:'Orbitron',monospace;font-size:28px;font-weight:900;letter-spacing:12px;background:linear-gradient(90deg,#fff,#44aaff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;opacity:0;transition:opacity 1.5s;text-align:center;position:relative;z-index:101;}
-#bootText{font-family:'Orbitron',monospace;font-size:11px;letter-spacing:4px;color:#88ccff;text-align:center;opacity:0;transition:opacity 1s;margin-top:8px;text-shadow:0 0 15px #0066ff;position:relative;z-index:101;}
+#bootTitle{font-family:'Orbitron',monospace;font-size:28px;font-weight:900;letter-spacing:12px;background:linear-gradient(90deg,#fff,#44aaff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;opacity:0;transition:opacity 1s;text-align:center;position:relative;z-index:101;}
+#bootText{font-family:'Orbitron',monospace;font-size:22px;font-weight:700;letter-spacing:8px;color:#88ccff;text-align:center;opacity:0;transition:opacity 1s;margin-top:12px;text-shadow:0 0 20px #0066ff;position:relative;z-index:101;}
 #app{position:fixed;inset:0;z-index:10;display:none;flex-direction:column;}
 .topbar{display:flex;align-items:center;justify-content:space-between;padding:0 16px;height:48px;background:rgba(0,5,20,0.97);border-bottom:1px solid #1a3366;flex-shrink:0;}
 .logo{font-family:'Orbitron',monospace;font-size:16px;font-weight:900;letter-spacing:6px;background:linear-gradient(90deg,#fff,#44aaff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
@@ -57,7 +57,7 @@ html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-fami
 <canvas id="matrixCanvas"></canvas>
 <div id="boot">
   <div id="bootTitle">K H A I O S</div>
-  <div id="bootText">AIOS MULTITOOL</div>
+  <div id="bootText">A.I.O.S &nbsp; MULTITOOL</div>
 </div>
 <div id="app">
   <div class="topbar">
@@ -122,10 +122,9 @@ if('serviceWorker' in navigator){window.addEventListener('load',function(){navig
 
 // ── BOOT ─────────────────────────────────────────────────────────────────────
 function initBootThree(){
-  // Show title immediately
-  setTimeout(function(){document.getElementById('bootTitle').style.opacity=1;},500);
-  setTimeout(function(){document.getElementById('bootText').style.opacity=1;},1000);
-  setTimeout(function(){completeBoot();},4000);
+  setTimeout(function(){document.getElementById('bootTitle').style.opacity=1;},200);
+  setTimeout(function(){document.getElementById('bootText').style.opacity=1;},600);
+  setTimeout(function(){completeBoot();},2500);
 }
 initBootThree();</script>
 </body>
