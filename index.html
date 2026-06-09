@@ -6,10 +6,9 @@
 <title>A.I.O.S. — Multitool</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-<meta name="theme-color" content="#0044cc">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-family:'Exo 2',sans-serif;}
+html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-family:'Exo 2',sans-serif;user-select:none;}
 
 /* BG VIDEO */
 #bgVideo{position:fixed;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:0;transition:opacity 1s;}
@@ -19,30 +18,65 @@ html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-fami
 
 /* BOOT */
 #boot{position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,5,20,0.6);}
-#bootTitle{font-family:'Orbitron',monospace;font-size:52px;font-weight:900;letter-spacing:16px;background:linear-gradient(90deg,#fff,#44aaff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;opacity:0;transition:opacity 1s;text-align:center;text-shadow:0 0 40px #0066ff;}
+#bootTitle{font-family:'Orbitron',monospace;font-size:52px;font-weight:900;letter-spacing:16px;background:linear-gradient(90deg,#fff,#44aaff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;opacity:0;transition:opacity 1s;text-align:center;}
 #bootSub{font-family:'Orbitron',monospace;font-size:18px;font-weight:700;letter-spacing:8px;color:#88ccff;text-align:center;opacity:0;transition:opacity 1s;margin-top:16px;text-shadow:0 0 20px #0066ff;}
 #bootBar{width:300px;height:2px;background:rgba(0,100,255,0.2);margin-top:40px;opacity:0;transition:opacity 0.5s;}
-#bootBarFill{height:100%;width:0%;background:linear-gradient(90deg,#0044ff,#00ccff);transition:width 8s linear;box-shadow:0 0 10px #00aaff;}
+#bootBarFill{height:100%;width:0%;background:linear-gradient(90deg,#0044ff,#00ccff);transition:width 4.8s linear;box-shadow:0 0 10px #00aaff;}
 
-/* COCKPIT */
-#cockpit{position:fixed;inset:0;bottom:44px;z-index:10;display:none;flex-direction:column;}
+/* MATRIX ENTER SCREEN */
+#matrixEnter{position:fixed;inset:0;z-index:150;display:none;flex-direction:column;align-items:center;justify-content:center;}
+#enterBtn{font-family:'Orbitron',monospace;font-size:14px;letter-spacing:8px;color:#88ccff;background:rgba(0,10,40,0.7);border:1px solid #1a4488;padding:14px 40px;cursor:pointer;text-shadow:0 0 10px #0066ff;box-shadow:0 0 20px rgba(0,50,200,0.3);animation:blink2 1.5s infinite;}
+@keyframes blink2{0%,100%{opacity:1;}50%{opacity:0.4;}}
+.enterLabel{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:4px;color:#224466;margin-bottom:20px;}
 
-/* TOP HUD BAR */
-.hud-top{display:flex;align-items:center;justify-content:space-between;padding:0 16px;height:44px;background:rgba(0,5,20,0.95);border-bottom:1px solid #0a2244;flex-shrink:0;}
-.hud-logo{font-family:'Orbitron',monospace;font-size:14px;font-weight:900;letter-spacing:5px;background:linear-gradient(90deg,#fff,#44aaff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.hud-status{display:flex;align-items:center;gap:16px;}
-.hud-badge{font-family:'Share Tech Mono',monospace;font-size:9px;padding:2px 8px;border:1px solid #0a3366;color:#44aaff;letter-spacing:2px;}
-.sdot{width:6px;height:6px;border-radius:50%;background:#0088ff;animation:pulse 2s infinite;box-shadow:0 0 6px #0066ff;}
-@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
-@keyframes blink2{0%,100%{opacity:1;}50%{opacity:0.3;}}
+/* DESKTOP */
+#desktop{position:fixed;inset:0;bottom:44px;z-index:10;display:none;}
 
-/* MAIN AREA */
-.main-area{display:flex;flex:1;overflow:hidden;}
+/* TASKBAR */
+#taskbar{position:fixed;bottom:0;left:0;right:0;height:44px;background:rgba(0,4,18,0.97);border-top:1px solid #0a1a33;z-index:500;display:none;align-items:center;padding:0 6px;gap:3px;}
+.tb-start{display:flex;align-items:center;gap:6px;padding:4px 14px;background:linear-gradient(135deg,#001866,#002299);border:1px solid #1a3366;cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:3px;color:#88ccff;flex-shrink:0;height:32px;}
+.tb-start:hover{background:linear-gradient(135deg,#002299,#0033cc);}
+.tb-divider{width:1px;height:28px;background:#0a1a33;flex-shrink:0;margin:0 3px;}
+.tb-apps{display:flex;gap:2px;flex:1;overflow:hidden;}
+.tb-app{display:flex;align-items:center;gap:5px;padding:3px 10px;background:rgba(0,8,28,0.8);border:1px solid #0a1a33;cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:1px;color:#4488cc;white-space:nowrap;height:32px;transition:all .15s;}
+.tb-app:hover{background:rgba(0,20,70,0.9);border-color:#1a3366;}
+.tb-app.open{border-color:#1a4488;background:rgba(0,15,55,0.9);color:#88ccff;border-bottom:2px solid #0066ff;}
+.tb-app-icon{font-size:14px;}
+.tb-right{display:flex;align-items:center;gap:8px;flex-shrink:0;padding-left:6px;border-left:1px solid #0a1a33;}
+.tb-clock{font-family:'Share Tech Mono',monospace;font-size:9px;color:#4488cc;letter-spacing:1px;text-align:right;line-height:1.4;}
 
-/* LEFT - CHAT */
-.chat-panel{display:flex;flex-direction:column;width:55%;border-right:1px solid #0a2244;background:rgba(0,3,14,0.75);}
-.panel-header{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:3px;color:#0066aa;padding:6px 12px;border-bottom:1px solid #0a1a33;background:rgba(0,5,20,0.9);flex-shrink:0;}
-.chat{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth;}
+/* START MENU */
+#startMenu{display:none;position:fixed;bottom:44px;left:0;z-index:600;width:340px;background:rgba(0,5,22,0.98);border:1px solid #0a2244;border-bottom:none;flex-direction:column;}
+.sm-header{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid #0a1a33;background:rgba(0,8,30,0.95);}
+.sm-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#0033aa,#0066ff);display:flex;align-items:center;justify-content:center;font-size:20px;border:1px solid #1a4488;}
+.sm-name{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;color:#88ccff;letter-spacing:2px;}
+.sm-sub{font-family:'Share Tech Mono',monospace;font-size:8px;color:#224466;letter-spacing:1px;margin-top:2px;}
+.sm-section{font-family:'Share Tech Mono',monospace;font-size:8px;color:#224466;letter-spacing:3px;padding:8px 16px 4px;text-transform:uppercase;}
+.sm-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:4px 10px 10px;}
+.sm-tile{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 4px;cursor:pointer;border:1px solid transparent;transition:all .15s;border-radius:2px;}
+.sm-tile:hover{background:rgba(0,20,70,0.8);border-color:#0a2244;}
+.sm-tile-icon{font-size:24px;}
+.sm-tile-name{font-family:'Share Tech Mono',monospace;font-size:7px;color:#4488cc;letter-spacing:1px;text-align:center;}
+.sm-footer{display:flex;justify-content:space-between;padding:8px 14px;border-top:1px solid #0a1a33;background:rgba(0,4,15,0.95);}
+.sm-footer-btn{font-family:'Share Tech Mono',monospace;font-size:8px;color:#224466;letter-spacing:2px;cursor:pointer;padding:4px 8px;display:flex;align-items:center;gap:4px;}
+.sm-footer-btn:hover{color:#4488cc;}
+
+/* FLOATING WINDOWS */
+.fwindow{position:fixed;background:rgba(0,5,22,0.97);border:1px solid #0a2244;z-index:100;display:none;flex-direction:column;box-shadow:0 8px 32px rgba(0,20,100,0.4);min-width:300px;min-height:200px;}
+.fwindow.active{display:flex;}
+.fwindow.maximized{left:0!important;top:0!important;width:100%!important;height:calc(100vh - 44px)!important;}
+.fw-titlebar{display:flex;align-items:center;justify-content:space-between;padding:0 0 0 12px;height:30px;background:rgba(0,8,32,0.99);border-bottom:1px solid #0a1a33;cursor:move;flex-shrink:0;}
+.fw-title-left{display:flex;align-items:center;gap:8px;}
+.fw-icon{font-size:12px;}
+.fw-name{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;color:#4488cc;}
+.fw-controls{display:flex;height:30px;}
+.fw-btn{width:36px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:10px;color:#4488cc;border:none;background:none;border-left:1px solid #0a1a33;transition:background .15s;}
+.fw-btn:hover{background:rgba(0,20,80,0.8);}
+.fw-btn.close:hover{background:rgba(180,0,0,0.7);color:#fff;}
+.fw-body{flex:1;overflow:hidden;display:flex;flex-direction:column;}
+
+/* CHAT WINDOW */
+.chat{flex:1;overflow-y:auto;padding:10px 12px;display:flex;flex-direction:column;gap:8px;scroll-behavior:smooth;}
 .chat::-webkit-scrollbar{width:2px;}
 .chat::-webkit-scrollbar-thumb{background:#0a2244;}
 .msg{display:flex;flex-direction:column;gap:3px;animation:fadein 0.3s ease-out;}
@@ -50,315 +84,246 @@ html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-fami
 .mlabel{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:3px;font-weight:700;}
 .msg.ai .mlabel{color:#4488cc;}
 .msg.user .mlabel{color:#226699;}
-.mbubble{padding:8px 12px;font-size:12px;line-height:1.6;font-weight:300;max-width:92%;white-space:pre-wrap;word-break:break-word;}
-.msg.ai .mbubble{background:rgba(0,20,80,0.9);border-left:2px solid #1a4488;color:#cce4ff;display:flex;align-items:flex-start;gap:6px;flex-wrap:wrap;}
+.mbubble{padding:7px 11px;font-size:12px;line-height:1.6;font-weight:300;max-width:92%;white-space:pre-wrap;word-break:break-word;}
+.msg.ai .mbubble{background:rgba(0,15,60,0.9);border-left:2px solid #1a4488;color:#cce4ff;display:flex;align-items:flex-start;gap:6px;flex-wrap:wrap;}
 .msg.ai .mtext{flex:1;min-width:0;}
-.msg.user .mbubble{background:rgba(0,10,40,0.9);border-right:2px solid #0a2255;color:#99bbdd;align-self:flex-end;}
-.thinking{font-family:'Share Tech Mono',monospace;font-size:10px;color:#336699;padding:6px 12px;display:flex;gap:4px;align-items:center;}
+.msg.user .mbubble{background:rgba(0,8,30,0.9);border-right:2px solid #0a2255;color:#99bbdd;align-self:flex-end;}
+.thinking{font-family:'Share Tech Mono',monospace;font-size:10px;color:#336699;padding:5px 12px;display:flex;gap:4px;align-items:center;}
 .tdots span{animation:blink 1.2s infinite;opacity:0;}
 .tdots span:nth-child(2){animation-delay:.3s;}
 .tdots span:nth-child(3){animation-delay:.6s;}
 @keyframes blink{0%,100%{opacity:0;}50%{opacity:1;}}
 .playbtn{background:none;border:1px solid #1a3355;border-radius:50%;width:18px;height:18px;cursor:pointer;color:#4488cc;font-size:8px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
-.irow{padding:8px 10px;border-top:1px solid #0a1a33;background:rgba(0,4,18,0.97);display:flex;gap:6px;flex-shrink:0;}
-.ifield{flex:1;background:rgba(0,5,22,0.95);border:1px solid #0a1a33;border-radius:1px;padding:7px 10px;font-family:'Exo 2',sans-serif;font-size:12px;color:#cce4ff;outline:none;resize:none;min-height:34px;max-height:70px;line-height:1.5;transition:border-color .2s;}
+.irow{padding:6px 10px;border-top:1px solid #0a1a33;background:rgba(0,4,18,0.98);display:flex;gap:5px;flex-shrink:0;}
+.ifield{flex:1;background:rgba(0,4,18,0.95);border:1px solid #0a1a33;padding:6px 10px;font-family:'Exo 2',sans-serif;font-size:12px;color:#cce4ff;outline:none;resize:none;min-height:32px;max-height:60px;line-height:1.5;transition:border-color .2s;}
 .ifield:focus{border-color:#1a4488;}
 .ifield::placeholder{color:#0a1a33;}
-.sbtn{width:34px;height:34px;border:1px solid #1a3355;background:rgba(0,15,60,0.7);cursor:pointer;color:#4488cc;font-size:13px;display:flex;align-items:center;justify-content:center;align-self:flex-end;flex-shrink:0;}
+.sbtn{width:32px;height:32px;border:1px solid #1a3355;background:rgba(0,12,50,0.7);cursor:pointer;color:#4488cc;font-size:12px;display:flex;align-items:center;justify-content:center;align-self:flex-end;flex-shrink:0;}
 .sbtn:disabled{opacity:0.3;cursor:not-allowed;}
 
-/* RIGHT - APPS */
-.apps-panel{width:45%;display:flex;flex-direction:column;background:rgba(0,3,14,0.75);}
-.apps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;background:#020810;padding:4px;flex-shrink:0;}
-.app-btn{background:rgba(0,8,25,0.95);padding:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;cursor:pointer;border:1px solid #0a1a33;color:#cce4ff;transition:all .2s;position:relative;overflow:hidden;height:90px;border-radius:2px;}
-.app-btn:hover{border-color:#1a4488;box-shadow:0 0 12px rgba(0,80,255,0.3);}
-.app-btn:hover .app-tile-bg{opacity:0.9;}
-.app-tile-bg{position:absolute;inset:0;opacity:0.7;transition:opacity .2s;}
-.app-icon{font-size:26px;position:relative;z-index:1;margin-bottom:2px;}
-.app-name{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:2px;color:#88bbdd;position:relative;z-index:1;padding:4px 4px;width:100%;text-align:center;background:rgba(0,0,0,0.5);}
-.cockpit-display{flex:1;position:relative;overflow:hidden;border-top:1px solid #0a1a33;}
-.cockpit-display canvas{position:absolute;top:0;left:0;width:100%;height:100%;}
-/* System readouts */
-.sys-readouts{padding:8px 12px;display:flex;flex-direction:column;gap:4px;background:rgba(0,3,12,0.9);border-top:1px solid #0a1a33;flex-shrink:0;}
-.sys-row{display:flex;justify-content:space-between;align-items:center;}
-.sys-label{font-family:'Share Tech Mono',monospace;font-size:8px;color:#224466;letter-spacing:2px;}
-.sys-val{font-family:'Share Tech Mono',monospace;font-size:8px;color:#0066aa;}
-.sys-bar{flex:1;height:3px;background:rgba(0,40,100,0.3);margin:0 8px;border-radius:1px;overflow:hidden;}
-.sys-bar-fill{height:100%;background:linear-gradient(90deg,#0044ff,#00aaff);border-radius:1px;}
-
-/* COCKPIT FRAME OVERLAY */
-.cockpit-frame{position:fixed;inset:0;z-index:9;pointer-events:none;}
-.cockpit-frame svg{width:100%;height:100%;}
-
-/* TASKBAR */
-.taskbar{position:fixed;bottom:0;left:0;right:0;height:44px;background:rgba(0,4,18,0.97);border-top:1px solid #0a1a33;z-index:50;display:flex;align-items:center;padding:0 8px;gap:4px;}
-.tb-start{display:flex;align-items:center;gap:6px;padding:4px 12px;background:rgba(0,20,80,0.7);border:1px solid #1a3366;cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;color:#66aaff;flex-shrink:0;}
-.tb-start:hover{background:rgba(0,40,150,0.7);}
-.tb-divider{width:1px;height:28px;background:#0a1a33;flex-shrink:0;margin:0 4px;}
-.tb-apps{display:flex;gap:3px;flex:1;overflow:hidden;}
-.tb-app{display:flex;align-items:center;gap:5px;padding:4px 10px;background:rgba(0,10,35,0.8);border:1px solid #0a1a33;cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;color:#4488cc;white-space:nowrap;transition:all .15s;}
-.tb-app:hover{background:rgba(0,25,80,0.9);border-color:#1a3366;}
-.tb-app.open{border-color:#1a4488;background:rgba(0,20,70,0.9);color:#88ccff;}
-.tb-app-icon{font-size:14px;}
-.tb-right{display:flex;align-items:center;gap:10px;flex-shrink:0;padding-left:8px;}
-.tb-clock{font-family:'Share Tech Mono',monospace;font-size:9px;color:#4488cc;letter-spacing:1px;text-align:right;}
-.tb-sys{font-family:'Share Tech Mono',monospace;font-size:8px;color:#224466;letter-spacing:1px;}
-
-/* FLOATING WINDOWS */
-.fwindow{position:fixed;background:rgba(0,5,20,0.97);border:1px solid #0a2244;z-index:100;display:none;flex-direction:column;min-width:320px;min-height:250px;box-shadow:0 0 30px rgba(0,50,200,0.2);}
-.fwindow.active{display:flex;}
-.fw-title{display:flex;align-items:center;justify-content:space-between;padding:6px 12px;background:rgba(0,8,30,0.98);border-bottom:1px solid #0a1a33;cursor:move;flex-shrink:0;}
-.fw-name{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:3px;color:#4488cc;}
-.fw-close{background:none;border:1px solid #0a2244;color:#4488cc;cursor:pointer;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:10px;}
-.fw-body{flex:1;overflow:hidden;padding:12px;}
-
 /* CALCULATOR */
-.calc{display:grid;gap:4px;}
-.calc-display{background:rgba(0,3,12,0.9);border:1px solid #0a1a33;padding:8px 10px;font-family:'Share Tech Mono',monospace;font-size:20px;color:#88ccff;text-align:right;margin-bottom:6px;min-height:40px;}
-.calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;}
-.calc-btn{background:rgba(0,10,40,0.9);border:1px solid #0a1a33;color:#cce4ff;font-family:'Share Tech Mono',monospace;font-size:12px;padding:8px 4px;cursor:pointer;transition:background .15s;}
-.calc-btn:hover{background:rgba(0,30,100,0.8);}
-.calc-btn.op{color:#44aaff;border-color:#0a2244;}
-.calc-btn.eq{background:rgba(0,30,120,0.9);color:#88ccff;}
+.calc-display{background:rgba(0,3,12,0.95);border-bottom:1px solid #0a1a33;padding:8px 12px;font-family:'Share Tech Mono',monospace;font-size:22px;color:#88ccff;text-align:right;min-height:44px;flex-shrink:0;}
+.calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#0a1a33;flex:1;}
+.calc-btn{background:rgba(0,8,28,0.95);border:none;color:#cce4ff;font-family:'Share Tech Mono',monospace;font-size:13px;cursor:pointer;transition:background .1s;display:flex;align-items:center;justify-content:center;}
+.calc-btn:hover{background:rgba(0,25,80,0.9);}
+.calc-btn.op{color:#44aaff;background:rgba(0,10,40,0.95);}
+.calc-btn.eq{background:rgba(0,25,100,0.95);color:#88ccff;}
 
 /* NOTES */
-.notes-area{width:100%;height:100%;background:rgba(0,3,12,0.9);border:1px solid #0a1a33;color:#cce4ff;font-family:'Exo 2',sans-serif;font-size:12px;padding:8px;resize:none;outline:none;line-height:1.6;}
+.notes-area{width:100%;height:100%;background:rgba(0,3,12,0.95);border:none;color:#cce4ff;font-family:'Exo 2',sans-serif;font-size:12px;padding:10px;resize:none;outline:none;line-height:1.6;}
 
-/* EMULATOR */
-.emu-frame{width:100%;height:100%;border:none;background:#000;}
+/* STATUS BAR */
+.status-bar{height:22px;background:rgba(0,4,18,0.98);border-top:1px solid #0a1a33;display:flex;align-items:center;padding:0 10px;gap:10px;flex-shrink:0;}
+.status-item{font-family:'Share Tech Mono',monospace;font-size:7px;color:#224466;letter-spacing:2px;}
+.status-dot{width:5px;height:5px;border-radius:50%;background:#0066ff;animation:pulse 2s infinite;box-shadow:0 0 4px #0044ff;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
 </style>
 </head>
 <body>
 
-<!-- SPACE BG -->
 <video id="bgVideo" autoplay loop muted playsinline>
   <source src="bg.mp4" type="video/mp4">
-  <source src="storage_v1/bg.mp4" type="video/mp4">
 </video>
-
-<!-- MATRIX -->
 <canvas id="matrixCanvas"></canvas>
-
-<!-- MATRIX ENTER SCREEN -->
-<div id="matrixEnter" style="display:none;position:fixed;inset:0;z-index:150;display:none;flex-direction:column;align-items:center;justify-content:center;">
-  <div style="font-family:'Orbitron',monospace;font-size:13px;letter-spacing:6px;color:#4488cc;margin-bottom:30px;text-shadow:0 0 15px #0066ff;opacity:0.7;">SYSTEM INITIALIZED</div>
-  <button id="enterBtn" onclick="enterCockpit()" style="font-family:'Orbitron',monospace;font-size:14px;letter-spacing:8px;color:#88ccff;background:rgba(0,10,40,0.7);border:1px solid #1a4488;padding:14px 40px;cursor:pointer;animation:blink2 1.5s infinite;text-shadow:0 0 10px #0066ff;box-shadow:0 0 20px rgba(0,50,200,0.3);">[ ENTER ]</button>
-</div>
 
 <!-- BOOT -->
 <div id="boot">
   <div id="bootTitle">K H A I O S</div>
   <div id="bootSub">A.I.O.S. &nbsp; MULTITOOL</div>
   <div id="bootBar"><div id="bootBarFill"></div></div>
-
 </div>
 
-<!-- COCKPIT FRAME -->
-<div class="cockpit-frame">
-  <svg viewBox="0 0 1366 768" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-    <!-- Corner brackets -->
-    <path d="M0,0 L80,0 L80,4 L4,4 L4,80 L0,80 Z" fill="#0044ff" opacity="0.6"/>
-    <path d="M1366,0 L1286,0 L1286,4 L1362,4 L1362,80 L1366,80 Z" fill="#0044ff" opacity="0.6"/>
-    <path d="M0,768 L80,768 L80,764 L4,764 L4,688 L0,688 Z" fill="#0044ff" opacity="0.6"/>
-    <path d="M1366,768 L1286,768 L1286,764 L1362,764 L1362,688 L1366,688 Z" fill="#0044ff" opacity="0.6"/>
-    <!-- Top scanline -->
-    <rect x="0" y="43" width="1366" height="1" fill="#0033aa" opacity="0.5"/>
-    <!-- Bottom scanline -->
-    <rect x="0" y="724" width="1366" height="1" fill="#0033aa" opacity="0.5"/>
-    <!-- Center divider -->
-    <rect x="751" y="44" width="1" height="680" fill="#0033aa" opacity="0.4"/>
-  </svg>
+<!-- MATRIX ENTER -->
+<div id="matrixEnter">
+  <div class="enterLabel">SYSTEM INITIALIZED — READY</div>
+  <button id="enterBtn" onclick="enterDesktop()">[ ENTER ]</button>
 </div>
 
-<!-- MAIN COCKPIT UI -->
-<div id="cockpit">
-  <div class="hud-top">
-    <div class="hud-logo">A.I.O.S.</div>
-    <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:#224466;letter-spacing:3px;" id="clockDisplay">──</div>
-    <div class="hud-status">
-      <div class="hud-badge" id="providerBadge">GROQ</div>
-      <div class="hud-badge" id="coordDisplay">LAT:29.1 LON:-89.2</div>
-      <div class="sdot"></div>
+<!-- DESKTOP (empty - just matrix rain) -->
+<div id="desktop"></div>
+
+<!-- CHAT WINDOW -->
+<div class="fwindow" id="fw-chat" style="left:50px;top:50px;width:500px;height:500px;">
+  <div class="fw-titlebar" onmousedown="dragStart(event,'fw-chat')">
+    <div class="fw-title-left"><span class="fw-icon">💬</span><span class="fw-name">KHAIOS AI CORE</span></div>
+    <div class="fw-controls">
+      <button class="fw-btn" onclick="minimizeApp('chat')">─</button>
+      <button class="fw-btn" onclick="maximizeApp('fw-chat')">□</button>
+      <button class="fw-btn close" onclick="closeApp('chat')">✕</button>
     </div>
-  </div>
-
-  <div class="main-area">
-    <!-- LEFT: CHAT -->
-    <div class="chat-panel">
-      <div class="panel-header">◈ AI CORE — KHAIOS INTERFACE</div>
-      <div class="chat" id="chat"></div>
-      <div class="irow">
-        <textarea class="ifield" id="ifield" placeholder="Commander..." rows="1"></textarea>
-        <button class="sbtn" id="sbtn">&#9654;</button>
-      </div>
-    </div>
-
-    <!-- RIGHT: APPS + DISPLAY -->
-    <div class="apps-panel">
-      <div class="panel-header">◈ SYSTEM MODULES</div>
-      <div class="apps-grid">
-        <button class="app-btn" onclick="openApp('emulator')">
-          <div class="app-tile-bg" style="background:linear-gradient(135deg,#0a0a2e,#0d1b4b);"></div>
-          <div class="app-icon">🕹</div>
-          <div class="app-name">EMULATOR</div>
-        </button>
-        <button class="app-btn" onclick="openApp('calculator')">
-          <div class="app-tile-bg" style="background:linear-gradient(135deg,#0a1a2e,#0d2b4b);"></div>
-          <div class="app-icon">🔢</div>
-          <div class="app-name">CALCULATOR</div>
-        </button>
-        <button class="app-btn" onclick="openApp('notes')">
-          <div class="app-tile-bg" style="background:linear-gradient(135deg,#0a2a1e,#0d3b2b);"></div>
-          <div class="app-icon">📋</div>
-          <div class="app-name">NOTES</div>
-        </button>
-        <button class="app-btn" onclick="openApp('browser')">
-          <div class="app-tile-bg" style="background:linear-gradient(135deg,#1a0a2e,#2b0d4b);"></div>
-          <div class="app-icon">🌐</div>
-          <div class="app-name">BROWSER</div>
-        </button>
-        <button class="app-btn" onclick="openApp('weather')">
-          <div class="app-tile-bg" style="background:linear-gradient(135deg,#0a1a3e,#0d2a5b);"></div>
-          <div class="app-icon">⛅</div>
-          <div class="app-name">WEATHER</div>
-        </button>
-        <button class="app-btn" onclick="openApp('maps')">
-          <div class="app-tile-bg" style="background:linear-gradient(135deg,#1a2a0a,#2b3b0d);"></div>
-          <div class="app-icon">🗺</div>
-          <div class="app-name">MAPS</div>
-        </button>
-      </div>
-
-      <!-- Cockpit display panel -->
-      <div class="cockpit-display" id="cockpitDisplay"></div>
-
-      <!-- System readouts -->
-      <div class="sys-readouts">
-        <div class="sys-row">
-          <span class="sys-label">NEURAL</span>
-          <div class="sys-bar"><div class="sys-bar-fill" id="bar1" style="width:78%"></div></div>
-          <span class="sys-val">78%</span>
-        </div>
-        <div class="sys-row">
-          <span class="sys-label">UPLINK</span>
-          <div class="sys-bar"><div class="sys-bar-fill" id="bar2" style="width:92%"></div></div>
-          <span class="sys-val">92%</span>
-        </div>
-        <div class="sys-row">
-          <span class="sys-label">SHIELDS</span>
-          <div class="sys-bar"><div class="sys-bar-fill" id="bar3" style="width:65%"></div></div>
-          <span class="sys-val">65%</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- FLOATING WINDOWS -->
-<div class="fwindow" id="fw-calculator" style="left:200px;top:100px;width:280px;height:340px;">
-  <div class="fw-title" onmousedown="dragStart(event,'fw-calculator')">
-    <span class="fw-name">◈ CALCULATOR</span>
-    <button class="fw-close" onclick="closeApp('calculator')">✕</button>
   </div>
   <div class="fw-body">
-    <div class="calc">
-      <div class="calc-display" id="calcDisplay">0</div>
-      <div class="calc-grid">
-        <button class="calc-btn op" onclick="calcInput('C')">C</button>
-        <button class="calc-btn op" onclick="calcInput('+/-')">+/-</button>
-        <button class="calc-btn op" onclick="calcInput('%')">%</button>
-        <button class="calc-btn op" onclick="calcInput('/')">÷</button>
-        <button class="calc-btn" onclick="calcInput('7')">7</button>
-        <button class="calc-btn" onclick="calcInput('8')">8</button>
-        <button class="calc-btn" onclick="calcInput('9')">9</button>
-        <button class="calc-btn op" onclick="calcInput('*')">×</button>
-        <button class="calc-btn" onclick="calcInput('4')">4</button>
-        <button class="calc-btn" onclick="calcInput('5')">5</button>
-        <button class="calc-btn" onclick="calcInput('6')">6</button>
-        <button class="calc-btn op" onclick="calcInput('-')">−</button>
-        <button class="calc-btn" onclick="calcInput('1')">1</button>
-        <button class="calc-btn" onclick="calcInput('2')">2</button>
-        <button class="calc-btn" onclick="calcInput('3')">3</button>
-        <button class="calc-btn op" onclick="calcInput('+')">+</button>
-        <button class="calc-btn" onclick="calcInput('0')" style="grid-column:span 2">0</button>
-        <button class="calc-btn" onclick="calcInput('.')">.</button>
-        <button class="calc-btn eq" onclick="calcInput('=')">=</button>
-      </div>
+    <div class="chat" id="chat"></div>
+    <div class="irow">
+      <textarea class="ifield" id="ifield" placeholder="Commander..." rows="1"></textarea>
+      <button class="sbtn" id="sbtn">&#9654;</button>
+    </div>
+  </div>
+  <div class="status-bar">
+    <div class="status-dot"></div>
+    <div class="status-item" id="providerBadge">GROQ</div>
+    <div class="status-item" id="statusText">ONLINE</div>
+  </div>
+</div>
+
+<!-- CALCULATOR -->
+<div class="fwindow" id="fw-calculator" style="left:600px;top:80px;width:260px;height:360px;">
+  <div class="fw-titlebar" onmousedown="dragStart(event,'fw-calculator')">
+    <div class="fw-title-left"><span class="fw-icon">🔢</span><span class="fw-name">CALCULATOR</span></div>
+    <div class="fw-controls">
+      <button class="fw-btn" onclick="minimizeApp('calculator')">─</button>
+      <button class="fw-btn" onclick="maximizeApp('fw-calculator')">□</button>
+      <button class="fw-btn close" onclick="closeApp('calculator')">✕</button>
+    </div>
+  </div>
+  <div class="fw-body">
+    <div class="calc-display" id="calcDisplay">0</div>
+    <div class="calc-grid">
+      <button class="calc-btn op" onclick="calcInput('C')">C</button>
+      <button class="calc-btn op" onclick="calcInput('+/-')">+/-</button>
+      <button class="calc-btn op" onclick="calcInput('%')">%</button>
+      <button class="calc-btn op" onclick="calcInput('/')">÷</button>
+      <button class="calc-btn" onclick="calcInput('7')">7</button>
+      <button class="calc-btn" onclick="calcInput('8')">8</button>
+      <button class="calc-btn" onclick="calcInput('9')">9</button>
+      <button class="calc-btn op" onclick="calcInput('*')">×</button>
+      <button class="calc-btn" onclick="calcInput('4')">4</button>
+      <button class="calc-btn" onclick="calcInput('5')">5</button>
+      <button class="calc-btn" onclick="calcInput('6')">6</button>
+      <button class="calc-btn op" onclick="calcInput('-')">−</button>
+      <button class="calc-btn" onclick="calcInput('1')">1</button>
+      <button class="calc-btn" onclick="calcInput('2')">2</button>
+      <button class="calc-btn" onclick="calcInput('3')">3</button>
+      <button class="calc-btn op" onclick="calcInput('+')">+</button>
+      <button class="calc-btn" onclick="calcInput('0')" style="grid-column:span 2">0</button>
+      <button class="calc-btn" onclick="calcInput('.')">.</button>
+      <button class="calc-btn eq" onclick="calcInput('=')">=</button>
     </div>
   </div>
 </div>
 
-<div class="fwindow" id="fw-notes" style="left:300px;top:120px;width:380px;height:320px;">
-  <div class="fw-title" onmousedown="dragStart(event,'fw-notes')">
-    <span class="fw-name">◈ MISSION LOG</span>
-    <button class="fw-close" onclick="closeApp('notes')">✕</button>
+<!-- NOTES -->
+<div class="fwindow" id="fw-notes" style="left:200px;top:200px;width:380px;height:300px;">
+  <div class="fw-titlebar" onmousedown="dragStart(event,'fw-notes')">
+    <div class="fw-title-left"><span class="fw-icon">📋</span><span class="fw-name">MISSION LOG</span></div>
+    <div class="fw-controls">
+      <button class="fw-btn" onclick="minimizeApp('notes')">─</button>
+      <button class="fw-btn" onclick="maximizeApp('fw-notes')">□</button>
+      <button class="fw-btn close" onclick="closeApp('notes')">✕</button>
+    </div>
   </div>
-  <div class="fw-body" style="padding:8px;">
-    <textarea class="notes-area" id="notesArea" placeholder="Enter mission log..."></textarea>
+  <div class="fw-body"><textarea class="notes-area" placeholder="Enter mission log..."></textarea></div>
+</div>
+
+<!-- BROWSER -->
+<div class="fwindow" id="fw-browser" style="left:100px;top:60px;width:700px;height:500px;">
+  <div class="fw-titlebar" onmousedown="dragStart(event,'fw-browser')">
+    <div class="fw-title-left"><span class="fw-icon">🌐</span><span class="fw-name">NET BROWSER</span></div>
+    <div class="fw-controls">
+      <button class="fw-btn" onclick="minimizeApp('browser')">─</button>
+      <button class="fw-btn" onclick="maximizeApp('fw-browser')">□</button>
+      <button class="fw-btn close" onclick="closeApp('browser')">✕</button>
+    </div>
+  </div>
+  <div class="fw-body" style="flex-direction:column;">
+    <div style="display:flex;gap:4px;padding:5px;background:rgba(0,4,18,0.98);border-bottom:1px solid #0a1a33;flex-shrink:0;">
+      <input id="browserUrl" style="flex:1;background:rgba(0,4,18,0.95);border:1px solid #0a1a33;color:#cce4ff;font-family:'Share Tech Mono',monospace;font-size:9px;padding:4px 8px;outline:none;" placeholder="Enter URL..." value="https://www.google.com">
+      <button onclick="loadBrowser()" style="background:rgba(0,12,50,0.8);border:1px solid #0a1a33;color:#4488cc;font-family:'Share Tech Mono',monospace;font-size:9px;padding:4px 10px;cursor:pointer;">GO</button>
+    </div>
+    <iframe id="browserFrame" style="flex:1;border:none;background:#000;" src="about:blank"></iframe>
   </div>
 </div>
 
-<div class="fwindow" id="fw-emulator" style="left:100px;top:80px;width:500px;height:450px;">
-  <div class="fw-title" onmousedown="dragStart(event,'fw-emulator')">
-    <span class="fw-name">◈ EMULATOR</span>
-    <button class="fw-close" onclick="closeApp('emulator')">✕</button>
+<!-- EMULATOR -->
+<div class="fwindow" id="fw-emulator" style="left:150px;top:100px;width:550px;height:460px;">
+  <div class="fw-titlebar" onmousedown="dragStart(event,'fw-emulator')">
+    <div class="fw-title-left"><span class="fw-icon">🕹</span><span class="fw-name">EMULATOR</span></div>
+    <div class="fw-controls">
+      <button class="fw-btn" onclick="minimizeApp('emulator')">─</button>
+      <button class="fw-btn" onclick="maximizeApp('fw-emulator')">□</button>
+      <button class="fw-btn close" onclick="closeApp('emulator')">✕</button>
+    </div>
   </div>
-  <div class="fw-body" style="padding:0;display:flex;flex-direction:column;gap:8px;padding:8px;">
+  <div class="fw-body" style="flex-direction:column;padding:10px;gap:8px;">
     <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:#224466;letter-spacing:2px;flex-shrink:0;">LOAD ROM FILE:</div>
-    <input type="file" id="romFile" accept=".nes,.gb,.gbc,.gba,.sfc,.smc,.n64,.z64,.md,.bin" style="font-family:'Share Tech Mono',monospace;font-size:9px;color:#4488cc;background:rgba(0,5,20,0.9);border:1px solid #0a1a33;padding:4px;width:100%;">
-    <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:#224466;letter-spacing:2px;flex-shrink:0;">OR PLAY ONLINE:</div>
+    <input type="file" id="romFile" accept=".nes,.gb,.gbc,.gba,.sfc,.smc" style="font-family:'Share Tech Mono',monospace;font-size:9px;color:#4488cc;background:rgba(0,4,18,0.9);border:1px solid #0a1a33;padding:4px;width:100%;flex-shrink:0;">
     <div style="display:flex;gap:4px;flex-shrink:0;">
-      <button onclick="loadEmu('https://jsnes.org/')" class="calc-btn" style="flex:1;font-size:9px;">NES ONLINE</button>
-      <button onclick="loadEmu('https://nostalgist.js.org/demos/fc/')" class="calc-btn" style="flex:1;font-size:9px;">DEMO</button>
+      <button onclick="loadEmu('https://jsnes.org/')" style="flex:1;background:rgba(0,8,28,0.9);border:1px solid #0a1a33;color:#4488cc;font-family:'Share Tech Mono',monospace;font-size:9px;padding:6px;cursor:pointer;">NES ONLINE</button>
+      <button onclick="loadEmu('https://www.8bbit.com/')" style="flex:1;background:rgba(0,8,28,0.9);border:1px solid #0a1a33;color:#4488cc;font-family:'Share Tech Mono',monospace;font-size:9px;padding:6px;cursor:pointer;">8-BIT GAMES</button>
     </div>
-    <iframe id="emuFrame" class="emu-frame" style="flex:1;border:1px solid #0a1a33;" src="about:blank"></iframe>
+    <iframe id="emuFrame" style="flex:1;border:1px solid #0a1a33;background:#000;" src="about:blank"></iframe>
   </div>
 </div>
 
-<div class="fwindow" id="fw-browser" style="left:150px;top:100px;width:600px;height:450px;">
-  <div class="fw-title" onmousedown="dragStart(event,'fw-browser')">
-    <span class="fw-name">◈ NET BROWSER</span>
-    <button class="fw-close" onclick="closeApp('browser')">✕</button>
-  </div>
-  <div class="fw-body" style="padding:8px;display:flex;flex-direction:column;gap:6px;">
-    <div style="display:flex;gap:4px;flex-shrink:0;">
-      <input id="browserUrl" style="flex:1;background:rgba(0,5,22,0.95);border:1px solid #0a1a33;color:#cce4ff;font-family:'Share Tech Mono',monospace;font-size:10px;padding:5px 8px;outline:none;" placeholder="Enter URL..." value="https://www.google.com">
-      <button onclick="loadBrowser()" class="sbtn" style="width:50px;font-size:9px;font-family:'Share Tech Mono',monospace;">GO</button>
+<!-- WEATHER -->
+<div class="fwindow" id="fw-weather" style="left:300px;top:100px;width:400px;height:350px;">
+  <div class="fw-titlebar" onmousedown="dragStart(event,'fw-weather')">
+    <div class="fw-title-left"><span class="fw-icon">⛅</span><span class="fw-name">WEATHER INTEL</span></div>
+    <div class="fw-controls">
+      <button class="fw-btn" onclick="minimizeApp('weather')">─</button>
+      <button class="fw-btn" onclick="maximizeApp('fw-weather')">□</button>
+      <button class="fw-btn close" onclick="closeApp('weather')">✕</button>
     </div>
-    <iframe id="browserFrame" style="flex:1;border:1px solid #0a1a33;background:#000;width:100%;" src="about:blank"></iframe>
+  </div>
+  <div class="fw-body">
+    <iframe src="https://wttr.in/?format=v2" style="width:100%;height:100%;border:none;filter:invert(1) hue-rotate(180deg);background:#000;"></iframe>
   </div>
 </div>
 
-<div class="fwindow" id="fw-weather" style="left:200px;top:100px;width:340px;height:300px;">
-  <div class="fw-title" onmousedown="dragStart(event,'fw-weather')">
-    <span class="fw-name">◈ WEATHER INTEL</span>
-    <button class="fw-close" onclick="closeApp('weather')">✕</button>
+<!-- MAPS -->
+<div class="fwindow" id="fw-maps" style="left:200px;top:120px;width:500px;height:400px;">
+  <div class="fw-titlebar" onmousedown="dragStart(event,'fw-maps')">
+    <div class="fw-title-left"><span class="fw-icon">🗺</span><span class="fw-name">NAV MAPS</span></div>
+    <div class="fw-controls">
+      <button class="fw-btn" onclick="minimizeApp('maps')">─</button>
+      <button class="fw-btn" onclick="maximizeApp('fw-maps')">□</button>
+      <button class="fw-btn close" onclick="closeApp('maps')">✕</button>
+    </div>
   </div>
-  <div class="fw-body" style="padding:0;">
-    <iframe src="https://forecast.weather.gov/MapClick.php?CityName=New+Orleans&state=LA&site=LIX&textField1=29.9511&textField2=-90.0715&unit=0&lg=english&&FcstType=text&menu=1" style="width:100%;height:100%;border:none;filter:invert(1) hue-rotate(180deg);"></iframe>
-  </div>
-</div>
-
-<div class="fwindow" id="fw-maps" style="left:200px;top:100px;width:500px;height:400px;">
-  <div class="fw-title" onmousedown="dragStart(event,'fw-maps')">
-    <span class="fw-name">◈ NAV MAPS</span>
-    <button class="fw-close" onclick="closeApp('maps')">✕</button>
-  </div>
-  <div class="fw-body" style="padding:0;">
+  <div class="fw-body">
     <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=-90.1,29.9,-89.9,30.1&layer=mapnik" style="width:100%;height:100%;border:none;filter:invert(1) hue-rotate(180deg);"></iframe>
+  </div>
+</div>
+
+<!-- START MENU -->
+<div id="startMenu">
+  <div class="sm-header">
+    <div class="sm-avatar">⚡</div>
+    <div><div class="sm-name">COMMANDER</div><div class="sm-sub">A.I.O.S. MULTITOOL v2.0</div></div>
+  </div>
+  <div class="sm-section">APPLICATIONS</div>
+  <div class="sm-grid">
+    <div class="sm-tile" onclick="openApp('chat');toggleStartMenu()"><div class="sm-tile-icon">💬</div><div class="sm-tile-name">AI CORE</div></div>
+    <div class="sm-tile" onclick="openApp('emulator');toggleStartMenu()"><div class="sm-tile-icon">🕹</div><div class="sm-tile-name">EMULATOR</div></div>
+    <div class="sm-tile" onclick="openApp('calculator');toggleStartMenu()"><div class="sm-tile-icon">🔢</div><div class="sm-tile-name">CALC</div></div>
+    <div class="sm-tile" onclick="openApp('notes');toggleStartMenu()"><div class="sm-tile-icon">📋</div><div class="sm-tile-name">NOTES</div></div>
+    <div class="sm-tile" onclick="openApp('browser');toggleStartMenu()"><div class="sm-tile-icon">🌐</div><div class="sm-tile-name">BROWSER</div></div>
+    <div class="sm-tile" onclick="openApp('weather');toggleStartMenu()"><div class="sm-tile-icon">⛅</div><div class="sm-tile-name">WEATHER</div></div>
+    <div class="sm-tile" onclick="openApp('maps');toggleStartMenu()"><div class="sm-tile-icon">🗺</div><div class="sm-tile-name">MAPS</div></div>
+    <div class="sm-tile" onclick="toggleStartMenu()"><div class="sm-tile-icon">⚙</div><div class="sm-tile-name">SETTINGS</div></div>
+  </div>
+  <div class="sm-footer">
+    <div class="sm-footer-btn">👤 PROFILE</div>
+    <div class="sm-footer-btn" onclick="if(confirm('Shutdown A.I.O.S.?'))document.body.innerHTML='<div style=background:#000;color:#0044ff;font-family:monospace;padding:40px;font-size:14px>SYSTEM SHUTDOWN...</div>'">⏻ SHUTDOWN</div>
+  </div>
+</div>
+
+<!-- TASKBAR -->
+<div id="taskbar">
+  <div class="tb-start" onclick="toggleStartMenu()">⊕ &nbsp;START</div>
+  <div class="tb-divider"></div>
+  <div class="tb-apps" id="tbApps">
+    <div class="tb-app open" id="tb-chat" onclick="toggleApp('chat')"><span class="tb-app-icon">💬</span>AI CORE</div>
+  </div>
+  <div class="tb-divider"></div>
+  <div class="tb-right">
+    <div class="tb-clock" id="tbClock">──<br>──</div>
   </div>
 </div>
 
 <script>
 var API_URL='https://khaios-assests-py-24-7.onrender.com/api/chat';
-var SYSTEM=`You are KHAIOS — a razor-sharp feminine intelligence embedded in the A.I.O.S. Multitool. Think JARVIS precision meets quiet feminine power. Address the user as Commander, always. Calm, warm, wickedly capable. Responses concise — one or two sentences unless depth needed.`;
-
-// ── CLOCK ──────────────────────────────────────────────────────────────────
-setInterval(function(){
-  var d=new Date();
-  document.getElementById('clockDisplay').textContent=
-    d.toLocaleDateString()+'  '+d.toTimeString().slice(0,8);
-},1000);
+var SYSTEM=`You are KHAIOS — a razor-sharp feminine intelligence embedded in the A.I.O.S. Multitool. Address the user as Commander, always. Calm, warm, wickedly capable. Responses concise.`;
 
 // ── MATRIX RAIN ───────────────────────────────────────────────────────────
 (function(){
@@ -395,37 +360,7 @@ setInterval(function(){
   window.addEventListener('resize',resize);resize();requestAnimationFrame(draw);
 })();
 
-// ── BOOT SPEECH ──────────────────────────────────────────────────────────────
-function speakBoot(text){
-  if(!window.speechSynthesis)return;
-  var trySpeak=function(){
-    var voices=speechSynthesis.getVoices();
-    var v=voices.find(function(x){return x.name.includes('Zira');})||
-          voices.find(function(x){return x.name.includes('Samantha');})||
-          voices.find(function(x){return x.name.toLowerCase().includes('female');})||null;
-    var u=new SpeechSynthesisUtterance(text);
-    u.rate=0.88;u.pitch=1.15;u.volume=1;
-    if(v)u.voice=v;
-    speechSynthesis.speak(u);
-  };
-  if(speechSynthesis.getVoices().length>0){trySpeak();}
-  else{speechSynthesis.onvoiceschanged=function(){trySpeak();};}
-}
-
 // ── BOOT ──────────────────────────────────────────────────────────────────
-
-function enterCockpit(){
-  var el=document.getElementById('matrixEnter');
-  el.style.transition='opacity 0.8s';el.style.opacity='0';
-  setTimeout(function(){
-    el.style.display='none';
-    document.getElementById('matrixCanvas').style.opacity='0.4';
-    document.getElementById('cockpit').style.display='flex';
-    document.getElementById('taskbar').style.display='flex';
-    sendGreeting();
-    animateBars();
-  },800);
-}
 var bootDone=false;
 function completeBoot(){
   if(bootDone)return;bootDone=true;
@@ -433,49 +368,49 @@ function completeBoot(){
   el.style.transition='opacity 1.5s';el.style.opacity='0';
   setTimeout(function(){
     el.style.display='none';
-    // Show matrix enter screen
     document.getElementById('bgVideo').style.opacity='0';
-    document.getElementById('matrixCanvas').style.opacity='0.4';
+    document.getElementById('matrixCanvas').style.opacity='0.5';
     var me=document.getElementById('matrixEnter');
     me.style.display='flex';me.style.opacity='1';
-    // Speak welcome
     speakBoot('Welcome back, Commander.');
   },1500);
 }
 (function(){
-  // Boot: fade in video, keep matrix hidden
   setTimeout(function(){document.getElementById('bgVideo').style.opacity='0.85';},100);
-  document.getElementById('matrixCanvas').style.opacity='0';
   setTimeout(function(){document.getElementById('bootTitle').style.opacity=1;},300);
-  // Speak welcome on boot
-  setTimeout(function(){speakBoot('Welcome back, Commander.');},800);
   setTimeout(function(){document.getElementById('bootSub').style.opacity=1;},800);
   setTimeout(function(){
     document.getElementById('bootBar').style.opacity=1;
     setTimeout(function(){document.getElementById('bootBarFill').style.width='100%';},100);
-  },1200);
+  },100);
   setTimeout(completeBoot,5000);
 })();
 
-// ── SYSTEM BARS ANIMATION ────────────────────────────────────────────────
-function animateBars(){
-  setInterval(function(){
-    var vals=[Math.floor(65+Math.random()*30),Math.floor(80+Math.random()*18),Math.floor(50+Math.random()*45)];
-    ['bar1','bar2','bar3'].forEach(function(id,i){
-      var el=document.getElementById(id);if(el){el.style.width=vals[i]+'%';}
-    });
-  },2000);
+function enterDesktop(){
+  var me=document.getElementById('matrixEnter');
+  me.style.transition='opacity 0.8s';me.style.opacity='0';
+  setTimeout(function(){
+    me.style.display='none';
+    document.getElementById('desktop').style.display='block';
+    document.getElementById('taskbar').style.display='flex';
+    // Open chat by default
+    openApp('chat');
+    sendGreeting();
+  },800);
 }
 
 // ── SPEECH ────────────────────────────────────────────────────────────────
-var cachedVoice=null,userInteracted=false,pendingSpeech=null,msgStore={},msgCounter=0;
+var cachedVoice=null,msgStore={},msgCounter=0;
 function getVoice(){if(cachedVoice)return cachedVoice;var voices=speechSynthesis.getVoices();var v=voices.find(function(x){return x.name.includes('Zira');})||voices.find(function(x){return x.name.includes('Samantha');})||null;if(v)cachedVoice=v;return v;}
 if(window.speechSynthesis){speechSynthesis.getVoices();speechSynthesis.onvoiceschanged=function(){getVoice();};}
-function onInteract(){if(userInteracted)return;userInteracted=true;if(pendingSpeech){speak(pendingSpeech);pendingSpeech=null;}}
-document.addEventListener('click',onInteract,{once:true});
+function speakBoot(text){
+  if(!window.speechSynthesis)return;
+  var u=new SpeechSynthesisUtterance(text);u.rate=0.88;u.pitch=1.15;
+  var v=getVoice();if(v)u.voice=v;
+  speechSynthesis.speak(u);
+}
 function speak(text){
   if(!window.speechSynthesis)return;
-  if(!userInteracted){pendingSpeech=text;return;}
   speechSynthesis.cancel();
   var chunks=text.match(/[^.!?]{1,180}[.!?]*/g)||[text];
   var voice=getVoice();
@@ -503,6 +438,7 @@ async function callAPI(messages){
 async function sendMsg(text){
   if(busy||!text.trim())return;busy=true;
   document.getElementById('sbtn').disabled=true;
+  document.getElementById('statusText').textContent='PROCESSING...';
   addMsg('user',text);
   var thinking=addThinking();
   chatHistory.push({role:'user',content:text});
@@ -510,30 +446,77 @@ async function sendMsg(text){
     var response=await callAPI([{role:'system',content:SYSTEM}].concat(chatHistory));
     chatHistory.push({role:'assistant',content:response});
     thinking.remove();addMsg('ai',response);speak(response);
-  }catch(e){thinking.remove();addMsg('ai','Systems recalibrating, Commander.');}
+    document.getElementById('statusText').textContent='ONLINE';
+  }catch(e){thinking.remove();addMsg('ai','Systems recalibrating, Commander.');document.getElementById('statusText').textContent='ERROR';}
   busy=false;document.getElementById('sbtn').disabled=false;
 }
 function sendGreeting(){addMsg('ai','Systems online, Commander. A.I.O.S. Multitool ready.');}
 
 document.getElementById('sbtn').addEventListener('click',function(){var f=document.getElementById('ifield');sendMsg(f.value.trim());f.value='';f.style.height='';});
 document.getElementById('ifield').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();var f=document.getElementById('ifield');sendMsg(f.value.trim());f.value='';f.style.height='';}});
-document.getElementById('ifield').addEventListener('input',function(){this.style.height='';this.style.height=Math.min(this.scrollHeight,70)+'px';});
+document.getElementById('ifield').addEventListener('input',function(){this.style.height='';this.style.height=Math.min(this.scrollHeight,60)+'px';});
 
-// ── APP WINDOWS ────────────────────────────────────────────────────────────
+// ── WINDOW MANAGEMENT ────────────────────────────────────────────────────
+var appNames={chat:'💬 AI CORE',emulator:'🕹 EMULATOR',calculator:'🔢 CALC',notes:'📋 NOTES',browser:'🌐 BROWSER',weather:'⛅ WEATHER',maps:'🗺 MAPS'};
+var minimized={};
+
 function openApp(name){
-  document.getElementById('fw-'+name).classList.add('active');
-  var tb=document.getElementById('tb-'+name);if(tb)tb.classList.add('open');
+  var fw=document.getElementById('fw-'+name);
+  fw.classList.add('active');
+  fw.style.zIndex=getTopZ();
+  minimized[name]=false;
+  updateTaskbar(name,true);
 }
 function closeApp(name){
   document.getElementById('fw-'+name).classList.remove('active');
-  var tb=document.getElementById('tb-'+name);if(tb)tb.classList.remove('open');
+  removeTaskbarBtn(name);
+}
+function minimizeApp(name){
+  document.getElementById('fw-'+name).style.display='none';
+  minimized[name]=true;
+  updateTaskbar(name,true);
+}
+function maximizeApp(id){
+  var fw=document.getElementById(id);
+  fw.classList.toggle('maximized');
+}
+function toggleApp(name){
+  var fw=document.getElementById('fw-'+name);
+  if(!fw.classList.contains('active')){openApp(name);return;}
+  if(minimized[name]||fw.style.display==='none'){
+    fw.style.display='flex';minimized[name]=false;fw.style.zIndex=getTopZ();
+  } else {
+    minimizeApp(name);
+  }
+}
+function getTopZ(){
+  var z=100;
+  document.querySelectorAll('.fwindow').forEach(function(w){if(parseInt(w.style.zIndex)>z)z=parseInt(w.style.zIndex);});
+  return z+1;
+}
+function updateTaskbar(name,show){
+  var existing=document.getElementById('tb-'+name);
+  if(show&&!existing){
+    var btn=document.createElement('div');
+    btn.className='tb-app open';btn.id='tb-'+name;
+    btn.innerHTML='<span class="tb-app-icon">'+appNames[name].split(' ')[0]+'</span>'+appNames[name].split(' ').slice(1).join(' ');
+    btn.onclick=function(){toggleApp(name);};
+    document.getElementById('tbApps').appendChild(btn);
+  } else if(existing){
+    existing.classList.toggle('open',!minimized[name]);
+  }
+}
+function removeTaskbarBtn(name){
+  var btn=document.getElementById('tb-'+name);if(btn)btn.remove();
 }
 
-// ── DRAG WINDOWS ──────────────────────────────────────────────────────────
-var drag={el:null,ox:0,oy:0,sx:0,sy:0};
+// ── DRAG WINDOWS ─────────────────────────────────────────────────────────
+var drag={el:null,ox:0,oy:0};
 function dragStart(e,id){
-  drag.el=document.getElementById(id);
-  var r=drag.el.getBoundingClientRect();
+  var fw=document.getElementById(id);
+  fw.style.zIndex=getTopZ();
+  drag.el=fw;
+  var r=fw.getBoundingClientRect();
   drag.ox=e.clientX-r.left;drag.oy=e.clientY-r.top;
   document.onmousemove=function(e2){
     if(!drag.el)return;
@@ -543,14 +526,33 @@ function dragStart(e,id){
   document.onmouseup=function(){drag.el=null;document.onmousemove=null;document.onmouseup=null;};
 }
 
+// ── START MENU ────────────────────────────────────────────────────────────
+function toggleStartMenu(){
+  var sm=document.getElementById('startMenu');
+  sm.style.display=sm.style.display==='flex'?'none':'flex';
+}
+document.addEventListener('click',function(e){
+  var sm=document.getElementById('startMenu');
+  if(sm&&sm.style.display==='flex'&&!sm.contains(e.target)&&!e.target.closest('.tb-start')){
+    sm.style.display='none';
+  }
+});
+
+// ── CLOCK ─────────────────────────────────────────────────────────────────
+setInterval(function(){
+  var d=new Date();
+  var tb=document.getElementById('tbClock');
+  if(tb){tb.innerHTML=d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+'<br>'+d.toLocaleDateString([],{month:'2-digit',day:'2-digit',year:'2-digit'});}
+},1000);
+
 // ── CALCULATOR ────────────────────────────────────────────────────────────
 var calcStr='',calcPrev='',calcOp='',calcNew=true;
 function calcInput(v){
   var d=document.getElementById('calcDisplay');
   if(v==='C'){calcStr='0';calcPrev='';calcOp='';calcNew=true;d.textContent='0';return;}
-  if(v==='='){ try{var r=eval(calcPrev+calcOp+calcStr);d.textContent=parseFloat(r.toFixed(10));calcStr=String(r);calcPrev='';calcOp='';}catch(e){d.textContent='ERR';}calcNew=true;return;}
+  if(v==='='){try{var r=eval(calcPrev+calcOp+calcStr);d.textContent=parseFloat(r.toFixed(10));calcStr=String(r);calcPrev='';calcOp='';}catch(e){d.textContent='ERR';}calcNew=true;return;}
   if(['+','-','*','/'].includes(v)){calcPrev=calcStr;calcOp=v;calcNew=true;return;}
-  if(v==='%'){try{d.textContent=parseFloat((eval(calcStr)/100).toFixed(10));}catch(e){}return;}
+  if(v==='%'){try{d.textContent=parseFloat((parseFloat(calcStr)/100).toFixed(10));}catch(e){}return;}
   if(v==='+/-'){calcStr=String(-parseFloat(calcStr)||0);d.textContent=calcStr;return;}
   if(calcNew){calcStr='';calcNew=false;}
   if(v==='.'&&calcStr.includes('.'))return;
@@ -559,11 +561,6 @@ function calcInput(v){
 
 // ── EMULATOR ──────────────────────────────────────────────────────────────
 function loadEmu(url){document.getElementById('emuFrame').src=url;}
-document.getElementById('romFile').addEventListener('change',function(e){
-  var file=e.target.files[0];if(!file)return;
-  var url=URL.createObjectURL(file);
-  document.getElementById('emuFrame').src='https://js.emularity.com/embed.html?rom='+url;
-});
 
 // ── BROWSER ───────────────────────────────────────────────────────────────
 function loadBrowser(){
@@ -572,69 +569,5 @@ function loadBrowser(){
   document.getElementById('browserFrame').src=url;
 }
 </script>
-<!-- START MENU -->
-<div id="startMenu" style="display:none;position:fixed;bottom:44px;left:0;z-index:300;width:320px;background:rgba(0,4,18,0.98);border:1px solid #0a2244;border-bottom:none;flex-direction:column;">
-  <!-- User header -->
-  <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid #0a1a33;background:rgba(0,8,30,0.9);">
-    <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#0033aa,#0066ff);display:flex;align-items:center;justify-content:center;font-size:18px;">⚡</div>
-    <div>
-      <div style="font-family:'Orbitron',monospace;font-size:11px;font-weight:700;color:#88ccff;letter-spacing:2px;">COMMANDER</div>
-      <div style="font-family:'Share Tech Mono',monospace;font-size:8px;color:#224466;letter-spacing:1px;">A.I.O.S. MULTITOOL</div>
-    </div>
-  </div>
-  <!-- App grid -->
-  <div style="padding:10px;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;">
-    <div onclick="openApp('emulator');toggleStartMenu();" style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 6px;cursor:pointer;border:1px solid #0a1a33;background:rgba(0,8,30,0.8);transition:all .15s;" onmouseover="this.style.background='rgba(0,25,80,0.9)'" onmouseout="this.style.background='rgba(0,8,30,0.8)'">
-      <span style="font-size:22px;">🕹</span>
-      <span style="font-family:'Share Tech Mono',monospace;font-size:7px;color:#4488cc;letter-spacing:1px;">EMULATOR</span>
-    </div>
-    <div onclick="openApp('calculator');toggleStartMenu();" style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 6px;cursor:pointer;border:1px solid #0a1a33;background:rgba(0,8,30,0.8);transition:all .15s;" onmouseover="this.style.background='rgba(0,25,80,0.9)'" onmouseout="this.style.background='rgba(0,8,30,0.8)'">
-      <span style="font-size:22px;">🔢</span>
-      <span style="font-family:'Share Tech Mono',monospace;font-size:7px;color:#4488cc;letter-spacing:1px;">CALC</span>
-    </div>
-    <div onclick="openApp('notes');toggleStartMenu();" style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 6px;cursor:pointer;border:1px solid #0a1a33;background:rgba(0,8,30,0.8);transition:all .15s;" onmouseover="this.style.background='rgba(0,25,80,0.9)'" onmouseout="this.style.background='rgba(0,8,30,0.8)'">
-      <span style="font-size:22px;">📋</span>
-      <span style="font-family:'Share Tech Mono',monospace;font-size:7px;color:#4488cc;letter-spacing:1px;">NOTES</span>
-    </div>
-    <div onclick="openApp('browser');toggleStartMenu();" style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 6px;cursor:pointer;border:1px solid #0a1a33;background:rgba(0,8,30,0.8);transition:all .15s;" onmouseover="this.style.background='rgba(0,25,80,0.9)'" onmouseout="this.style.background='rgba(0,8,30,0.8)'">
-      <span style="font-size:22px;">🌐</span>
-      <span style="font-family:'Share Tech Mono',monospace;font-size:7px;color:#4488cc;letter-spacing:1px;">BROWSER</span>
-    </div>
-    <div onclick="openApp('weather');toggleStartMenu();" style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 6px;cursor:pointer;border:1px solid #0a1a33;background:rgba(0,8,30,0.8);transition:all .15s;" onmouseover="this.style.background='rgba(0,25,80,0.9)'" onmouseout="this.style.background='rgba(0,8,30,0.8)'">
-      <span style="font-size:22px;">⛅</span>
-      <span style="font-family:'Share Tech Mono',monospace;font-size:7px;color:#4488cc;letter-spacing:1px;">WEATHER</span>
-    </div>
-    <div onclick="openApp('maps');toggleStartMenu();" style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 6px;cursor:pointer;border:1px solid #0a1a33;background:rgba(0,8,30,0.8);transition:all .15s;" onmouseover="this.style.background='rgba(0,25,80,0.9)'" onmouseout="this.style.background='rgba(0,8,30,0.8)'">
-      <span style="font-size:22px;">🗺</span>
-      <span style="font-family:'Share Tech Mono',monospace;font-size:7px;color:#4488cc;letter-spacing:1px;">MAPS</span>
-    </div>
-  </div>
-  <!-- Bottom bar -->
-  <div style="display:flex;justify-content:space-between;padding:8px 12px;border-top:1px solid #0a1a33;background:rgba(0,4,15,0.9);">
-    <div style="font-family:'Share Tech Mono',monospace;font-size:8px;color:#224466;letter-spacing:2px;cursor:pointer;" onclick="toggleStartMenu()">⚙ SETTINGS</div>
-    <div style="font-family:'Share Tech Mono',monospace;font-size:8px;color:#224466;letter-spacing:2px;cursor:pointer;" onclick="if(confirm('Shutdown AIOS?'))window.close()">⏻ SHUTDOWN</div>
-  </div>
-</div>
-
-<!-- TASKBAR -->
-<div class="taskbar" id="taskbar" style="display:none;">
-  <div class="tb-start" onclick="toggleStartMenu()">⊕ &nbsp;A.I.O.S.</div>
-  <div class="tb-divider"></div>
-  <div class="tb-apps">
-    <div class="tb-app" id="tb-chat" onclick="focusChat()"><span class="tb-app-icon">💬</span>KHAIOS AI</div>
-    <div class="tb-app" id="tb-emulator" onclick="toggleApp('emulator')"><span class="tb-app-icon">🕹</span>EMULATOR</div>
-    <div class="tb-app" id="tb-calculator" onclick="toggleApp('calculator')"><span class="tb-app-icon">🔢</span>CALC</div>
-    <div class="tb-app" id="tb-notes" onclick="toggleApp('notes')"><span class="tb-app-icon">📋</span>NOTES</div>
-    <div class="tb-app" id="tb-browser" onclick="toggleApp('browser')"><span class="tb-app-icon">🌐</span>BROWSER</div>
-    <div class="tb-app" id="tb-weather" onclick="toggleApp('weather')"><span class="tb-app-icon">⛅</span>WEATHER</div>
-    <div class="tb-app" id="tb-maps" onclick="toggleApp('maps')"><span class="tb-app-icon">🗺</span>MAPS</div>
-  </div>
-  <div class="tb-divider"></div>
-  <div class="tb-right">
-    <div class="tb-sys" id="tbProvider">GROQ</div>
-    <div class="tb-clock" id="tbClock">──</div>
-  </div>
-</div>
-
 </body>
 </html>
