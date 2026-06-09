@@ -25,7 +25,7 @@ html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-fami
 #bootBarFill{height:100%;width:0%;background:linear-gradient(90deg,#0044ff,#00ccff);transition:width 8s linear;box-shadow:0 0 10px #00aaff;}
 
 /* COCKPIT */
-#cockpit{position:fixed;inset:0;z-index:10;display:none;flex-direction:column;}
+#cockpit{position:fixed;inset:0;bottom:44px;z-index:10;display:none;flex-direction:column;}
 
 /* TOP HUD BAR */
 .hud-top{display:flex;align-items:center;justify-content:space-between;padding:0 16px;height:44px;background:rgba(0,5,20,0.95);border-bottom:1px solid #0a2244;flex-shrink:0;}
@@ -89,6 +89,20 @@ html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-fami
 /* COCKPIT FRAME OVERLAY */
 .cockpit-frame{position:fixed;inset:0;z-index:9;pointer-events:none;}
 .cockpit-frame svg{width:100%;height:100%;}
+
+/* TASKBAR */
+.taskbar{position:fixed;bottom:0;left:0;right:0;height:44px;background:rgba(0,4,18,0.97);border-top:1px solid #0a1a33;z-index:50;display:flex;align-items:center;padding:0 8px;gap:4px;}
+.tb-start{display:flex;align-items:center;gap:6px;padding:4px 12px;background:rgba(0,20,80,0.7);border:1px solid #1a3366;cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;color:#66aaff;flex-shrink:0;}
+.tb-start:hover{background:rgba(0,40,150,0.7);}
+.tb-divider{width:1px;height:28px;background:#0a1a33;flex-shrink:0;margin:0 4px;}
+.tb-apps{display:flex;gap:3px;flex:1;overflow:hidden;}
+.tb-app{display:flex;align-items:center;gap:5px;padding:4px 10px;background:rgba(0,10,35,0.8);border:1px solid #0a1a33;cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;color:#4488cc;white-space:nowrap;transition:all .15s;}
+.tb-app:hover{background:rgba(0,25,80,0.9);border-color:#1a3366;}
+.tb-app.open{border-color:#1a4488;background:rgba(0,20,70,0.9);color:#88ccff;}
+.tb-app-icon{font-size:14px;}
+.tb-right{display:flex;align-items:center;gap:10px;flex-shrink:0;padding-left:8px;}
+.tb-clock{font-family:'Share Tech Mono',monospace;font-size:9px;color:#4488cc;letter-spacing:1px;text-align:right;}
+.tb-sys{font-family:'Share Tech Mono',monospace;font-size:8px;color:#224466;letter-spacing:1px;}
 
 /* FLOATING WINDOWS */
 .fwindow{position:fixed;background:rgba(0,5,20,0.97);border:1px solid #0a2244;z-index:100;display:none;flex-direction:column;min-width:320px;min-height:250px;box-shadow:0 0 30px rgba(0,50,200,0.2);}
@@ -407,6 +421,7 @@ function enterCockpit(){
     el.style.display='none';
     document.getElementById('matrixCanvas').style.opacity='0.4';
     document.getElementById('cockpit').style.display='flex';
+    document.getElementById('taskbar').style.display='flex';
     sendGreeting();
     animateBars();
   },800);
@@ -438,7 +453,7 @@ function completeBoot(){
   setTimeout(function(){
     document.getElementById('bootBar').style.opacity=1;
     setTimeout(function(){document.getElementById('bootBarFill').style.width='100%';},100);
-  },100);
+  },1200);
   setTimeout(completeBoot,5000);
 })();
 
@@ -505,8 +520,14 @@ document.getElementById('ifield').addEventListener('keydown',function(e){if(e.ke
 document.getElementById('ifield').addEventListener('input',function(){this.style.height='';this.style.height=Math.min(this.scrollHeight,70)+'px';});
 
 // ── APP WINDOWS ────────────────────────────────────────────────────────────
-function openApp(name){document.getElementById('fw-'+name).classList.add('active');}
-function closeApp(name){document.getElementById('fw-'+name).classList.remove('active');}
+function openApp(name){
+  document.getElementById('fw-'+name).classList.add('active');
+  var tb=document.getElementById('tb-'+name);if(tb)tb.classList.add('open');
+}
+function closeApp(name){
+  document.getElementById('fw-'+name).classList.remove('active');
+  var tb=document.getElementById('tb-'+name);if(tb)tb.classList.remove('open');
+}
 
 // ── DRAG WINDOWS ──────────────────────────────────────────────────────────
 var drag={el:null,ox:0,oy:0,sx:0,sy:0};
@@ -551,5 +572,25 @@ function loadBrowser(){
   document.getElementById('browserFrame').src=url;
 }
 </script>
+<!-- TASKBAR -->
+<div class="taskbar" id="taskbar" style="display:none;">
+  <div class="tb-start" onclick="toggleStartMenu()">⊕ &nbsp;A.I.O.S.</div>
+  <div class="tb-divider"></div>
+  <div class="tb-apps">
+    <div class="tb-app" id="tb-chat" onclick="focusChat()"><span class="tb-app-icon">💬</span>KHAIOS AI</div>
+    <div class="tb-app" id="tb-emulator" onclick="toggleApp('emulator')"><span class="tb-app-icon">🕹</span>EMULATOR</div>
+    <div class="tb-app" id="tb-calculator" onclick="toggleApp('calculator')"><span class="tb-app-icon">🔢</span>CALC</div>
+    <div class="tb-app" id="tb-notes" onclick="toggleApp('notes')"><span class="tb-app-icon">📋</span>NOTES</div>
+    <div class="tb-app" id="tb-browser" onclick="toggleApp('browser')"><span class="tb-app-icon">🌐</span>BROWSER</div>
+    <div class="tb-app" id="tb-weather" onclick="toggleApp('weather')"><span class="tb-app-icon">⛅</span>WEATHER</div>
+    <div class="tb-app" id="tb-maps" onclick="toggleApp('maps')"><span class="tb-app-icon">🗺</span>MAPS</div>
+  </div>
+  <div class="tb-divider"></div>
+  <div class="tb-right">
+    <div class="tb-sys" id="tbProvider">GROQ</div>
+    <div class="tb-clock" id="tbClock">──</div>
+  </div>
+</div>
+
 </body>
 </html>
