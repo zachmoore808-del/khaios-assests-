@@ -33,7 +33,7 @@ html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-fami
 #desktop{position:fixed;inset:0;bottom:44px;z-index:10;display:none;}
 
 /* TASKBAR */
-#taskbar{position:fixed;bottom:0;left:0;right:0;height:44px;background:#000;border-top:1px solid rgba(56,138,221,0.4);z-index:500;display:flex;align-items:center;padding:0 6px;gap:3px;overflow:hidden;}
+#taskbar{position:fixed;bottom:0;left:0;right:0;height:44px;background:#000;border-top:1px solid rgba(56,138,221,0.4);z-index:500;display:none;align-items:center;padding:0 6px;gap:3px;overflow:hidden;}
 .circuit-layer .trace-base path{stroke:#0e3a66;stroke-width:1.5;fill:none;stroke-linecap:round;}
 .circuit-layer .trace-glow path{stroke:#3fa9ff;stroke-width:1.5;fill:none;stroke-linecap:round;stroke-dasharray:14 220;filter:drop-shadow(0 0 4px #3fa9ff);animation-name:pulse-flow;animation-timing-function:linear;animation-iteration-count:infinite;}
 @keyframes pulse-flow{from{stroke-dashoffset:234;}to{stroke-dashoffset:0;}}
@@ -42,7 +42,7 @@ html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-fami
 .tb-app:hover{background:rgba(0,20,70,0.9);border-color:#1a3366;}
 .tb-app.open{border-color:#1a4488;background:rgba(0,15,55,0.9);color:#88ccff;border-bottom:2px solid #0066ff;}
 .tb-app-icon{font-size:14px;}
-.tb-right{display:flex;align-items:center;gap:8px;flex-shrink:0;padding-left:6px;border-left:1px solid #0a1a33;margin-left:auto;position:relative;z-index:2;}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:8px;flex-shrink:0;padding-left:6px;border-left:1px solid #0a1a33;}
 .tb-clock{font-family:'Share Tech Mono',monospace;font-size:9px;color:#4488cc;letter-spacing:1px;text-align:right;line-height:1.4;}
 
 /* START MENU */
