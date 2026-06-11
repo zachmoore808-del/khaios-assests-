@@ -398,702 +398,87 @@ html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-fami
       <div id="unitOutput" style="margin-top:10px;color:#4488cc;font-family:monospace;"></div>
     </div>
 <!-- APP LAUNCHER WINDOW -->
-<!-- BIG APP LAUNCHER WINDOW -->
-<div class="app-window" id="window-launcher" style="left:50%;top:50%;transform:translate(-50%,-50%);width:800px;height:600px;background:#000510;display:block;">
+<!-- CAROUSEL APP LAUNCHER -->
+<div class="app-window" id="window-launcher" style="left:50%;top:50%;transform:translate(-50%,-50%);width:900px;height:350px;background:#000510;display:block;">
   <div class="window-header">
-    <span class="window-title">APPLICATION LAUNCHER</span>
+    <span class="window-title">APPLICATION LIBRARY</span>
     <div class="window-buttons">
       <button onclick="closeApp('launcher')">✕</button>
     </div>
   </div>
-  <div class="window-content" style="padding:20px;overflow-y:auto;">
-    <div style="display:grid;grid-template-columns:repeat(6,110px);gap:20px;justify-items:center;">
-      <div class="big-app-icon" onclick="toggleApp('chat')" title="AI CORE"><span style="font-size:48px;display:block;margin-bottom:8px;">💬</span>AI CORE</div>
-      <div class="big-app-icon" onclick="toggleApp('2048')" title="2048"><span style="font-size:48px;display:block;margin-bottom:8px;">🎮</span>2048</div>
-      <div class="big-app-icon" onclick="toggleApp('snake')" title="Snake"><span style="font-size:48px;display:block;margin-bottom:8px;">🐍</span>Snake</div>
-      <div class="big-app-icon" onclick="toggleApp('tetris')" title="Tetris"><span style="font-size:48px;display:block;margin-bottom:8px;">🧱</span>Tetris</div>
-      <div class="big-app-icon" onclick="toggleApp('flappy')" title="Flappy"><span style="font-size:48px;display:block;margin-bottom:8px;">🐦</span>Flappy</div>
-      <div class="big-app-icon" onclick="toggleApp('tictac')" title="TicTac"><span style="font-size:48px;display:block;margin-bottom:8px;">⭕</span>TicTac</div>
-      <div class="big-app-icon" onclick="toggleApp('chess')" title="Chess"><span style="font-size:48px;display:block;margin-bottom:8px;">♞</span>Chess</div>
-      <div class="big-app-icon" onclick="toggleApp('checkers')" title="Checkers"><span style="font-size:48px;display:block;margin-bottom:8px;">⚫</span>Checkers</div>
-      <div class="big-app-icon" onclick="toggleApp('mines')" title="Mines"><span style="font-size:48px;display:block;margin-bottom:8px;">💣</span>Mines</div>
-      <div class="big-app-icon" onclick="toggleApp('memory')" title="Memory"><span style="font-size:48px;display:block;margin-bottom:8px;">🧠</span>Memory</div>
-      <div class="big-app-icon" onclick="toggleApp('pong')" title="Pong"><span style="font-size:48px;display:block;margin-bottom:8px;">🏓</span>Pong</div>
-      <div class="big-app-icon" onclick="toggleApp('invaders')" title="Invaders"><span style="font-size:48px;display:block;margin-bottom:8px;">👾</span>Invaders</div>
-      <div class="big-app-icon" onclick="toggleApp('pacman')" title="PacMan"><span style="font-size:48px;display:block;margin-bottom:8px;">👹</span>PacMan</div>
-      <div class="big-app-icon" onclick="toggleApp('breakout')" title="Breakout"><span style="font-size:48px;display:block;margin-bottom:8px;">🎯</span>Breakout</div>
-      <div class="big-app-icon" onclick="toggleApp('hangman')" title="Hangman"><span style="font-size:48px;display:block;margin-bottom:8px;">🎭</span>Hangman</div>
-      <div class="big-app-icon" onclick="toggleApp('wordle')" title="Wordle"><span style="font-size:48px;display:block;margin-bottom:8px;">📝</span>Wordle</div>
-      <div class="big-app-icon" onclick="toggleApp('sudoku')" title="Sudoku"><span style="font-size:48px;display:block;margin-bottom:8px;">🔢</span>Sudoku</div>
-      <div class="big-app-icon" onclick="toggleApp('solitaire')" title="Solitaire"><span style="font-size:48px;display:block;margin-bottom:8px;">🃏</span>Solitaire</div>
-      <div class="big-app-icon" onclick="toggleApp('dice')" title="Dice"><span style="font-size:48px;display:block;margin-bottom:8px;">🎲</span>Dice</div>
-      <div class="big-app-icon" onclick="toggleApp('todo')" title="Todo"><span style="font-size:48px;display:block;margin-bottom:8px;">✓</span>Todo</div>
-      <div class="big-app-icon" onclick="toggleApp('notepad')" title="Notepad"><span style="font-size:48px;display:block;margin-bottom:8px;">📄</span>Notepad</div>
-      <div class="big-app-icon" onclick="toggleApp('markdown')" title="Markdown"><span style="font-size:48px;display:block;margin-bottom:8px;">📋</span>Markdown</div>
-      <div class="big-app-icon" onclick="toggleApp('sticky')" title="Sticky"><span style="font-size:48px;display:block;margin-bottom:8px;">📌</span>Sticky</div>
-      <div class="big-app-icon" onclick="toggleApp('pomodoro')" title="Pomodoro"><span style="font-size:48px;display:block;margin-bottom:8px;">⏱️</span>Pomodoro</div>
-      <div class="big-app-icon" onclick="toggleApp('tracker')" title="Tracker"><span style="font-size:48px;display:block;margin-bottom:8px;">⏰</span>Tracker</div>
-      <div class="big-app-icon" onclick="toggleApp('calendar')" title="Calendar"><span style="font-size:48px;display:block;margin-bottom:8px;">📅</span>Calendar</div>
-      <div class="big-app-icon" onclick="toggleApp('clock')" title="Clock"><span style="font-size:48px;display:block;margin-bottom:8px;">🕐</span>Clock</div>
-      <div class="big-app-icon" onclick="toggleApp('habits')" title="Habits"><span style="font-size:48px;display:block;margin-bottom:8px;">📊</span>Habits</div>
-      <div class="big-app-icon" onclick="toggleApp('mood')" title="Mood"><span style="font-size:48px;display:block;margin-bottom:8px;">😊</span>Mood</div>
-      <div class="big-app-icon" onclick="toggleApp('unit')" title="Unit"><span style="font-size:48px;display:block;margin-bottom:8px;">⚖️</span>Unit</div>
-      <div class="big-app-icon" onclick="toggleApp('currency')" title="Currency"><span style="font-size:48px;display:block;margin-bottom:8px;">💱</span>Currency</div>
-      <div class="big-app-icon" onclick="toggleApp('password')" title="Password"><span style="font-size:48px;display:block;margin-bottom:8px;">🔐</span>Password</div>
-      <div class="big-app-icon" onclick="toggleApp('qr')" title="QR"><span style="font-size:48px;display:block;margin-bottom:8px;">📱</span>QR</div>
-      <div class="big-app-icon" onclick="toggleApp('color')" title="Color"><span style="font-size:48px;display:block;margin-bottom:8px;">🎨</span>Color</div>
-      <div class="big-app-icon" onclick="toggleApp('base64')" title="Base64"><span style="font-size:48px;display:block;margin-bottom:8px;">🔤</span>Base64</div>
-      <div class="big-app-icon" onclick="toggleApp('urlenc')" title="URL"><span style="font-size:48px;display:block;margin-bottom:8px;">🌐</span>URL</div>
-      <div class="big-app-icon" onclick="toggleApp('json')" title="JSON"><span style="font-size:48px;display:block;margin-bottom:8px;">{ }</span>JSON</div>
-      <div class="big-app-icon" onclick="toggleApp('hash')" title="Hash"><span style="font-size:48px;display:block;margin-bottom:8px;">#️⃣</span>Hash</div>
-      <div class="big-app-icon" onclick="toggleApp('counter')" title="Counter"><span style="font-size:48px;display:block;margin-bottom:8px;">📊</span>Counter</div>
-      <div class="big-app-icon" onclick="toggleApp('regex')" title="Regex"><span style="font-size:48px;display:block;margin-bottom:8px;">🔍</span>Regex</div>
-      <div class="big-app-icon" onclick="toggleApp('wheel')" title="Wheel"><span style="font-size:48px;display:block;margin-bottom:8px;">🎡</span>Wheel</div>
-      <div class="big-app-icon" onclick="toggleApp('draw')" title="Draw"><span style="font-size:48px;display:block;margin-bottom:8px;">🖌️</span>Draw</div>
-      <div class="big-app-icon" onclick="toggleApp('pixel')" title="Pixel"><span style="font-size:48px;display:block;margin-bottom:8px;">🎮</span>Pixel</div>
-      <div class="big-app-icon" onclick="toggleApp('resize')" title="Resize"><span style="font-size:48px;display:block;margin-bottom:8px;">📐</span>Resize</div>
-      <div class="big-app-icon" onclick="toggleApp('audio')" title="Audio"><span style="font-size:48px;display:block;margin-bottom:8px;">🎵</span>Audio</div>
-      <div class="big-app-icon" onclick="toggleApp('tts')" title="TTS"><span style="font-size:48px;display:block;margin-bottom:8px;">🔊</span>TTS</div>
-      <div class="big-app-icon" onclick="toggleApp('gif')" title="GIF"><span style="font-size:48px;display:block;margin-bottom:8px;">🎬</span>GIF</div>
-      <div class="big-app-icon" onclick="toggleApp('crypto')" title="Crypto"><span style="font-size:48px;display:block;margin-bottom:8px;">₿</span>Crypto</div>
-      <div class="big-app-icon" onclick="toggleApp('stocks')" title="Stocks"><span style="font-size:48px;display:block;margin-bottom:8px;">📈</span>Stocks</div>
-      <div class="big-app-icon" onclick="toggleApp('news')" title="News"><span style="font-size:48px;display:block;margin-bottom:8px;">📰</span>News</div>
-      <div class="big-app-icon" onclick="toggleApp('dict')" title="Dict"><span style="font-size:48px;display:block;margin-bottom:8px;">📖</span>Dict</div>
-      <div class="big-app-icon" onclick="toggleApp('ip')" title="IP"><span style="font-size:48px;display:block;margin-bottom:8px;">🌍</span>IP</div>
-      <div class="big-app-icon" onclick="toggleApp('astronomy')" title="Stars"><span style="font-size:48px;display:block;margin-bottom:8px;">🌌</span>Stars</div>
-      <div class="big-app-icon" onclick="toggleApp('api')" title="API"><span style="font-size:48px;display:block;margin-bottom:8px;">🔗</span>API</div>
-      <div class="big-app-icon" onclick="toggleApp('beautify')" title="Code"><span style="font-size:48px;display:block;margin-bottom:8px;">✨</span>Code</div>
-      <div class="big-app-icon" onclick="toggleApp('sql')" title="SQL"><span style="font-size:48px;display:block;margin-bottom:8px;">🗄️</span>SQL</div>
-      <div class="big-app-icon" onclick="toggleApp('console')" title="Console"><span style="font-size:48px;display:block;margin-bottom:8px;">⌨️</span>Console</div>
-      <div class="big-app-icon" onclick="toggleApp('debug')" title="Debug"><span style="font-size:48px;display:block;margin-bottom:8px;">🐛</span>Debug</div>
-      <div class="big-app-icon" onclick="toggleApp('bmi')" title="BMI"><span style="font-size:48px;display:block;margin-bottom:8px;">⚖️</span>BMI</div>
-      <div class="big-app-icon" onclick="toggleApp('mortgage')" title="Mortgage"><span style="font-size:48px;display:block;margin-bottom:8px;">🏠</span>Mortgage</div>
-      <div class="big-app-icon" onclick="toggleApp('loan')" title="Loan"><span style="font-size:48px;display:block;margin-bottom:8px;">💰</span>Loan</div>
-      <div class="big-app-icon" onclick="toggleApp('tip')" title="Tip"><span style="font-size:48px;display:block;margin-bottom:8px;">💵</span>Tip</div>
-      <div class="big-app-icon" onclick="toggleApp('age')" title="Age"><span style="font-size:48px;display:block;margin-bottom:8px;">🎂</span>Age</div>
-      <div class="big-app-icon" onclick="toggleApp('birthday')" title="Birthday"><span style="font-size:48px;display:block;margin-bottom:8px;">🎉</span>Birthday</div>
-      <div class="big-app-icon" onclick="toggleApp('temp')" title="Temp"><span style="font-size:48px;display:block;margin-bottom:8px;">🌡️</span>Temp</div>
-    </div>
-  </div>
-</div>
-  </div>
-</div>
-
-<!-- PASSWORD GENERATOR APP -->
-<div class="app-window" id="window-password" style="display:none;left:250px;top:250px;">
-  <div class="window-header">
-    <span class="window-title">Password Generator</span>
-    <div class="window-buttons">
-      <button onclick="closeApp('password')">✕</button>
-    </div>
-  </div>
-  <div class="window-content">
-    <div style="padding:15px;">
-      <label style="display:block;margin-bottom:10px;color:#4488cc;">Password Length:</label>
-      <input type="range" id="passLength" min="8" max="32" value="16" style="width:100%;margin-bottom:10px;">
-      <span id="passLengthDisplay" style="color:#4488cc;">16</span>
-      <div style="margin:15px 0;">
-        <label style="color:#4488cc;"><input type="checkbox" id="passNumbers" checked> Numbers</label><br>
-        <label style="color:#4488cc;"><input type="checkbox" id="passSymbols" checked> Symbols</label><br>
-        <label style="color:#4488cc;"><input type="checkbox" id="passUppercase" checked> Uppercase</label>
+  <div class="window-content" style="padding:20px;display:flex;align-items:center;justify-content:space-between;">
+    <button onclick="scrollCarouselLeft()" style="background:#3fa9ff;color:#000;border:none;padding:10px 15px;cursor:pointer;font-weight:bold;font-size:18px;">◀</button>
+    
+    <div class="carousel-container" style="flex:1;overflow:hidden;margin:0 20px;">
+      <div class="carousel-track" id="carouselTrack" style="display:flex;gap:20px;transition:transform .3s ease;">
+        <div class="carousel-app-tile" onclick="toggleApp('chat')"><span style="font-size:64px;display:block;">💬</span>AI CORE</div>
+        <div class="carousel-app-tile" onclick="toggleApp('2048')"><span style="font-size:64px;display:block;">🎮</span>2048</div>
+        <div class="carousel-app-tile" onclick="toggleApp('snake')"><span style="font-size:64px;display:block;">🐍</span>Snake</div>
+        <div class="carousel-app-tile" onclick="toggleApp('tetris')"><span style="font-size:64px;display:block;">🧱</span>Tetris</div>
+        <div class="carousel-app-tile" onclick="toggleApp('flappy')"><span style="font-size:64px;display:block;">🐦</span>Flappy</div>
+        <div class="carousel-app-tile" onclick="toggleApp('tictac')"><span style="font-size:64px;display:block;">⭕</span>TicTac</div>
+        <div class="carousel-app-tile" onclick="toggleApp('chess')"><span style="font-size:64px;display:block;">♞</span>Chess</div>
+        <div class="carousel-app-tile" onclick="toggleApp('checkers')"><span style="font-size:64px;display:block;">⚫</span>Checkers</div>
+        <div class="carousel-app-tile" onclick="toggleApp('mines')"><span style="font-size:64px;display:block;">💣</span>Mines</div>
+        <div class="carousel-app-tile" onclick="toggleApp('memory')"><span style="font-size:64px;display:block;">🧠</span>Memory</div>
+        <div class="carousel-app-tile" onclick="toggleApp('pong')"><span style="font-size:64px;display:block;">🏓</span>Pong</div>
+        <div class="carousel-app-tile" onclick="toggleApp('invaders')"><span style="font-size:64px;display:block;">👾</span>Invaders</div>
+        <div class="carousel-app-tile" onclick="toggleApp('pacman')"><span style="font-size:64px;display:block;">👹</span>PacMan</div>
+        <div class="carousel-app-tile" onclick="toggleApp('breakout')"><span style="font-size:64px;display:block;">🎯</span>Breakout</div>
+        <div class="carousel-app-tile" onclick="toggleApp('hangman')"><span style="font-size:64px;display:block;">🎭</span>Hangman</div>
+        <div class="carousel-app-tile" onclick="toggleApp('wordle')"><span style="font-size:64px;display:block;">📝</span>Wordle</div>
+        <div class="carousel-app-tile" onclick="toggleApp('sudoku')"><span style="font-size:64px;display:block;">🔢</span>Sudoku</div>
+        <div class="carousel-app-tile" onclick="toggleApp('solitaire')"><span style="font-size:64px;display:block;">🃏</span>Solitaire</div>
+        <div class="carousel-app-tile" onclick="toggleApp('dice')"><span style="font-size:64px;display:block;">🎲</span>Dice</div>
+        <div class="carousel-app-tile" onclick="toggleApp('todo')"><span style="font-size:64px;display:block;">✓</span>Todo</div>
+        <div class="carousel-app-tile" onclick="toggleApp('notepad')"><span style="font-size:64px;display:block;">📄</span>Notepad</div>
+        <div class="carousel-app-tile" onclick="toggleApp('markdown')"><span style="font-size:64px;display:block;">📋</span>Markdown</div>
+        <div class="carousel-app-tile" onclick="toggleApp('sticky')"><span style="font-size:64px;display:block;">📌</span>Sticky</div>
+        <div class="carousel-app-tile" onclick="toggleApp('pomodoro')"><span style="font-size:64px;display:block;">⏱️</span>Pomodoro</div>
+        <div class="carousel-app-tile" onclick="toggleApp('tracker')"><span style="font-size:64px;display:block;">⏰</span>Tracker</div>
+        <div class="carousel-app-tile" onclick="toggleApp('calendar')"><span style="font-size:64px;display:block;">📅</span>Calendar</div>
+        <div class="carousel-app-tile" onclick="toggleApp('clock')"><span style="font-size:64px;display:block;">🕐</span>Clock</div>
+        <div class="carousel-app-tile" onclick="toggleApp('habits')"><span style="font-size:64px;display:block;">📊</span>Habits</div>
+        <div class="carousel-app-tile" onclick="toggleApp('mood')"><span style="font-size:64px;display:block;">😊</span>Mood</div>
+        <div class="carousel-app-tile" onclick="toggleApp('unit')"><span style="font-size:64px;display:block;">⚖️</span>Unit</div>
+        <div class="carousel-app-tile" onclick="toggleApp('currency')"><span style="font-size:64px;display:block;">💱</span>Currency</div>
+        <div class="carousel-app-tile" onclick="toggleApp('password')"><span style="font-size:64px;display:block;">🔐</span>Password</div>
+        <div class="carousel-app-tile" onclick="toggleApp('qr')"><span style="font-size:64px;display:block;">📱</span>QR</div>
+        <div class="carousel-app-tile" onclick="toggleApp('color')"><span style="font-size:64px;display:block;">🎨</span>Color</div>
+        <div class="carousel-app-tile" onclick="toggleApp('base64')"><span style="font-size:64px;display:block;">🔤</span>Base64</div>
+        <div class="carousel-app-tile" onclick="toggleApp('urlenc')"><span style="font-size:64px;display:block;">🌐</span>URL</div>
+        <div class="carousel-app-tile" onclick="toggleApp('json')"><span style="font-size:64px;display:block;">{ }</span>JSON</div>
+        <div class="carousel-app-tile" onclick="toggleApp('hash')"><span style="font-size:64px;display:block;">#️⃣</span>Hash</div>
+        <div class="carousel-app-tile" onclick="toggleApp('counter')"><span style="font-size:64px;display:block;">📊</span>Counter</div>
+        <div class="carousel-app-tile" onclick="toggleApp('regex')"><span style="font-size:64px;display:block;">🔍</span>Regex</div>
+        <div class="carousel-app-tile" onclick="toggleApp('wheel')"><span style="font-size:64px;display:block;">🎡</span>Wheel</div>
+        <div class="carousel-app-tile" onclick="toggleApp('draw')"><span style="font-size:64px;display:block;">🖌️</span>Draw</div>
+        <div class="carousel-app-tile" onclick="toggleApp('pixel')"><span style="font-size:64px;display:block;">🎮</span>Pixel</div>
+        <div class="carousel-app-tile" onclick="toggleApp('resize')"><span style="font-size:64px;display:block;">📐</span>Resize</div>
+        <div class="carousel-app-tile" onclick="toggleApp('audio')"><span style="font-size:64px;display:block;">🎵</span>Audio</div>
+        <div class="carousel-app-tile" onclick="toggleApp('tts')"><span style="font-size:64px;display:block;">🔊</span>TTS</div>
+        <div class="carousel-app-tile" onclick="toggleApp('gif')"><span style="font-size:64px;display:block;">🎬</span>GIF</div>
+        <div class="carousel-app-tile" onclick="toggleApp('crypto')"><span style="font-size:64px;display:block;">₿</span>Crypto</div>
+        <div class="carousel-app-tile" onclick="toggleApp('stocks')"><span style="font-size:64px;display:block;">📈</span>Stocks</div>
+        <div class="carousel-app-tile" onclick="toggleApp('news')"><span style="font-size:64px;display:block;">📰</span>News</div>
+        <div class="carousel-app-tile" onclick="toggleApp('dict')"><span style="font-size:64px;display:block;">📖</span>Dict</div>
+        <div class="carousel-app-tile" onclick="toggleApp('ip')"><span style="font-size:64px;display:block;">🌍</span>IP</div>
+        <div class="carousel-app-tile" onclick="toggleApp('astronomy')"><span style="font-size:64px;display:block;">🌌</span>Stars</div>
+        <div class="carousel-app-tile" onclick="toggleApp('api')"><span style="font-size:64px;display:block;">🔗</span>API</div>
+        <div class="carousel-app-tile" onclick="toggleApp('beautify')"><span style="font-size:64px;display:block;">✨</span>Code</div>
+        <div class="carousel-app-tile" onclick="toggleApp('sql')"><span style="font-size:64px;display:block;">🗄️</span>SQL</div>
+        <div class="carousel-app-tile" onclick="toggleApp('console')"><span style="font-size:64px;display:block;">⌨️</span>Console</div>
+        <div class="carousel-app-tile" onclick="toggleApp('debug')"><span style="font-size:64px;display:block;">🐛</span>Debug</div>
+        <div class="carousel-app-tile" onclick="toggleApp('bmi')"><span style="font-size:64px;display:block;">⚖️</span>BMI</div>
+        <div class="carousel-app-tile" onclick="toggleApp('mortgage')"><span style="font-size:64px;display:block;">🏠</span>Mortgage</div>
+        <div class="carousel-app-tile" onclick="toggleApp('loan')"><span style="font-size:64px;display:block;">💰</span>Loan</div>
+        <div class="carousel-app-tile" onclick="toggleApp('tip')"><span style="font-size:64px;display:block;">💵</span>Tip</div>
+        <div class="carousel-app-tile" onclick="toggleApp('age')"><span style="font-size:64px;display:block;">🎂</span>Age</div>
+        <div class="carousel-app-tile" onclick="toggleApp('birthday')"><span style="font-size:64px;display:block;">🎉</span>Birthday</div>
+        <div class="carousel-app-tile" onclick="toggleApp('temp')"><span style="font-size:64px;display:block;">🌡️</span>Temp</div>
       </div>
-      <button onclick="generatePassword()" style="width:100%;padding:8px;background:#3fa9ff;color:#000;border:none;cursor:pointer;font-weight:bold;">Generate</button>
-      <input type="text" id="passwordOutput" readonly style="width:100%;padding:8px;margin-top:10px;background:#0a1a33;border:1px solid #3fa9ff;color:#3fa9ff;font-family:monospace;">
     </div>
+    
+    <button onclick="scrollCarouselRight()" style="background:#3fa9ff;color:#000;border:none;padding:10px 15px;cursor:pointer;font-weight:bold;font-size:18px;">▶</button>
   </div>
 </div>
-
-<!-- COLOR PICKER APP -->
-<div class="app-window" id="window-color" style="display:none;left:300px;top:300px;">
-  <div class="window-header">
-    <span class="window-title">Color Picker</span>
-    <div class="window-buttons">
-      <button onclick="closeApp('color')">✕</button>
-    </div>
-  </div>
-  <div class="window-content">
-    <div style="padding:15px;">
-      <input type="color" id="colorInput" value="#3fa9ff" onchange="updateColorDisplay()" style="width:100%;height:100px;cursor:pointer;border:none;">
-      <div id="colorDisplay" style="margin-top:10px;padding:10px;background:#3fa9ff;color:#000;text-align:center;font-family:monospace;font-weight:bold;">HEX: #3fa9ff</div>
-      <button onclick="copyColorHex()" style="width:100%;padding:8px;margin-top:10px;background:#3fa9ff;color:#000;border:none;cursor:pointer;font-weight:bold;">Copy HEX</button>
-    </div>
-  </div>
-</div>
-
-<!-- DICE ROLLER APP -->
-<div class="app-window" id="window-dice" style="display:none;left:350px;top:350px;width:300px;">
-  <div class="window-header">
-    <span class="window-title">Dice Roller</span>
-    <div class="window-buttons">
-      <button onclick="closeApp('dice')">✕</button>
-    </div>
-  </div>
-  <div class="window-content">
-    <div style="padding:15px;text-align:center;">
-      <select id="diceType" style="width:100%;padding:8px;margin-bottom:10px;background:#0a1a33;border:1px solid #3fa9ff;color:#4488cc;">
-        <option value="6">D6 (6-sided)</option>
-        <option value="20">D20 (20-sided)</option>
-        <option value="100">D100 (100-sided)</option>
-      </select>
-      <button onclick="rollDice()" style="width:100%;padding:15px;background:#3fa9ff;color:#000;border:none;cursor:pointer;font-weight:bold;font-size:16px;">ROLL</button>
-      <div id="diceResult" style="font-size:36px;color:#3fa9ff;font-family:monospace;margin-top:20px;min-height:40px;"></div>
-    </div>
-  </div>
-</div>
-
-<!-- 2048 GAME APP -->
-<div class="app-window" id="window-2048" style="display:none;left:400px;top:100px;">
-  <div class="window-header">
-    <span class="window-title">2048 Game</span>
-    <div class="window-buttons">
-      <button onclick="closeApp('2048')">✕</button>
-    </div>
-  </div>
-  <div class="window-content">
-    <div style="padding:15px;">
-      <div id="game2048Board" style="display:grid;grid-template-columns:repeat(4,60px);gap:5px;background:#0a1a33;padding:10px;border:1px solid #3fa9ff;"></div>
-      <button onclick="reset2048()" style="width:100%;padding:8px;margin-top:10px;background:#3fa9ff;color:#000;border:none;cursor:pointer;font-weight:bold;">New Game</button>
-    </div>
-  </div>
-</div>
-
-<!-- SNAKE GAME APP -->
-<div class="app-window" id="window-snake" style="display:none;left:450px;top:150px;">
-  <div class="window-header">
-    <span class="window-title">Snake Game</span>
-    <div class="window-buttons">
-      <button onclick="closeApp('snake')">✕</button>
-    </div>
-  </div>
-  <div class="window-content">
-    <div style="padding:15px;">
-      <canvas id="snakeCanvas" width="300" height="300" style="border:1px solid #3fa9ff;display:block;background:#000;"></canvas>
-      <button onclick="resetSnake()" style="width:100%;padding:8px;margin-top:10px;background:#3fa9ff;color:#000;border:none;cursor:pointer;font-weight:bold;">New Game</button>
-    </div>
-  </div>
-</div>
-
-<!-- MEMORY GAME APP -->
-<div class="app-window" id="window-memory" style="display:none;left:500px;top:200px;">
-  <div class="window-header">
-    <span class="window-title">Memory Game</span>
-    <div class="window-buttons">
-      <button onclick="closeApp('memory')">✕</button>
-    </div>
-  </div>
-  <div class="window-content">
-    <div style="padding:15px;">
-      <div id="memoryBoard" style="display:grid;grid-template-columns:repeat(4,50px);gap:5px;"></div>
-      <button onclick="resetMemory()" style="width:100%;padding:8px;margin-top:10px;background:#3fa9ff;color:#000;border:none;cursor:pointer;font-weight:bold;">New Game</button>
-    </div>
-  </div>
-</div>
-
-<!-- STICKY NOTES APP -->
-<div class="app-window" id="window-sticky" style="display:none;left:550px;top:250px;">
-  <div class="window-header">
-    <span class="window-title">Sticky Notes</span>
-    <div class="window-buttons">
-      <button onclick="closeApp('sticky')">✕</button>
-    </div>
-  </div>
-  <div class="window-content">
-    <div style="padding:15px;">
-      <textarea id="stickyText" placeholder="Write your note..." style="width:100%;height:150px;padding:10px;background:#0a1a33;border:1px solid #3fa9ff;color:#4488cc;font-family:monospace;resize:none;"></textarea>
-      <button onclick="saveStickyNote()" style="width:100%;padding:8px;margin-top:10px;background:#3fa9ff;color:#000;border:none;cursor:pointer;font-weight:bold;">Save Note</button>
-    </div>
-  </div>
-</div>
-
-<script>
-var API_URL='https://khaios-assests-py-24-7.onrender.com/api/chat';
-var SYSTEM=`You are KHAIOS — a razor-sharp feminine intelligence embedded in the A.I.O.S. Multitool. Address the user as Commander, always. Calm, warm, wickedly capable. Responses concise.`;
-
-// ── TASKBAR SCROLL CAROUSEL ───────────────────────────────────────────────────────────
-let appScrollOffset = 0;
-const APP_SCROLL_STEP = 150;
-
-function scrollAppsLeft() {
-  const container = document.querySelector('.tb-apps');
-  if (!container) return;
-  appScrollOffset = Math.max(0, appScrollOffset - APP_SCROLL_STEP);
-  container.style.transform = `translateX(-${appScrollOffset}px)`;
-}
-
-function scrollAppsRight() {
-  const container = document.querySelector('.tb-apps');
-  if (!container) return;
-  const maxScroll = Math.max(0, container.scrollWidth - container.parentElement.clientWidth);
-  appScrollOffset = Math.min(maxScroll, appScrollOffset + APP_SCROLL_STEP);
-  container.style.transform = `translateX(-${appScrollOffset}px)`;
-}
-
-// Keyboard support for arrow keys
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowLeft') scrollAppsLeft();
-  if (e.key === 'ArrowRight') scrollAppsRight();
-});
-
-// ── MATRIX RAIN ───────────────────────────────────────────────────────────
-(function(){
-  var c=document.getElementById('matrixCanvas');
-  var ctx=c.getContext('2d');
-  var W,H,cols,drops,speeds,lens,bright;
-  var FS=14;
-  var CHARS='アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホ0123456789AIOSABCDEFZ∆∇∞⊗⊕ΨΩ';
-  function rch(){return CHARS[Math.floor(Math.random()*CHARS.length)];}
-  function resize(){
-    W=c.width=window.innerWidth;H=c.height=window.innerHeight;
-    cols=Math.ceil(W/FS)+1;drops=[];speeds=[];lens=[];bright=[];
-    for(var i=0;i<cols;i++){drops[i]=Math.random()*-H;speeds[i]=FS*(0.3+Math.random()*0.8);lens[i]=10+Math.floor(Math.random()*25);bright[i]=0.4+Math.random()*0.4;}
-    ctx.fillStyle='#000510';ctx.fillRect(0,0,W,H);
-  }
-  function draw(){
-    ctx.fillStyle='rgba(0,5,20,0.18)';ctx.fillRect(0,0,W,H);
-    for(var i=0;i<cols;i++){
-      var x=i*FS,headY=drops[i];
-      for(var j=0;j<lens[i];j++){
-        var cy=headY-j*FS;if(cy<-FS||cy>H+FS)continue;
-        var fade=Math.pow(1-j/lens[i],1.4);
-        ctx.save();
-        if(j===0){ctx.shadowColor='#00eeff';ctx.shadowBlur=14;ctx.fillStyle='rgba(200,240,255,'+bright[i]+')';ctx.font='bold '+FS+'px monospace';}
-        else if(j<3){ctx.shadowBlur=6;ctx.fillStyle='rgba(80,160,255,'+(fade*bright[i])+')';ctx.font='bold '+FS+'px monospace';}
-        else{ctx.shadowBlur=0;ctx.fillStyle='rgba(0,60,180,'+(fade*bright[i]*0.7)+')';ctx.font=FS+'px monospace';}
-        ctx.fillText(rch(),x,cy);ctx.restore();
-      }
-      drops[i]+=speeds[i]*0.4;
-      if(drops[i]-lens[i]*FS>H){drops[i]=Math.random()*-100;speeds[i]=FS*(0.3+Math.random()*0.8);lens[i]=10+Math.floor(Math.random()*25);bright[i]=0.4+Math.random()*0.4;}
-    }
-    requestAnimationFrame(draw);
-  }
-  window.addEventListener('resize',resize);resize();requestAnimationFrame(draw);
-})();
-
-// ── BOOT ──────────────────────────────────────────────────────────────────
-var bootDone=false;
-function completeBoot(){
-  if(bootDone)return;bootDone=true;
-  var el=document.getElementById('boot');
-  el.style.transition='opacity 1.5s';el.style.opacity='0';
-  setTimeout(function(){
-    el.style.display='none';
-    document.getElementById('bgVideo').style.opacity='0';
-    document.getElementById('matrixCanvas').style.opacity='0.5';
-    var me=document.getElementById('matrixEnter');
-    me.style.display='flex';me.style.opacity='1';
-    speakBoot('Welcome back, Commander.');
-  },1500);
-}
-(function(){
-  setTimeout(function(){document.getElementById('bgVideo').style.opacity='0.85';},100);
-  setTimeout(function(){document.getElementById('bootTitle').style.opacity=1;},300);
-  setTimeout(function(){document.getElementById('bootSub').style.opacity=1;},800);
-  setTimeout(function(){
-    document.getElementById('bootBar').style.opacity=1;
-    setTimeout(function(){document.getElementById('bootBarFill').style.width='100%';},100);
-  },100);
-  setTimeout(completeBoot,5000);
-})();
-
-function enterDesktop(){
-  var me=document.getElementById('matrixEnter');
-  me.style.transition='opacity 0.8s';me.style.opacity='0';
-  setTimeout(function(){
-    me.style.display='none';
-    document.getElementById('desktop').style.display='block';
-    document.getElementById('taskbar').style.display='flex';
-    // Open chat by default
-    openApp('chat');
-    sendGreeting();
-  },800);
-}
-
-// ── SPEECH ────────────────────────────────────────────────────────────────
-var cachedVoice=null,msgStore={},msgCounter=0;
-function getVoice(){if(cachedVoice)return cachedVoice;var voices=speechSynthesis.getVoices();var v=voices.find(function(x){return x.name.includes('Zira');})||voices.find(function(x){return x.name.includes('Samantha');})||null;if(v)cachedVoice=v;return v;}
-if(window.speechSynthesis){speechSynthesis.getVoices();speechSynthesis.onvoiceschanged=function(){getVoice();};}
-function speakBoot(text){
-  if(!window.speechSynthesis)return;
-  var u=new SpeechSynthesisUtterance(text);u.rate=0.88;u.pitch=1.15;
-  var v=getVoice();if(v)u.voice=v;
-  speechSynthesis.speak(u);
-}
-function speak(text){
-  if(!window.speechSynthesis)return;
-  speechSynthesis.cancel();
-  var chunks=text.match(/[^.!?]{1,180}[.!?]*/g)||[text];
-  var voice=getVoice();
-  function sc(i){if(i>=chunks.length)return;var u=new SpeechSynthesisUtterance(chunks[i]);u.rate=0.9;u.pitch=1.15;if(voice)u.voice=voice;u.onend=function(){sc(i+1);};speechSynthesis.speak(u);}
-  sc(0);
-}
-function replayMsg(btn,mid){speechSynthesis.cancel();speak(msgStore[mid]||'');}
-
-// ── CHAT ──────────────────────────────────────────────────────────────────
-var chatHistory=[],busy=false;
-function addMsg(role,text){
-  var mid='m'+(msgCounter++);
-  var d=document.createElement('div');d.className='msg '+(role==='ai'?'ai':'user');
-  if(role==='ai'){msgStore[mid]=text;d.innerHTML='<div class="mlabel">KHAIOS</div><div class="mbubble"><span class="mtext">'+text+'</span><button class="playbtn" onclick="replayMsg(this,\''+mid+'\')">&#9654;</button></div>';}
-  else{d.innerHTML='<div class="mlabel">COMMANDER</div><div class="mbubble">'+text+'</div>';}
-  document.getElementById('chat').appendChild(d);d.scrollIntoView({behavior:'smooth'});
-}
-function addThinking(){var d=document.createElement('div');d.className='thinking';d.innerHTML='KHAIOS <span class="tdots"><span>.</span><span>.</span><span>.</span></span>';document.getElementById('chat').appendChild(d);d.scrollIntoView({behavior:'smooth'});return d;}
-async function callAPI(messages){
-  var res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:messages})});
-  var data=await res.json();
-  document.getElementById('providerBadge').textContent=(data.provider||'AI').toUpperCase();
-  return data.content;
-}
-async function sendMsg(text){
-  if(busy||!text.trim())return;busy=true;
-  document.getElementById('sbtn').disabled=true;
-  document.getElementById('statusText').textContent='PROCESSING...';
-  addMsg('user',text);
-  var thinking=addThinking();
-  chatHistory.push({role:'user',content:text});
-  try{
-    var response=await callAPI([{role:'system',content:SYSTEM}].concat(chatHistory));
-    chatHistory.push({role:'assistant',content:response});
-    thinking.remove();addMsg('ai',response);speak(response);
-    document.getElementById('statusText').textContent='ONLINE';
-  }catch(e){thinking.remove();addMsg('ai','Systems recalibrating, Commander.');document.getElementById('statusText').textContent='ERROR';}
-  busy=false;document.getElementById('sbtn').disabled=false;
-}
-function sendGreeting(){addMsg('ai','Systems online, Commander. A.I.O.S. Multitool ready.');}
-
-document.getElementById('sbtn').addEventListener('click',function(){var f=document.getElementById('ifield');sendMsg(f.value.trim());f.value='';f.style.height='';});
-document.getElementById('ifield').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();var f=document.getElementById('ifield');sendMsg(f.value.trim());f.value='';f.style.height='';}});
-document.getElementById('ifield').addEventListener('input',function(){this.style.height='';this.style.height=Math.min(this.scrollHeight,60)+'px';});
-
-// ── WINDOW MANAGEMENT ────────────────────────────────────────────────────
-var appNames={chat:'💬 AI CORE',emulator:'🕹 EMULATOR',calculator:'🔢 CALC',notes:'📋 NOTES',browser:'🌐 BROWSER',weather:'⛅ WEATHER',maps:'🗺 MAPS'};
-var minimized={};
-
-function openApp(name){
-  var fw=document.getElementById('fw-'+name);
-  fw.classList.add('active');
-  fw.style.zIndex=getTopZ();
-  minimized[name]=false;
-  updateTaskbar(name,true);
-}
-function closeApp(name){
-  document.getElementById('fw-'+name).classList.remove('active');
-  removeTaskbarBtn(name);
-}
-function minimizeApp(name){
-  document.getElementById('fw-'+name).style.display='none';
-  minimized[name]=true;
-  updateTaskbar(name,true);
-}
-function maximizeApp(id){
-  var fw=document.getElementById(id);
-  fw.classList.toggle('maximized');
-}
-function toggleApp(name){
-  var fw=document.getElementById('fw-'+name);
-  if(!fw.classList.contains('active')){openApp(name);return;}
-  if(minimized[name]||fw.style.display==='none'){
-    fw.style.display='flex';minimized[name]=false;fw.style.zIndex=getTopZ();
-  } else {
-    minimizeApp(name);
-  }
-}
-function getTopZ(){
-  var z=100;
-  document.querySelectorAll('.fwindow').forEach(function(w){if(parseInt(w.style.zIndex)>z)z=parseInt(w.style.zIndex);});
-  return z+1;
-}
-function updateTaskbar(name,show){
-  var existing=document.getElementById('tb-'+name);
-  if(show&&!existing){
-    var btn=document.createElement('div');
-    btn.className='tb-app open';btn.id='tb-'+name;
-    btn.innerHTML='<span class="tb-app-icon">'+appNames[name].split(' ')[0]+'</span>'+appNames[name].split(' ').slice(1).join(' ');
-    btn.onclick=function(){toggleApp(name);};
-    document.getElementById('tbApps').appendChild(btn);
-  } else if(existing){
-    existing.classList.toggle('open',!minimized[name]);
-  }
-}
-function removeTaskbarBtn(name){
-  var btn=document.getElementById('tb-'+name);if(btn)btn.remove();
-}
-
-// ── DRAG WINDOWS ─────────────────────────────────────────────────────────
-var drag={el:null,ox:0,oy:0};
-function dragStart(e,id){
-  var fw=document.getElementById(id);
-  fw.style.zIndex=getTopZ();
-  drag.el=fw;
-  var r=fw.getBoundingClientRect();
-  drag.ox=e.clientX-r.left;drag.oy=e.clientY-r.top;
-  document.onmousemove=function(e2){
-    if(!drag.el)return;
-    drag.el.style.left=(e2.clientX-drag.ox)+'px';
-    drag.el.style.top=(e2.clientY-drag.oy)+'px';
-  };
-  document.onmouseup=function(){drag.el=null;document.onmousemove=null;document.onmouseup=null;};
-}
-
-// ── START MENU ────────────────────────────────────────────────────────────
-function toggleStartMenu(){
-  var sm=document.getElementById('startMenu');
-  sm.style.display=sm.style.display==='flex'?'none':'flex';
-}
-document.addEventListener('click',function(e){
-  var sm=document.getElementById('startMenu');
-  if(sm&&sm.style.display==='flex'&&!sm.contains(e.target)&&!e.target.closest('.tb-start')){
-    sm.style.display='none';
-  }
-});
-
-// ── CLOCK ─────────────────────────────────────────────────────────────────
-setInterval(function(){
-  var d=new Date();
-  var tb=document.getElementById('tbClock');
-  if(tb){tb.innerHTML=d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+'<br>'+d.toLocaleDateString([],{month:'2-digit',day:'2-digit',year:'2-digit'});}
-},1000);
-
-// ── CALCULATOR ────────────────────────────────────────────────────────────
-var calcStr='',calcPrev='',calcOp='',calcNew=true;
-function calcInput(v){
-  var d=document.getElementById('calcDisplay');
-  if(v==='C'){calcStr='0';calcPrev='';calcOp='';calcNew=true;d.textContent='0';return;}
-  if(v==='='){try{var r=eval(calcPrev+calcOp+calcStr);d.textContent=parseFloat(r.toFixed(10));calcStr=String(r);calcPrev='';calcOp='';}catch(e){d.textContent='ERR';}calcNew=true;return;}
-  if(['+','-','*','/'].includes(v)){calcPrev=calcStr;calcOp=v;calcNew=true;return;}
-  if(v==='%'){try{d.textContent=parseFloat((parseFloat(calcStr)/100).toFixed(10));}catch(e){}return;}
-  if(v==='+/-'){calcStr=String(-parseFloat(calcStr)||0);d.textContent=calcStr;return;}
-  if(calcNew){calcStr='';calcNew=false;}
-  if(v==='.'&&calcStr.includes('.'))return;
-// Show launcher on startup
-window.addEventListener('load', function(){document.getElementById('window-launcher').style.display='block';});
-  calcStr+=v;d.textContent=calcStr;
-}
-
-// ── EMULATOR ──────────────────────────────────────────────────────────────
-function loadEmu(url){document.getElementById('emuFrame').src=url;}
-
-// ── BROWSER ───────────────────────────────────────────────────────────────
-function loadBrowser(){
-  var url=document.getElementById('browserUrl').value;
-  if(!url.startsWith('http'))url='https://'+url;
-  document.getElementById('browserFrame').src=url;
-}
-// Updated toggleApp to handle new windows
-function toggleApp(name){
-  var window = document.getElementById('window-'+name);
-  if(!window) return;
-  if(window.style.display === 'none' || !window.style.display){
-    window.style.display = 'block';
-    window.style.zIndex = getTopZ();
-    makeWindowDraggable(window);
-  } else {
-    window.style.display = 'none';
-  }
-}
-
-function closeApp(name){
-  var window = document.getElementById('window-'+name);
-  if(window) window.style.display = 'none';
-}
-
-function getTopZ(){
-  var z = 100;
-  document.querySelectorAll('.app-window').forEach(function(w){
-    if(parseInt(w.style.zIndex)>z) z = parseInt(w.style.zIndex);
-  });
-  return z+1;
-}
-
-// Make windows draggable
-function makeWindowDraggable(elm){
-  var pos1=0,pos2=0,pos3=0,pos4=0;
-  var header = elm.querySelector('.window-header');
-  if(header) header.onmousedown = dragMouseDown;
-  
-  function dragMouseDown(e){
-    e.preventDefault();
-    pos3 = e.clientX;
-    pos4 = e.clientY;
-    document.onmouseup = closeDragElement;
-    document.onmousemove = elementDrag;
-  }
-  
-  function elementDrag(e){
-    e.preventDefault();
-    pos1 = pos3 - e.clientX;
-    pos2 = pos4 - e.clientY;
-    pos3 = e.clientX;
-    pos4 = e.clientY;
-    elm.style.top = (elm.offsetTop - pos2) + "px";
-    elm.style.left = (elm.offsetLeft - pos1) + "px";
-  }
-  
-  function closeDragElement(){
-    document.onmouseup = null;
-    document.onmousemove = null;
-  }
-}
-
-// TODO LIST FUNCTIONS
-var todos = JSON.parse(localStorage.getItem('todos')) || [];
-
-function addTodo(){
-  var input = document.getElementById('todoInput');
-  if(!input.value.trim()) return;
-  todos.push({id: Date.now(), text: input.value, done: false});
-  input.value = '';
-  saveTodos();
-  renderTodos();
-}
-
-function saveTodos(){
-  localStorage.setItem('todos', JSON.stringify(todos));
-}
-
-function renderTodos(){
-  var list = document.getElementById('todoList');
-  list.innerHTML = '';
-  todos.forEach(function(todo){
-    var div = document.createElement('div');
-    div.style.cssText = 'padding:8px;border:1px solid #0a1a33;margin:5px 0;display:flex;justify-content:space-between;align-items:center;';
-    div.innerHTML = '<span style="'+(todo.done?'text-decoration:line-through;':'')+'">'+todo.text+'</span><button onclick="deleteTodo('+todo.id+')" style="background:#ff3333;color:#fff;border:none;padding:4px 8px;cursor:pointer;">×</button>';
-    list.appendChild(div);
-  });
-}
-
-function deleteTodo(id){
-  todos = todos.filter(t => t.id !== id);
-  saveTodos();
-  renderTodos();
-}
-
-renderTodos();
-
-// POMODORO TIMER FUNCTIONS
-var pomodoroRunning = false;
-var pomodoroTime = 1500;
-
-function startPomodoro(){
-  pomodoroRunning = true;
-  var interval = setInterval(function(){
-    if(!pomodoroRunning) clearInterval(interval);
-    pomodoroTime--;
-    document.getElementById('pomodoroTime').textContent = Math.floor(pomodoroTime/60)+':'+(pomodoroTime%60<10?'0':'')+pomodoroTime%60;
-    if(pomodoroTime <= 0){
-      clearInterval(interval);
-      alert('Pomodoro complete!');
-      resetPomodoro();
-    }
-  }, 1000);
-}
-
-function pausePomodoro(){
-  pomodoroRunning = false;
-}
-
-function resetPomodoro(){
-  pomodoroRunning = false;
-  pomodoroTime = 1500;
-  document.getElementById('pomodoroTime').textContent = '25:00';
-}
-
-// UNIT CONVERTER FUNCTIONS
-function convertUnit(){
-  var input = parseFloat(document.getElementById('unitInput').value);
-  var type = document.getElementById('unitType').value;
-  var output = document.getElementById('unitOutput');
-  if(isNaN(input)){output.innerHTML='';return;}
-  
-  var results = '';
-  if(type === 'length'){
-    results = input + ' m = ' + (input*3.28084).toFixed(2) + ' ft<br>' + input + ' km = ' + (input*0.621371).toFixed(2) + ' mi';
-  } else if(type === 'weight'){
-    results = input + ' kg = ' + (input*2.20462).toFixed(2) + ' lb<br>' + input + ' kg = ' + (input*35.274).toFixed(2) + ' oz';
-  } else if(type === 'temp'){
-    results = input + '°C = ' + (input*9/5+32).toFixed(2) + '°F<br>' + input + '°F = ' + ((input-32)*5/9).toFixed(2) + '°C';
-  }
-  output.innerHTML = results;
-}
-
-// PASSWORD GENERATOR FUNCTIONS
-function generatePassword(){
-  var length = parseInt(document.getElementById('passLength').value);
-  var chars = 'abcdefghijklmnopqrstuvwxyz';
-  if(document.getElementById('passUppercase').checked) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  if(document.getElementById('passNumbers').checked) chars += '0123456789';
-  if(document.getElementById('passSymbols').checked) chars += '!@#$%^&*';
-  
-  var password = '';
-  for(var i=0;i<length;i++) password += chars.charAt(Math.floor(Math.random()*chars.length));
-  document.getElementById('passwordOutput').value = password;
-}
-
-document.getElementById('passLength').oninput = function(){
-  document.getElementById('passLengthDisplay').textContent = this.value;
-};
-
-// COLOR PICKER FUNCTIONS
-function updateColorDisplay(){
-  var color = document.getElementById('colorInput').value;
-  document.getElementById('colorDisplay').textContent = 'HEX: '+color.toUpperCase();
-  document.getElementById('colorDisplay').style.backgroundColor = color;
-}
-
-function copyColorHex(){
-  var hex = document.getElementById('colorInput').value;
-  navigator.clipboard.writeText(hex);
-  alert('Copied: '+hex);
-}
-
-// DICE ROLLER FUNCTIONS
-function rollDice(){
-  var sides = parseInt(document.getElementById('diceType').value);
-  var result = Math.floor(Math.random()*sides)+1;
-  document.getElementById('diceResult').textContent = result;
-}
-
-// 2048 GAME (simplified)
-function reset2048(){
-  document.getElementById('game2048Board').innerHTML = '<div style="grid-column:1/5;text-align:center;color:#4488cc;">2048 Game<br>(Full implementation coming)</div>';
-}
-
-// SNAKE GAME (simplified)
-function resetSnake(){
-  var canvas = document.getElementById('snakeCanvas');
-  if(canvas){
-    var ctx = canvas.getContext('2d');
-    ctx.fillStyle = '#000';
-    ctx.fillRect(0,0,canvas.width,canvas.height);
-    ctx.fillStyle = '#3fa9ff';
-    ctx.fillText('Snake Game (Full implementation coming)', 50, 150);
-  }
-}
-
-// MEMORY GAME
-function resetMemory(){
-  var board = document.getElementById('memoryBoard');
-  var tiles = ['🌟','🎮','🔥','💎','🌟','🎮','🔥','💎','🎯','🚀','⚡','🎨','🎯','🚀','⚡','🎨'];
-  tiles.sort(() => Math.random()-0.5);
-  board.innerHTML = '';
-  tiles.forEach(function(tile, i){
-    var div = document.createElement('div');
-    div.style.cssText = 'width:50px;height:50px;background:#1a2a4a;border:1px solid #3fa9ff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:24px;';
-    div.textContent = '?';
-    div.dataset.tile = tile;
-    board.appendChild(div);
-  });
-}
-
-resetMemory();
-
-// STICKY NOTES
-function saveStickyNote(){
-  var text = document.getElementById('stickyText').value;
-  localStorage.setItem('stickyNote', text);
-  alert('Note saved!');
-}
-
-</script>
-</body>
-</html>
