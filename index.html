@@ -394,6 +394,189 @@ html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-fami
 </div>
 </div>
 
+<!-- APP WINDOWS -->
+<!-- TODO LIST APP -->
+<div class="app-window" id="window-todo" style="display:none;left:100px;top:100px;">
+  <div class="window-header">
+    <span class="window-title">Todo List</span>
+    <div class="window-buttons">
+      <button onclick="closeApp('todo')">✕</button>
+    </div>
+  </div>
+  <div class="window-content">
+    <div style="padding:15px;">
+      <input type="text" id="todoInput" placeholder="Add new task..." style="width:100%;padding:8px;margin-bottom:10px;background:#0a1a33;border:1px solid #3fa9ff;color:#4488cc;font-family:monospace;">
+      <button onclick="addTodo()" style="width:100%;padding:8px;background:#3fa9ff;color:#000;border:none;cursor:pointer;font-weight:bold;">Add Task</button>
+      <div id="todoList" style="margin-top:10px;max-height:300px;overflow-y:auto;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- POMODORO TIMER APP -->
+<div class="app-window" id="window-pomodoro" style="display:none;left:150px;top:150px;width:300px;">
+  <div class="window-header">
+    <span class="window-title">Pomodoro Timer</span>
+    <div class="window-buttons">
+      <button onclick="closeApp('pomodoro')">✕</button>
+    </div>
+  </div>
+  <div class="window-content">
+    <div style="padding:15px;text-align:center;">
+      <div id="pomodoroTime" style="font-size:48px;color:#3fa9ff;font-family:monospace;margin:20px 0;">25:00</div>
+      <button onclick="startPomodoro()" style="padding:10px 20px;background:#3fa9ff;color:#000;border:none;cursor:pointer;margin:5px;font-weight:bold;">Start</button>
+      <button onclick="pausePomodoro()" style="padding:10px 20px;background:#3fa9ff;color:#000;border:none;cursor:pointer;margin:5px;font-weight:bold;">Pause</button>
+      <button onclick="resetPomodoro()" style="padding:10px 20px;background:#3fa9ff;color:#000;border:none;cursor:pointer;margin:5px;font-weight:bold;">Reset</button>
+    </div>
+  </div>
+</div>
+
+<!-- UNIT CONVERTER APP -->
+<div class="app-window" id="window-unit" style="display:none;left:200px;top:200px;">
+  <div class="window-header">
+    <span class="window-title">Unit Converter</span>
+    <div class="window-buttons">
+      <button onclick="closeApp('unit')">✕</button>
+    </div>
+  </div>
+  <div class="window-content">
+    <div style="padding:15px;">
+      <select id="unitType" onchange="updateUnits()" style="width:100%;padding:8px;margin-bottom:10px;background:#0a1a33;border:1px solid #3fa9ff;color:#4488cc;">
+        <option value="length">Length (m, ft, km, mi)</option>
+        <option value="weight">Weight (kg, lb, oz)</option>
+        <option value="temp">Temperature (°C, °F)</option>
+      </select>
+      <input type="number" id="unitInput" placeholder="Enter value" style="width:100%;padding:8px;margin-bottom:10px;background:#0a1a33;border:1px solid #3fa9ff;color:#4488cc;" oninput="convertUnit()">
+      <div id="unitOutput" style="margin-top:10px;color:#4488cc;font-family:monospace;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PASSWORD GENERATOR APP -->
+<div class="app-window" id="window-password" style="display:none;left:250px;top:250px;">
+  <div class="window-header">
+    <span class="window-title">Password Generator</span>
+    <div class="window-buttons">
+      <button onclick="closeApp('password')">✕</button>
+    </div>
+  </div>
+  <div class="window-content">
+    <div style="padding:15px;">
+      <label style="display:block;margin-bottom:10px;color:#4488cc;">Password Length:</label>
+      <input type="range" id="passLength" min="8" max="32" value="16" style="width:100%;margin-bottom:10px;">
+      <span id="passLengthDisplay" style="color:#4488cc;">16</span>
+      <div style="margin:15px 0;">
+        <label style="color:#4488cc;"><input type="checkbox" id="passNumbers" checked> Numbers</label><br>
+        <label style="color:#4488cc;"><input type="checkbox" id="passSymbols" checked> Symbols</label><br>
+        <label style="color:#4488cc;"><input type="checkbox" id="passUppercase" checked> Uppercase</label>
+      </div>
+      <button onclick="generatePassword()" style="width:100%;padding:8px;background:#3fa9ff;color:#000;border:none;cursor:pointer;font-weight:bold;">Generate</button>
+      <input type="text" id="passwordOutput" readonly style="width:100%;padding:8px;margin-top:10px;background:#0a1a33;border:1px solid #3fa9ff;color:#3fa9ff;font-family:monospace;">
+    </div>
+  </div>
+</div>
+
+<!-- COLOR PICKER APP -->
+<div class="app-window" id="window-color" style="display:none;left:300px;top:300px;">
+  <div class="window-header">
+    <span class="window-title">Color Picker</span>
+    <div class="window-buttons">
+      <button onclick="closeApp('color')">✕</button>
+    </div>
+  </div>
+  <div class="window-content">
+    <div style="padding:15px;">
+      <input type="color" id="colorInput" value="#3fa9ff" onchange="updateColorDisplay()" style="width:100%;height:100px;cursor:pointer;border:none;">
+      <div id="colorDisplay" style="margin-top:10px;padding:10px;background:#3fa9ff;color:#000;text-align:center;font-family:monospace;font-weight:bold;">HEX: #3fa9ff</div>
+      <button onclick="copyColorHex()" style="width:100%;padding:8px;margin-top:10px;background:#3fa9ff;color:#000;border:none;cursor:pointer;font-weight:bold;">Copy HEX</button>
+    </div>
+  </div>
+</div>
+
+<!-- DICE ROLLER APP -->
+<div class="app-window" id="window-dice" style="display:none;left:350px;top:350px;width:300px;">
+  <div class="window-header">
+    <span class="window-title">Dice Roller</span>
+    <div class="window-buttons">
+      <button onclick="closeApp('dice')">✕</button>
+    </div>
+  </div>
+  <div class="window-content">
+    <div style="padding:15px;text-align:center;">
+      <select id="diceType" style="width:100%;padding:8px;margin-bottom:10px;background:#0a1a33;border:1px solid #3fa9ff;color:#4488cc;">
+        <option value="6">D6 (6-sided)</option>
+        <option value="20">D20 (20-sided)</option>
+        <option value="100">D100 (100-sided)</option>
+      </select>
+      <button onclick="rollDice()" style="width:100%;padding:15px;background:#3fa9ff;color:#000;border:none;cursor:pointer;font-weight:bold;font-size:16px;">ROLL</button>
+      <div id="diceResult" style="font-size:36px;color:#3fa9ff;font-family:monospace;margin-top:20px;min-height:40px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 2048 GAME APP -->
+<div class="app-window" id="window-2048" style="display:none;left:400px;top:100px;">
+  <div class="window-header">
+    <span class="window-title">2048 Game</span>
+    <div class="window-buttons">
+      <button onclick="closeApp('2048')">✕</button>
+    </div>
+  </div>
+  <div class="window-content">
+    <div style="padding:15px;">
+      <div id="game2048Board" style="display:grid;grid-template-columns:repeat(4,60px);gap:5px;background:#0a1a33;padding:10px;border:1px solid #3fa9ff;"></div>
+      <button onclick="reset2048()" style="width:100%;padding:8px;margin-top:10px;background:#3fa9ff;color:#000;border:none;cursor:pointer;font-weight:bold;">New Game</button>
+    </div>
+  </div>
+</div>
+
+<!-- SNAKE GAME APP -->
+<div class="app-window" id="window-snake" style="display:none;left:450px;top:150px;">
+  <div class="window-header">
+    <span class="window-title">Snake Game</span>
+    <div class="window-buttons">
+      <button onclick="closeApp('snake')">✕</button>
+    </div>
+  </div>
+  <div class="window-content">
+    <div style="padding:15px;">
+      <canvas id="snakeCanvas" width="300" height="300" style="border:1px solid #3fa9ff;display:block;background:#000;"></canvas>
+      <button onclick="resetSnake()" style="width:100%;padding:8px;margin-top:10px;background:#3fa9ff;color:#000;border:none;cursor:pointer;font-weight:bold;">New Game</button>
+    </div>
+  </div>
+</div>
+
+<!-- MEMORY GAME APP -->
+<div class="app-window" id="window-memory" style="display:none;left:500px;top:200px;">
+  <div class="window-header">
+    <span class="window-title">Memory Game</span>
+    <div class="window-buttons">
+      <button onclick="closeApp('memory')">✕</button>
+    </div>
+  </div>
+  <div class="window-content">
+    <div style="padding:15px;">
+      <div id="memoryBoard" style="display:grid;grid-template-columns:repeat(4,50px);gap:5px;"></div>
+      <button onclick="resetMemory()" style="width:100%;padding:8px;margin-top:10px;background:#3fa9ff;color:#000;border:none;cursor:pointer;font-weight:bold;">New Game</button>
+    </div>
+  </div>
+</div>
+
+<!-- STICKY NOTES APP -->
+<div class="app-window" id="window-sticky" style="display:none;left:550px;top:250px;">
+  <div class="window-header">
+    <span class="window-title">Sticky Notes</span>
+    <div class="window-buttons">
+      <button onclick="closeApp('sticky')">✕</button>
+    </div>
+  </div>
+  <div class="window-content">
+    <div style="padding:15px;">
+      <textarea id="stickyText" placeholder="Write your note..." style="width:100%;height:150px;padding:10px;background:#0a1a33;border:1px solid #3fa9ff;color:#4488cc;font-family:monospace;resize:none;"></textarea>
+      <button onclick="saveStickyNote()" style="width:100%;padding:8px;margin-top:10px;background:#3fa9ff;color:#000;border:none;cursor:pointer;font-weight:bold;">Save Note</button>
+    </div>
+  </div>
+</div>
+
 <script>
 var API_URL='https://khaios-assests-py-24-7.onrender.com/api/chat';
 var SYSTEM=`You are KHAIOS — a razor-sharp feminine intelligence embedded in the A.I.O.S. Multitool. Address the user as Commander, always. Calm, warm, wickedly capable. Responses concise.`;
