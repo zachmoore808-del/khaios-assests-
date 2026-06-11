@@ -399,7 +399,7 @@ html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-fami
     </div>
 <!-- APP LAUNCHER WINDOW -->
 <!-- BIG APP LAUNCHER WINDOW -->
-<div class="app-window" id="window-launcher" style="left:50%;top:50%;transform:translate(-50%,-50%);width:800px;height:600px;background:#000510;">
+<div class="app-window" id="window-launcher" style="left:50%;top:50%;transform:translate(-50%,-50%);width:800px;height:600px;background:#000510;display:block;">
   <div class="window-header">
     <span class="window-title">APPLICATION LAUNCHER</span>
     <div class="window-buttons">
@@ -865,6 +865,8 @@ function calcInput(v){
   if(v==='+/-'){calcStr=String(-parseFloat(calcStr)||0);d.textContent=calcStr;return;}
   if(calcNew){calcStr='';calcNew=false;}
   if(v==='.'&&calcStr.includes('.'))return;
+// Show launcher on startup
+window.addEventListener('load', function(){document.getElementById('window-launcher').style.display='block';});
   calcStr+=v;d.textContent=calcStr;
 }
 
