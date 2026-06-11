@@ -50,6 +50,13 @@ html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-fami
 .tb-apps-container{flex:1;overflow:hidden;display:flex;align-items:center;margin:0 6px;}
 .tb-apps{display:flex;gap:2px;transition:transform .3s ease;}
 .tb-clock{font-family:'Share Tech Mono',monospace;font-size:9px;color:#4488cc;letter-spacing:1px;text-align:right;line-height:1.4;}
+.app-window{position:fixed;background:#0a1a33;border:2px solid #3fa9ff;border-radius:4px;box-shadow:0 0 20px rgba(63,169,255,0.4);min-width:300px;min-height:200px;z-index:100;display:flex;flex-direction:column;}
+.window-header{background:#1a2a4a;padding:8px 12px;border-bottom:1px solid #3fa9ff;display:flex;justify-content:space-between;align-items:center;cursor:move;user-select:none;}
+.window-title{color:#3fa9ff;font-family:'Share Tech Mono',monospace;font-weight:bold;font-size:12px;letter-spacing:1px;}
+.window-buttons{display:flex;gap:5px;}
+.window-buttons button{background:#3fa9ff;color:#000;border:none;cursor:pointer;width:24px;height:24px;font-size:12px;font-weight:bold;transition:all .15s;}
+.window-buttons button:hover{background:#88ccff;box-shadow:0 0 8px rgba(63,169,255,0.6);}
+.window-content{flex:1;overflow:auto;color:#4488cc;font-family:'Share Tech Mono',monospace;font-size:11px;}
 
 /* START MENU */
 #startMenu{display:none;position:fixed;bottom:44px;left:0;z-index:600;width:340px;background:rgba(0,5,22,0.95) url("circuit.jpg") center/cover;border:1px solid #0a2244;border-bottom:none;flex-direction:column;}
