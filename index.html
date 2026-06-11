@@ -57,6 +57,8 @@ html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-fami
 .window-buttons button{background:#3fa9ff;color:#000;border:none;cursor:pointer;width:24px;height:24px;font-size:12px;font-weight:bold;transition:all .15s;}
 .window-buttons button:hover{background:#88ccff;box-shadow:0 0 8px rgba(63,169,255,0.6);}
 .window-content{flex:1;overflow:auto;color:#4488cc;font-family:'Share Tech Mono',monospace;font-size:11px;}
+.big-app-icon{padding:12px;cursor:pointer;border:2px solid #0a4a7a;border-radius:8px;text-align:center;color:#3fa9ff;font-size:12px;font-family:'Share Tech Mono',monospace;transition:all .2s;user-select:none;background:rgba(10,26,51,0.6);}
+.big-app-icon:hover{background:rgba(63,169,255,0.2);border-color:#3fa9ff;box-shadow:0 0 20px rgba(63,169,255,0.6);transform:scale(1.1);}
 .app-icon-launcher{padding:8px;cursor:pointer;border:1px solid #0a1a33;border-radius:4px;text-align:center;color:#4488cc;font-size:10px;font-family:'Share Tech Mono',monospace;transition:all .15s;user-select:none;}
 .app-icon-launcher:hover{background:#1a2a4a;border-color:#3fa9ff;box-shadow:0 0 10px rgba(63,169,255,0.3);}
 
@@ -396,6 +398,84 @@ html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-fami
       <div id="unitOutput" style="margin-top:10px;color:#4488cc;font-family:monospace;"></div>
     </div>
 <!-- APP LAUNCHER WINDOW -->
+<!-- BIG APP LAUNCHER WINDOW -->
+<div class="app-window" id="window-launcher" style="left:50%;top:50%;transform:translate(-50%,-50%);width:800px;height:600px;background:#000510;">
+  <div class="window-header">
+    <span class="window-title">APPLICATION LAUNCHER</span>
+    <div class="window-buttons">
+      <button onclick="closeApp('launcher')">✕</button>
+    </div>
+  </div>
+  <div class="window-content" style="padding:20px;overflow-y:auto;">
+    <div style="display:grid;grid-template-columns:repeat(6,110px);gap:20px;justify-items:center;">
+      <div class="big-app-icon" onclick="toggleApp('chat')" title="AI CORE"><span style="font-size:48px;display:block;margin-bottom:8px;">💬</span>AI CORE</div>
+      <div class="big-app-icon" onclick="toggleApp('2048')" title="2048"><span style="font-size:48px;display:block;margin-bottom:8px;">🎮</span>2048</div>
+      <div class="big-app-icon" onclick="toggleApp('snake')" title="Snake"><span style="font-size:48px;display:block;margin-bottom:8px;">🐍</span>Snake</div>
+      <div class="big-app-icon" onclick="toggleApp('tetris')" title="Tetris"><span style="font-size:48px;display:block;margin-bottom:8px;">🧱</span>Tetris</div>
+      <div class="big-app-icon" onclick="toggleApp('flappy')" title="Flappy"><span style="font-size:48px;display:block;margin-bottom:8px;">🐦</span>Flappy</div>
+      <div class="big-app-icon" onclick="toggleApp('tictac')" title="TicTac"><span style="font-size:48px;display:block;margin-bottom:8px;">⭕</span>TicTac</div>
+      <div class="big-app-icon" onclick="toggleApp('chess')" title="Chess"><span style="font-size:48px;display:block;margin-bottom:8px;">♞</span>Chess</div>
+      <div class="big-app-icon" onclick="toggleApp('checkers')" title="Checkers"><span style="font-size:48px;display:block;margin-bottom:8px;">⚫</span>Checkers</div>
+      <div class="big-app-icon" onclick="toggleApp('mines')" title="Mines"><span style="font-size:48px;display:block;margin-bottom:8px;">💣</span>Mines</div>
+      <div class="big-app-icon" onclick="toggleApp('memory')" title="Memory"><span style="font-size:48px;display:block;margin-bottom:8px;">🧠</span>Memory</div>
+      <div class="big-app-icon" onclick="toggleApp('pong')" title="Pong"><span style="font-size:48px;display:block;margin-bottom:8px;">🏓</span>Pong</div>
+      <div class="big-app-icon" onclick="toggleApp('invaders')" title="Invaders"><span style="font-size:48px;display:block;margin-bottom:8px;">👾</span>Invaders</div>
+      <div class="big-app-icon" onclick="toggleApp('pacman')" title="PacMan"><span style="font-size:48px;display:block;margin-bottom:8px;">👹</span>PacMan</div>
+      <div class="big-app-icon" onclick="toggleApp('breakout')" title="Breakout"><span style="font-size:48px;display:block;margin-bottom:8px;">🎯</span>Breakout</div>
+      <div class="big-app-icon" onclick="toggleApp('hangman')" title="Hangman"><span style="font-size:48px;display:block;margin-bottom:8px;">🎭</span>Hangman</div>
+      <div class="big-app-icon" onclick="toggleApp('wordle')" title="Wordle"><span style="font-size:48px;display:block;margin-bottom:8px;">📝</span>Wordle</div>
+      <div class="big-app-icon" onclick="toggleApp('sudoku')" title="Sudoku"><span style="font-size:48px;display:block;margin-bottom:8px;">🔢</span>Sudoku</div>
+      <div class="big-app-icon" onclick="toggleApp('solitaire')" title="Solitaire"><span style="font-size:48px;display:block;margin-bottom:8px;">🃏</span>Solitaire</div>
+      <div class="big-app-icon" onclick="toggleApp('dice')" title="Dice"><span style="font-size:48px;display:block;margin-bottom:8px;">🎲</span>Dice</div>
+      <div class="big-app-icon" onclick="toggleApp('todo')" title="Todo"><span style="font-size:48px;display:block;margin-bottom:8px;">✓</span>Todo</div>
+      <div class="big-app-icon" onclick="toggleApp('notepad')" title="Notepad"><span style="font-size:48px;display:block;margin-bottom:8px;">📄</span>Notepad</div>
+      <div class="big-app-icon" onclick="toggleApp('markdown')" title="Markdown"><span style="font-size:48px;display:block;margin-bottom:8px;">📋</span>Markdown</div>
+      <div class="big-app-icon" onclick="toggleApp('sticky')" title="Sticky"><span style="font-size:48px;display:block;margin-bottom:8px;">📌</span>Sticky</div>
+      <div class="big-app-icon" onclick="toggleApp('pomodoro')" title="Pomodoro"><span style="font-size:48px;display:block;margin-bottom:8px;">⏱️</span>Pomodoro</div>
+      <div class="big-app-icon" onclick="toggleApp('tracker')" title="Tracker"><span style="font-size:48px;display:block;margin-bottom:8px;">⏰</span>Tracker</div>
+      <div class="big-app-icon" onclick="toggleApp('calendar')" title="Calendar"><span style="font-size:48px;display:block;margin-bottom:8px;">📅</span>Calendar</div>
+      <div class="big-app-icon" onclick="toggleApp('clock')" title="Clock"><span style="font-size:48px;display:block;margin-bottom:8px;">🕐</span>Clock</div>
+      <div class="big-app-icon" onclick="toggleApp('habits')" title="Habits"><span style="font-size:48px;display:block;margin-bottom:8px;">📊</span>Habits</div>
+      <div class="big-app-icon" onclick="toggleApp('mood')" title="Mood"><span style="font-size:48px;display:block;margin-bottom:8px;">😊</span>Mood</div>
+      <div class="big-app-icon" onclick="toggleApp('unit')" title="Unit"><span style="font-size:48px;display:block;margin-bottom:8px;">⚖️</span>Unit</div>
+      <div class="big-app-icon" onclick="toggleApp('currency')" title="Currency"><span style="font-size:48px;display:block;margin-bottom:8px;">💱</span>Currency</div>
+      <div class="big-app-icon" onclick="toggleApp('password')" title="Password"><span style="font-size:48px;display:block;margin-bottom:8px;">🔐</span>Password</div>
+      <div class="big-app-icon" onclick="toggleApp('qr')" title="QR"><span style="font-size:48px;display:block;margin-bottom:8px;">📱</span>QR</div>
+      <div class="big-app-icon" onclick="toggleApp('color')" title="Color"><span style="font-size:48px;display:block;margin-bottom:8px;">🎨</span>Color</div>
+      <div class="big-app-icon" onclick="toggleApp('base64')" title="Base64"><span style="font-size:48px;display:block;margin-bottom:8px;">🔤</span>Base64</div>
+      <div class="big-app-icon" onclick="toggleApp('urlenc')" title="URL"><span style="font-size:48px;display:block;margin-bottom:8px;">🌐</span>URL</div>
+      <div class="big-app-icon" onclick="toggleApp('json')" title="JSON"><span style="font-size:48px;display:block;margin-bottom:8px;">{ }</span>JSON</div>
+      <div class="big-app-icon" onclick="toggleApp('hash')" title="Hash"><span style="font-size:48px;display:block;margin-bottom:8px;">#️⃣</span>Hash</div>
+      <div class="big-app-icon" onclick="toggleApp('counter')" title="Counter"><span style="font-size:48px;display:block;margin-bottom:8px;">📊</span>Counter</div>
+      <div class="big-app-icon" onclick="toggleApp('regex')" title="Regex"><span style="font-size:48px;display:block;margin-bottom:8px;">🔍</span>Regex</div>
+      <div class="big-app-icon" onclick="toggleApp('wheel')" title="Wheel"><span style="font-size:48px;display:block;margin-bottom:8px;">🎡</span>Wheel</div>
+      <div class="big-app-icon" onclick="toggleApp('draw')" title="Draw"><span style="font-size:48px;display:block;margin-bottom:8px;">🖌️</span>Draw</div>
+      <div class="big-app-icon" onclick="toggleApp('pixel')" title="Pixel"><span style="font-size:48px;display:block;margin-bottom:8px;">🎮</span>Pixel</div>
+      <div class="big-app-icon" onclick="toggleApp('resize')" title="Resize"><span style="font-size:48px;display:block;margin-bottom:8px;">📐</span>Resize</div>
+      <div class="big-app-icon" onclick="toggleApp('audio')" title="Audio"><span style="font-size:48px;display:block;margin-bottom:8px;">🎵</span>Audio</div>
+      <div class="big-app-icon" onclick="toggleApp('tts')" title="TTS"><span style="font-size:48px;display:block;margin-bottom:8px;">🔊</span>TTS</div>
+      <div class="big-app-icon" onclick="toggleApp('gif')" title="GIF"><span style="font-size:48px;display:block;margin-bottom:8px;">🎬</span>GIF</div>
+      <div class="big-app-icon" onclick="toggleApp('crypto')" title="Crypto"><span style="font-size:48px;display:block;margin-bottom:8px;">₿</span>Crypto</div>
+      <div class="big-app-icon" onclick="toggleApp('stocks')" title="Stocks"><span style="font-size:48px;display:block;margin-bottom:8px;">📈</span>Stocks</div>
+      <div class="big-app-icon" onclick="toggleApp('news')" title="News"><span style="font-size:48px;display:block;margin-bottom:8px;">📰</span>News</div>
+      <div class="big-app-icon" onclick="toggleApp('dict')" title="Dict"><span style="font-size:48px;display:block;margin-bottom:8px;">📖</span>Dict</div>
+      <div class="big-app-icon" onclick="toggleApp('ip')" title="IP"><span style="font-size:48px;display:block;margin-bottom:8px;">🌍</span>IP</div>
+      <div class="big-app-icon" onclick="toggleApp('astronomy')" title="Stars"><span style="font-size:48px;display:block;margin-bottom:8px;">🌌</span>Stars</div>
+      <div class="big-app-icon" onclick="toggleApp('api')" title="API"><span style="font-size:48px;display:block;margin-bottom:8px;">🔗</span>API</div>
+      <div class="big-app-icon" onclick="toggleApp('beautify')" title="Code"><span style="font-size:48px;display:block;margin-bottom:8px;">✨</span>Code</div>
+      <div class="big-app-icon" onclick="toggleApp('sql')" title="SQL"><span style="font-size:48px;display:block;margin-bottom:8px;">🗄️</span>SQL</div>
+      <div class="big-app-icon" onclick="toggleApp('console')" title="Console"><span style="font-size:48px;display:block;margin-bottom:8px;">⌨️</span>Console</div>
+      <div class="big-app-icon" onclick="toggleApp('debug')" title="Debug"><span style="font-size:48px;display:block;margin-bottom:8px;">🐛</span>Debug</div>
+      <div class="big-app-icon" onclick="toggleApp('bmi')" title="BMI"><span style="font-size:48px;display:block;margin-bottom:8px;">⚖️</span>BMI</div>
+      <div class="big-app-icon" onclick="toggleApp('mortgage')" title="Mortgage"><span style="font-size:48px;display:block;margin-bottom:8px;">🏠</span>Mortgage</div>
+      <div class="big-app-icon" onclick="toggleApp('loan')" title="Loan"><span style="font-size:48px;display:block;margin-bottom:8px;">💰</span>Loan</div>
+      <div class="big-app-icon" onclick="toggleApp('tip')" title="Tip"><span style="font-size:48px;display:block;margin-bottom:8px;">💵</span>Tip</div>
+      <div class="big-app-icon" onclick="toggleApp('age')" title="Age"><span style="font-size:48px;display:block;margin-bottom:8px;">🎂</span>Age</div>
+      <div class="big-app-icon" onclick="toggleApp('birthday')" title="Birthday"><span style="font-size:48px;display:block;margin-bottom:8px;">🎉</span>Birthday</div>
+      <div class="big-app-icon" onclick="toggleApp('temp')" title="Temp"><span style="font-size:48px;display:block;margin-bottom:8px;">🌡️</span>Temp</div>
+    </div>
+  </div>
+</div>
 <div class="app-window" id="window-launcher" style="left:50%;top:50%;transform:translate(-50%,-50%);width:600px;height:500px;">
   <div class="window-header">
     <span class="window-title">App Launcher</span>
