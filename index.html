@@ -334,6 +334,31 @@ html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-fami
 var API_URL='https://khaios-assests-py-24-7.onrender.com/api/chat';
 var SYSTEM=`You are KHAIOS — a razor-sharp feminine intelligence embedded in the A.I.O.S. Multitool. Address the user as Commander, always. Calm, warm, wickedly capable. Responses concise.`;
 
+// ── TASKBAR SCROLL CAROUSEL ───────────────────────────────────────────────────────────
+let appScrollOffset = 0;
+const APP_SCROLL_STEP = 150;
+
+function scrollAppsLeft() {
+  const container = document.querySelector('.tb-apps');
+  if (!container) return;
+  appScrollOffset = Math.max(0, appScrollOffset - APP_SCROLL_STEP);
+  container.style.transform = `translateX(-${appScrollOffset}px)`;
+}
+
+function scrollAppsRight() {
+  const container = document.querySelector('.tb-apps');
+  if (!container) return;
+  const maxScroll = Math.max(0, container.scrollWidth - container.parentElement.clientWidth);
+  appScrollOffset = Math.min(maxScroll, appScrollOffset + APP_SCROLL_STEP);
+  container.style.transform = `translateX(-${appScrollOffset}px)`;
+}
+
+// Keyboard support for arrow keys
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowLeft') scrollAppsLeft();
+  if (e.key === 'ArrowRight') scrollAppsRight();
+});
+
 // ── MATRIX RAIN ───────────────────────────────────────────────────────────
 (function(){
   var c=document.getElementById('matrixCanvas');
