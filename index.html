@@ -856,6 +856,221 @@ function loadBrowser(){
   if(!url.startsWith('http'))url='https://'+url;
   document.getElementById('browserFrame').src=url;
 }
+// Updated toggleApp to handle new windows
+function toggleApp(name){
+  var window = document.getElementById('window-'+name);
+  if(!window) return;
+  if(window.style.display === 'none' || !window.style.display){
+    window.style.display = 'block';
+    window.style.zIndex = getTopZ();
+    makeWindowDraggable(window);
+  } else {
+    window.style.display = 'none';
+  }
+}
+
+function closeApp(name){
+  var window = document.getElementById('window-'+name);
+  if(window) window.style.display = 'none';
+}
+
+function getTopZ(){
+  var z = 100;
+  document.querySelectorAll('.app-window').forEach(function(w){
+    if(parseInt(w.style.zIndex)>z) z = parseInt(w.style.zIndex);
+  });
+  return z+1;
+}
+
+// Make windows draggable
+function makeWindowDraggable(elm){
+  var pos1=0,pos2=0,pos3=0,pos4=0;
+  var header = elm.querySelector('.window-header');
+  if(header) header.onmousedown = dragMouseDown;
+  
+  function dragMouseDown(e){
+    e.preventDefault();
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closeDragElement;
+    document.onmousemove = elementDrag;
+  }
+  
+  function elementDrag(e){
+    e.preventDefault();
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    elm.style.top = (elm.offsetTop - pos2) + "px";
+    elm.style.left = (elm.offsetLeft - pos1) + "px";
+  }
+  
+  function closeDragElement(){
+    document.onmouseup = null;
+    document.onmousemove = null;
+  }
+}
+
+// TODO LIST FUNCTIONS
+var todos = JSON.parse(localStorage.getItem('todos')) || [];
+
+function addTodo(){
+  var input = document.getElementById('todoInput');
+  if(!input.value.trim()) return;
+  todos.push({id: Date.now(), text: input.value, done: false});
+  input.value = '';
+  saveTodos();
+  renderTodos();
+}
+
+function saveTodos(){
+  localStorage.setItem('todos', JSON.stringify(todos));
+}
+
+function renderTodos(){
+  var list = document.getElementById('todoList');
+  list.innerHTML = '';
+  todos.forEach(function(todo){
+    var div = document.createElement('div');
+    div.style.cssText = 'padding:8px;border:1px solid #0a1a33;margin:5px 0;display:flex;justify-content:space-between;align-items:center;';
+    div.innerHTML = '<span style="'+(todo.done?'text-decoration:line-through;':'')+'">'+todo.text+'</span><button onclick="deleteTodo('+todo.id+')" style="background:#ff3333;color:#fff;border:none;padding:4px 8px;cursor:pointer;">×</button>';
+    list.appendChild(div);
+  });
+}
+
+function deleteTodo(id){
+  todos = todos.filter(t => t.id !== id);
+  saveTodos();
+  renderTodos();
+}
+
+renderTodos();
+
+// POMODORO TIMER FUNCTIONS
+var pomodoroRunning = false;
+var pomodoroTime = 1500;
+
+function startPomodoro(){
+  pomodoroRunning = true;
+  var interval = setInterval(function(){
+    if(!pomodoroRunning) clearInterval(interval);
+    pomodoroTime--;
+    document.getElementById('pomodoroTime').textContent = Math.floor(pomodoroTime/60)+':'+(pomodoroTime%60<10?'0':'')+pomodoroTime%60;
+    if(pomodoroTime <= 0){
+      clearInterval(interval);
+      alert('Pomodoro complete!');
+      resetPomodoro();
+    }
+  }, 1000);
+}
+
+function pausePomodoro(){
+  pomodoroRunning = false;
+}
+
+function resetPomodoro(){
+  pomodoroRunning = false;
+  pomodoroTime = 1500;
+  document.getElementById('pomodoroTime').textContent = '25:00';
+}
+
+// UNIT CONVERTER FUNCTIONS
+function convertUnit(){
+  var input = parseFloat(document.getElementById('unitInput').value);
+  var type = document.getElementById('unitType').value;
+  var output = document.getElementById('unitOutput');
+  if(isNaN(input)){output.innerHTML='';return;}
+  
+  var results = '';
+  if(type === 'length'){
+    results = input + ' m = ' + (input*3.28084).toFixed(2) + ' ft<br>' + input + ' km = ' + (input*0.621371).toFixed(2) + ' mi';
+  } else if(type === 'weight'){
+    results = input + ' kg = ' + (input*2.20462).toFixed(2) + ' lb<br>' + input + ' kg = ' + (input*35.274).toFixed(2) + ' oz';
+  } else if(type === 'temp'){
+    results = input + '°C = ' + (input*9/5+32).toFixed(2) + '°F<br>' + input + '°F = ' + ((input-32)*5/9).toFixed(2) + '°C';
+  }
+  output.innerHTML = results;
+}
+
+// PASSWORD GENERATOR FUNCTIONS
+function generatePassword(){
+  var length = parseInt(document.getElementById('passLength').value);
+  var chars = 'abcdefghijklmnopqrstuvwxyz';
+  if(document.getElementById('passUppercase').checked) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  if(document.getElementById('passNumbers').checked) chars += '0123456789';
+  if(document.getElementById('passSymbols').checked) chars += '!@#$%^&*';
+  
+  var password = '';
+  for(var i=0;i<length;i++) password += chars.charAt(Math.floor(Math.random()*chars.length));
+  document.getElementById('passwordOutput').value = password;
+}
+
+document.getElementById('passLength').oninput = function(){
+  document.getElementById('passLengthDisplay').textContent = this.value;
+};
+
+// COLOR PICKER FUNCTIONS
+function updateColorDisplay(){
+  var color = document.getElementById('colorInput').value;
+  document.getElementById('colorDisplay').textContent = 'HEX: '+color.toUpperCase();
+  document.getElementById('colorDisplay').style.backgroundColor = color;
+}
+
+function copyColorHex(){
+  var hex = document.getElementById('colorInput').value;
+  navigator.clipboard.writeText(hex);
+  alert('Copied: '+hex);
+}
+
+// DICE ROLLER FUNCTIONS
+function rollDice(){
+  var sides = parseInt(document.getElementById('diceType').value);
+  var result = Math.floor(Math.random()*sides)+1;
+  document.getElementById('diceResult').textContent = result;
+}
+
+// 2048 GAME (simplified)
+function reset2048(){
+  document.getElementById('game2048Board').innerHTML = '<div style="grid-column:1/5;text-align:center;color:#4488cc;">2048 Game<br>(Full implementation coming)</div>';
+}
+
+// SNAKE GAME (simplified)
+function resetSnake(){
+  var canvas = document.getElementById('snakeCanvas');
+  if(canvas){
+    var ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle = '#3fa9ff';
+    ctx.fillText('Snake Game (Full implementation coming)', 50, 150);
+  }
+}
+
+// MEMORY GAME
+function resetMemory(){
+  var board = document.getElementById('memoryBoard');
+  var tiles = ['🌟','🎮','🔥','💎','🌟','🎮','🔥','💎','🎯','🚀','⚡','🎨','🎯','🚀','⚡','🎨'];
+  tiles.sort(() => Math.random()-0.5);
+  board.innerHTML = '';
+  tiles.forEach(function(tile, i){
+    var div = document.createElement('div');
+    div.style.cssText = 'width:50px;height:50px;background:#1a2a4a;border:1px solid #3fa9ff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:24px;';
+    div.textContent = '?';
+    div.dataset.tile = tile;
+    board.appendChild(div);
+  });
+}
+
+resetMemory();
+
+// STICKY NOTES
+function saveStickyNote(){
+  var text = document.getElementById('stickyText').value;
+  localStorage.setItem('stickyNote', text);
+  alert('Note saved!');
+}
+
 </script>
 </body>
 </html>
