@@ -396,7 +396,7 @@ html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-fami
 </div>
 
 <!-- APP LAUNCHER WINDOW (carousel) -->
-<div class="app-window" id="window-launcher" style="left:50%;top:50%;transform:translate(-50%,-50%);width:900px;height:350px;background:#000510;display:block;">
+<div class="app-window" id="window-launcher" style="left:50%;top:50%;transform:translate(-50%,-50%);width:900px;height:350px;background:#000510;display:none;">
   <div class="window-header">
     <span class="window-title">APPLICATION LIBRARY</span>
     <div class="window-buttons">
@@ -703,6 +703,7 @@ function enterDesktop(){
     me.style.display='none';
     document.getElementById('desktop').style.display='block';
     document.getElementById('taskbar').style.display='flex';
+    document.getElementById('window-launcher').style.display='block';
   },800);
 }
 
@@ -864,7 +865,6 @@ function calcInput(v){
   if(calcNew){calcStr='';calcNew=false;}
   if(v==='.'&&calcStr.includes('.'))return;
 // Show launcher on startup
-window.addEventListener('load', function(){document.getElementById('window-launcher').style.display='block';});
   calcStr+=v;d.textContent=calcStr;
 }
 
