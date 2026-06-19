@@ -199,14 +199,14 @@ function initAvatar(){
   scene.add(new THREE.AmbientLight(0x88bbff,1.2));
   var p=new THREE.PointLight(0x33aaff,3,20);p.position.set(0,2,4);scene.add(p);
   holo=new THREE.Group();scene.add(holo);
-  holo.add(Object.assign(new THREE.Mesh(new THREE.CylinderGeometry(0.18,0.62,1.5,16,1,true),mkMat(0.42)),{position:{x:0,y:0.75,z:0}}));
-  holo.add(Object.assign(new THREE.Mesh(new THREE.CylinderGeometry(0.22,0.18,0.5,16),mkMat(0.5)),{position:{x:0,y:1.55,z:0}}));
+  (function(){var m=new THREE.Mesh(new THREE.CylinderGeometry(0.18,0.62,1.5,16,1,true),mkMat(0.42));m.position.set(0,0.75,0);holo.add(m);})();
+  (function(){var m=new THREE.Mesh(new THREE.CylinderGeometry(0.22,0.18,0.5,16),mkMat(0.5));m.position.set(0,1.55,0);holo.add(m);})();
   var head=new THREE.Mesh(new THREE.SphereGeometry(0.22,20,20),mkMat(0.58));head.position.set(0,2.0,0);head.scale.set(0.85,1.05,0.85);holo.add(head);
   [-1,1].forEach(function(s){var arm=new THREE.Mesh(new THREE.CylinderGeometry(0.05,0.07,0.7,8),mkMat(0.4));arm.position.set(s*0.28,1.35,0);arm.rotation.z=s*0.25;holo.add(arm);});
   core=new THREE.Mesh(new THREE.SphereGeometry(0.12,16,16),new THREE.MeshBasicMaterial({color:0x99eeff,transparent:true,opacity:0.85}));core.position.set(0,1.5,0.16);holo.add(core);
-  holo.add(Object.assign(new THREE.Mesh(new THREE.SphereGeometry(1.1,16,16),new THREE.MeshBasicMaterial({color:0x0066ff,transparent:true,opacity:0.05,side:THREE.BackSide})),{position:{x:0,y:1.1,z:0}}));
+  (function(){var m=new THREE.Mesh(new THREE.SphereGeometry(1.1,16,16),new THREE.MeshBasicMaterial({color:0x0066ff,transparent:true,opacity:0.05,side:THREE.BackSide}));m.position.set(0,1.1,0);holo.add(m);})();
   baseRing=new THREE.Mesh(new THREE.TorusGeometry(0.7,0.04,8,40),new THREE.MeshBasicMaterial({color:0x33aaff,transparent:true,opacity:0.8}));baseRing.rotation.x=Math.PI/2;baseRing.position.y=0.02;holo.add(baseRing);
-  holo.add(Object.assign(new THREE.Mesh(new THREE.ConeGeometry(0.7,2.0,24,1,true),new THREE.MeshBasicMaterial({color:0x0088ff,transparent:true,opacity:0.06,side:THREE.DoubleSide})),{position:{x:0,y:1.0,z:0}}));
+  (function(){var m=new THREE.Mesh(new THREE.ConeGeometry(0.7,2.0,24,1,true),new THREE.MeshBasicMaterial({color:0x0088ff,transparent:true,opacity:0.06,side:THREE.DoubleSide}));m.position.set(0,1.0,0);holo.add(m);})();
   loop();
 }
 function loop(){
