@@ -160,6 +160,14 @@ html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-fami
   <source src="bg.mp4" type="video/mp4">
 </video>
 <canvas id="matrixCanvas"></canvas>
+<style>
+/* 3D AI AVATAR HOLOGRAM */
+#avatarHolo{position:fixed;right:24px;bottom:60px;width:300px;height:430px;z-index:1200;display:none;pointer-events:none;}
+#avatarHolo.show{display:block;}
+#avatarCanvas{width:100%;height:100%;display:block;}
+#avatarCaption{position:absolute;bottom:6px;left:0;right:0;text-align:center;color:#8fdfff;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1px;text-shadow:0 0 8px #00aaff;padding:0 10px;pointer-events:none;}
+#avatarClose{position:absolute;top:6px;right:6px;background:rgba(0,20,50,0.7);border:1px solid #3fa9ff;color:#3fa9ff;width:24px;height:24px;cursor:pointer;border-radius:50%;pointer-events:auto;font-size:12px;}
+</style>
 
 <!-- BOOT -->
 <div id="boot">
@@ -176,9 +184,70 @@ html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-fami
 
 <!-- DESKTOP (empty - just matrix rain) -->
 <div id="desktop"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+var inited=false,scene,camera,renderer,holo,core,baseRing,talking=false,voicePulse=0,t=0,visible=false;
+function mkMat(op){return new THREE.MeshStandardMaterial({color:0x1188ff,emissive:0x33aaff,emissiveIntensity:2.2,transparent:true,opacity:op});}
+function initAvatar(){
+  if(inited)return;inited=true;
+  var canvas=document.getElementById('avatarCanvas');
+  renderer=new THREE.WebGLRenderer({canvas:canvas,antialias:true,alpha:true});
+  renderer.setSize(300,430);renderer.setPixelRatio(window.devicePixelRatio||1);renderer.setClearColor(0x000000,0);
+  scene=new THREE.Scene();
+  camera=new THREE.PerspectiveCamera(45,300/430,0.1,100);camera.position.set(0,1.1,5.2);camera.lookAt(0,0.95,0);
+  scene.add(new THREE.AmbientLight(0x88bbff,1.2));
+  var p=new THREE.PointLight(0x33aaff,3,20);p.position.set(0,2,4);scene.add(p);
+  holo=new THREE.Group();scene.add(holo);
+  holo.add(Object.assign(new THREE.Mesh(new THREE.CylinderGeometry(0.18,0.62,1.5,16,1,true),mkMat(0.42)),{position:{x:0,y:0.75,z:0}}));
+  holo.add(Object.assign(new THREE.Mesh(new THREE.CylinderGeometry(0.22,0.18,0.5,16),mkMat(0.5)),{position:{x:0,y:1.55,z:0}}));
+  var head=new THREE.Mesh(new THREE.SphereGeometry(0.22,20,20),mkMat(0.58));head.position.set(0,2.0,0);head.scale.set(0.85,1.05,0.85);holo.add(head);
+  [-1,1].forEach(function(s){var arm=new THREE.Mesh(new THREE.CylinderGeometry(0.05,0.07,0.7,8),mkMat(0.4));arm.position.set(s*0.28,1.35,0);arm.rotation.z=s*0.25;holo.add(arm);});
+  core=new THREE.Mesh(new THREE.SphereGeometry(0.12,16,16),new THREE.MeshBasicMaterial({color:0x99eeff,transparent:true,opacity:0.85}));core.position.set(0,1.5,0.16);holo.add(core);
+  holo.add(Object.assign(new THREE.Mesh(new THREE.SphereGeometry(1.1,16,16),new THREE.MeshBasicMaterial({color:0x0066ff,transparent:true,opacity:0.05,side:THREE.BackSide})),{position:{x:0,y:1.1,z:0}}));
+  baseRing=new THREE.Mesh(new THREE.TorusGeometry(0.7,0.04,8,40),new THREE.MeshBasicMaterial({color:0x33aaff,transparent:true,opacity:0.8}));baseRing.rotation.x=Math.PI/2;baseRing.position.y=0.02;holo.add(baseRing);
+  holo.add(Object.assign(new THREE.Mesh(new THREE.ConeGeometry(0.7,2.0,24,1,true),new THREE.MeshBasicMaterial({color:0x0088ff,transparent:true,opacity:0.06,side:THREE.DoubleSide})),{position:{x:0,y:1.0,z:0}}));
+  loop();
+}
+function loop(){
+  requestAnimationFrame(loop);if(!visible)return;t+=0.016;
+  holo.rotation.y=Math.sin(t*0.4)*0.25;holo.position.y=Math.sin(t*1.4)*0.04;
+  talking?voicePulse+=(1-voicePulse)*0.2:voicePulse+=(0-voicePulse)*0.1;
+  var pulse=1+voicePulse*(0.3+Math.sin(t*18)*0.25);
+  core.scale.setScalar(pulse);core.material.opacity=0.55+voicePulse*0.45;
+  baseRing.rotation.z+=0.02;
+  holo.traverse(function(n){if(n.isMesh&&n.material&&n.material.emissiveIntensity!==undefined)n.material.emissiveIntensity=2+Math.sin(t*2.5)*0.6+voicePulse*1.5;});
+  if(holo.scale.x<1)holo.scale.setScalar(Math.min(1,holo.scale.x+0.06));
+  renderer.render(scene,camera);
+}
+function avatarSpeak(text){
+  try{
+    if(!('speechSynthesis' in window))return;
+    var u=new SpeechSynthesisUtterance(text);
+    var vs=speechSynthesis.getVoices();
+    var pick=vs.filter(function(v){return /female|zira|samantha|hazel|susan|aria|jenny/i.test(v.name);})[0]||vs.filter(function(v){return /^en/i.test(v.lang);})[0];
+    if(pick)u.voice=pick;u.rate=1;u.pitch=1.1;
+    u.onstart=function(){talking=true;};u.onend=function(){talking=false;};u.onboundary=function(){voicePulse=1;};
+    speechSynthesis.cancel();speechSynthesis.speak(u);
+  }catch(e){}
+}
+function setCaption(txt){var c=document.getElementById('avatarCaption');if(c)c.textContent=txt;}
+function summonAvatar(){initAvatar();document.getElementById('avatarHolo').classList.add('show');visible=true;if(holo)holo.scale.setScalar(0.01);setCaption('KHAIOS online.');avatarSpeak('KHAIOS online. How can I help you?');}
+function dismissAvatar(){document.getElementById('avatarHolo').classList.remove('show');visible=false;try{speechSynthesis.cancel();}catch(e){}talking=false;}
+function toggleAvatar(){document.getElementById('avatarHolo').classList.contains('show')?dismissAvatar():summonAvatar();}
+window.summonAvatar=summonAvatar;window.dismissAvatar=dismissAvatar;window.toggleAvatar=toggleAvatar;window.avatarSpeak=avatarSpeak;window.avatarSetCaption=setCaption;
+if('speechSynthesis' in window){speechSynthesis.getVoices();}
+})();
+</script>
+<!-- 3D AI AVATAR -->
+<div id="avatarHolo">
+  <canvas id="avatarCanvas"></canvas>
+  <div id="avatarCaption"></div>
+  <button id="avatarClose" onclick="dismissAvatar()">✕</button>
+</div>
 <!-- TASKBAR -->
 <div id="taskbar">
-  <div class="tb-start tb-avatar" style="margin:0;" onclick="openAICore()" title="AI Core"><span style="font-size:20px;">🤖</span></div>
+  <div class="tb-start tb-avatar" style="margin:0;" onclick="toggleAvatar()" title="AI Core"><span style="font-size:20px;">🤖</span></div>
   <div class="tb-app" onclick="openStore()" title="App Store"><span class="tb-app-icon">🛍️</span></div>
   <div class="tb-scroll-left" onclick="scrollAppsLeft()">&lt;</div>
   <div class="tb-apps-container"><div class="tb-apps"></div></div>
