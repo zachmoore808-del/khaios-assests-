@@ -142,6 +142,17 @@ html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-fami
 .carousel-app-tile:hover{background:rgba(63,169,255,0.2);border-color:#3fa9ff;box-shadow:0 0 20px rgba(63,169,255,0.6);transform:scale(1.08);}
 .carousel-app-tile span{font-size:48px!important;display:block;line-height:1;}
 </style>
+<style>
+/* APP STORE + AVATAR */
+.store-grid{flex:1;overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:12px;padding:14px;}
+.store-item{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border:1px solid #0a4a7a;border-radius:8px;background:rgba(10,26,51,0.5);text-align:center;}
+.store-icon{font-size:34px;line-height:1;}
+.store-name{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:1px;color:#88ccff;min-height:24px;display:flex;align-items:center;}
+.store-btn{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;padding:5px 8px;border:1px solid #3fa9ff;background:#3fa9ff;color:#000;cursor:pointer;width:100%;transition:all .15s;}
+.store-btn:hover{box-shadow:0 0 10px rgba(63,169,255,0.6);}
+.store-btn.installed{background:transparent;color:#3fa9ff;}
+.tb-avatar{border-radius:50%!important;overflow:hidden;background:radial-gradient(circle at 30% 30%,#1a4488,#000510)!important;}
+</style>
 </head>
 <body>
 
@@ -167,7 +178,8 @@ html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-fami
 <div id="desktop"></div>
 <!-- TASKBAR -->
 <div id="taskbar">
-  <div class="tb-start" style="margin:0;" onclick="toggleStartMenu()"><span style="font-size:18px;color:#3fa9ff;">⊞</span></div>
+  <div class="tb-start tb-avatar" style="margin:0;" onclick="openAICore()" title="AI Core"><span style="font-size:20px;">🤖</span></div>
+  <div class="tb-app" onclick="openStore()" title="App Store"><span class="tb-app-icon">🛍️</span></div>
   <div class="tb-scroll-left" onclick="scrollAppsLeft()">&lt;</div>
   <div class="tb-apps-container"><div class="tb-apps"></div></div>
   <div class="tb-scroll-right" onclick="scrollAppsRight()">&gt;</div>
@@ -340,6 +352,17 @@ html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-fami
   </div>
 </div>
 <!-- TODO LIST APP -->
+<!-- APP STORE -->
+<div class="app-window" id="window-store" style="display:none;left:50%;top:50%;transform:translate(-50%,-50%);width:760px;height:480px;background:#000510;">
+  <div class="window-header">
+    <span class="window-title">🛍️ APP STORE</span>
+    <div class="window-buttons"><button onclick="document.getElementById('window-store').style.display='none'">✕</button></div>
+  </div>
+  <div class="window-content" style="padding:0;overflow:hidden;display:flex;flex-direction:column;height:calc(100% - 38px);">
+    <div style="padding:10px 14px;color:#3fa9ff;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1px;border-bottom:1px solid #0a4a7a;">DOWNLOAD APPS TO YOUR LIBRARY</div>
+    <div id="storeGrid" class="store-grid"></div>
+  </div>
+</div>
 <div class="app-window" id="window-todo" style="display:none;left:100px;top:100px;">
   <div class="window-header">
     <span class="window-title">Todo List</span>
@@ -408,71 +431,6 @@ html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-fami
     
     <div class="carousel-container" style="flex:1;overflow:hidden;margin:0 20px;">
       <div class="carousel-track" id="carouselTrack" style="display:flex;gap:20px;transition:transform .3s ease;">
-        <div class="carousel-app-tile" onclick="toggleApp('chat')"><span style="font-size:64px;display:block;">💬</span>AI CORE</div>
-        <div class="carousel-app-tile" onclick="toggleApp('2048')"><span style="font-size:64px;display:block;">🎮</span>2048</div>
-        <div class="carousel-app-tile" onclick="toggleApp('snake')"><span style="font-size:64px;display:block;">🐍</span>Snake</div>
-        <div class="carousel-app-tile" onclick="toggleApp('tetris')"><span style="font-size:64px;display:block;">🧱</span>Tetris</div>
-        <div class="carousel-app-tile" onclick="toggleApp('flappy')"><span style="font-size:64px;display:block;">🐦</span>Flappy</div>
-        <div class="carousel-app-tile" onclick="toggleApp('tictac')"><span style="font-size:64px;display:block;">⭕</span>TicTac</div>
-        <div class="carousel-app-tile" onclick="toggleApp('chess')"><span style="font-size:64px;display:block;">♞</span>Chess</div>
-        <div class="carousel-app-tile" onclick="toggleApp('checkers')"><span style="font-size:64px;display:block;">⚫</span>Checkers</div>
-        <div class="carousel-app-tile" onclick="toggleApp('mines')"><span style="font-size:64px;display:block;">💣</span>Mines</div>
-        <div class="carousel-app-tile" onclick="toggleApp('memory')"><span style="font-size:64px;display:block;">🧠</span>Memory</div>
-        <div class="carousel-app-tile" onclick="toggleApp('pong')"><span style="font-size:64px;display:block;">🏓</span>Pong</div>
-        <div class="carousel-app-tile" onclick="toggleApp('invaders')"><span style="font-size:64px;display:block;">👾</span>Invaders</div>
-        <div class="carousel-app-tile" onclick="toggleApp('pacman')"><span style="font-size:64px;display:block;">👹</span>PacMan</div>
-        <div class="carousel-app-tile" onclick="toggleApp('breakout')"><span style="font-size:64px;display:block;">🎯</span>Breakout</div>
-        <div class="carousel-app-tile" onclick="toggleApp('hangman')"><span style="font-size:64px;display:block;">🎭</span>Hangman</div>
-        <div class="carousel-app-tile" onclick="toggleApp('wordle')"><span style="font-size:64px;display:block;">📝</span>Wordle</div>
-        <div class="carousel-app-tile" onclick="toggleApp('sudoku')"><span style="font-size:64px;display:block;">🔢</span>Sudoku</div>
-        <div class="carousel-app-tile" onclick="toggleApp('solitaire')"><span style="font-size:64px;display:block;">🃏</span>Solitaire</div>
-        <div class="carousel-app-tile" onclick="toggleApp('dice')"><span style="font-size:64px;display:block;">🎲</span>Dice</div>
-        <div class="carousel-app-tile" onclick="toggleApp('todo')"><span style="font-size:64px;display:block;">✓</span>Todo</div>
-        <div class="carousel-app-tile" onclick="toggleApp('notepad')"><span style="font-size:64px;display:block;">📄</span>Notepad</div>
-        <div class="carousel-app-tile" onclick="toggleApp('markdown')"><span style="font-size:64px;display:block;">📋</span>Markdown</div>
-        <div class="carousel-app-tile" onclick="toggleApp('sticky')"><span style="font-size:64px;display:block;">📌</span>Sticky</div>
-        <div class="carousel-app-tile" onclick="toggleApp('pomodoro')"><span style="font-size:64px;display:block;">⏱️</span>Pomodoro</div>
-        <div class="carousel-app-tile" onclick="toggleApp('tracker')"><span style="font-size:64px;display:block;">⏰</span>Tracker</div>
-        <div class="carousel-app-tile" onclick="toggleApp('calendar')"><span style="font-size:64px;display:block;">📅</span>Calendar</div>
-        <div class="carousel-app-tile" onclick="toggleApp('clock')"><span style="font-size:64px;display:block;">🕐</span>Clock</div>
-        <div class="carousel-app-tile" onclick="toggleApp('habits')"><span style="font-size:64px;display:block;">📊</span>Habits</div>
-        <div class="carousel-app-tile" onclick="toggleApp('mood')"><span style="font-size:64px;display:block;">😊</span>Mood</div>
-        <div class="carousel-app-tile" onclick="toggleApp('unit')"><span style="font-size:64px;display:block;">⚖️</span>Unit</div>
-        <div class="carousel-app-tile" onclick="toggleApp('currency')"><span style="font-size:64px;display:block;">💱</span>Currency</div>
-        <div class="carousel-app-tile" onclick="toggleApp('password')"><span style="font-size:64px;display:block;">🔐</span>Password</div>
-        <div class="carousel-app-tile" onclick="toggleApp('qr')"><span style="font-size:64px;display:block;">📱</span>QR</div>
-        <div class="carousel-app-tile" onclick="toggleApp('color')"><span style="font-size:64px;display:block;">🎨</span>Color</div>
-        <div class="carousel-app-tile" onclick="toggleApp('base64')"><span style="font-size:64px;display:block;">🔤</span>Base64</div>
-        <div class="carousel-app-tile" onclick="toggleApp('urlenc')"><span style="font-size:64px;display:block;">🌐</span>URL</div>
-        <div class="carousel-app-tile" onclick="toggleApp('json')"><span style="font-size:64px;display:block;">{ }</span>JSON</div>
-        <div class="carousel-app-tile" onclick="toggleApp('hash')"><span style="font-size:64px;display:block;">#️⃣</span>Hash</div>
-        <div class="carousel-app-tile" onclick="toggleApp('counter')"><span style="font-size:64px;display:block;">📊</span>Counter</div>
-        <div class="carousel-app-tile" onclick="toggleApp('regex')"><span style="font-size:64px;display:block;">🔍</span>Regex</div>
-        <div class="carousel-app-tile" onclick="toggleApp('wheel')"><span style="font-size:64px;display:block;">🎡</span>Wheel</div>
-        <div class="carousel-app-tile" onclick="toggleApp('draw')"><span style="font-size:64px;display:block;">🖌️</span>Draw</div>
-        <div class="carousel-app-tile" onclick="toggleApp('pixel')"><span style="font-size:64px;display:block;">🎮</span>Pixel</div>
-        <div class="carousel-app-tile" onclick="toggleApp('resize')"><span style="font-size:64px;display:block;">📐</span>Resize</div>
-        <div class="carousel-app-tile" onclick="toggleApp('audio')"><span style="font-size:64px;display:block;">🎵</span>Audio</div>
-        <div class="carousel-app-tile" onclick="toggleApp('tts')"><span style="font-size:64px;display:block;">🔊</span>TTS</div>
-        <div class="carousel-app-tile" onclick="toggleApp('gif')"><span style="font-size:64px;display:block;">🎬</span>GIF</div>
-        <div class="carousel-app-tile" onclick="toggleApp('crypto')"><span style="font-size:64px;display:block;">₿</span>Crypto</div>
-        <div class="carousel-app-tile" onclick="toggleApp('stocks')"><span style="font-size:64px;display:block;">📈</span>Stocks</div>
-        <div class="carousel-app-tile" onclick="toggleApp('news')"><span style="font-size:64px;display:block;">📰</span>News</div>
-        <div class="carousel-app-tile" onclick="toggleApp('dict')"><span style="font-size:64px;display:block;">📖</span>Dict</div>
-        <div class="carousel-app-tile" onclick="toggleApp('ip')"><span style="font-size:64px;display:block;">🌍</span>IP</div>
-        <div class="carousel-app-tile" onclick="toggleApp('astronomy')"><span style="font-size:64px;display:block;">🌌</span>Stars</div>
-        <div class="carousel-app-tile" onclick="toggleApp('api')"><span style="font-size:64px;display:block;">🔗</span>API</div>
-        <div class="carousel-app-tile" onclick="toggleApp('beautify')"><span style="font-size:64px;display:block;">✨</span>Code</div>
-        <div class="carousel-app-tile" onclick="toggleApp('sql')"><span style="font-size:64px;display:block;">🗄️</span>SQL</div>
-        <div class="carousel-app-tile" onclick="toggleApp('console')"><span style="font-size:64px;display:block;">⌨️</span>Console</div>
-        <div class="carousel-app-tile" onclick="toggleApp('debug')"><span style="font-size:64px;display:block;">🐛</span>Debug</div>
-        <div class="carousel-app-tile" onclick="toggleApp('bmi')"><span style="font-size:64px;display:block;">⚖️</span>BMI</div>
-        <div class="carousel-app-tile" onclick="toggleApp('mortgage')"><span style="font-size:64px;display:block;">🏠</span>Mortgage</div>
-        <div class="carousel-app-tile" onclick="toggleApp('loan')"><span style="font-size:64px;display:block;">💰</span>Loan</div>
-        <div class="carousel-app-tile" onclick="toggleApp('tip')"><span style="font-size:64px;display:block;">💵</span>Tip</div>
-        <div class="carousel-app-tile" onclick="toggleApp('age')"><span style="font-size:64px;display:block;">🎂</span>Age</div>
-        <div class="carousel-app-tile" onclick="toggleApp('birthday')"><span style="font-size:64px;display:block;">🎉</span>Birthday</div>
-        <div class="carousel-app-tile" onclick="toggleApp('temp')"><span style="font-size:64px;display:block;">🌡️</span>Temp</div>
       </div>
     </div>
     
@@ -704,6 +662,7 @@ function enterDesktop(){
     document.getElementById('desktop').style.display='block';
     document.getElementById('taskbar').style.display='flex';
     document.getElementById('window-launcher').style.display='block';
+    renderCarousel();
   },800);
 }
 
@@ -1113,6 +1072,42 @@ function scrollCarouselLeft(){
 function updateUnits(){
   if(typeof convertUnit==='function')convertUnit();
 }
+</script>
+<script>
+
+// ── APP STORE / LIBRARY ────────────────────────────────────────────────────
+var APP_CATALOG=[
+ {id:'chat',icon:'💬',name:'AI CORE'},{id:'calculator',icon:'🔢',name:'Calculator'},{id:'emulator',icon:'🕹',name:'Emulator'},
+ {id:'notes',icon:'📋',name:'Notes'},{id:'browser',icon:'🌐',name:'Browser'},{id:'weather',icon:'⛅',name:'Weather'},{id:'maps',icon:'🗺',name:'Maps'},
+ {id:'2048',icon:'🎮',name:'2048'},{id:'snake',icon:'🐍',name:'Snake'},{id:'tetris',icon:'🧱',name:'Tetris'},{id:'flappy',icon:'🐦',name:'Flappy'},
+ {id:'tictac',icon:'⭕',name:'TicTac'},{id:'chess',icon:'♞',name:'Chess'},{id:'checkers',icon:'⚫',name:'Checkers'},{id:'mines',icon:'💣',name:'Mines'},
+ {id:'memory',icon:'🧠',name:'Memory'},{id:'pong',icon:'🏓',name:'Pong'},{id:'invaders',icon:'👾',name:'Invaders'},{id:'pacman',icon:'👹',name:'PacMan'},
+ {id:'breakout',icon:'🎯',name:'Breakout'},{id:'hangman',icon:'🎭',name:'Hangman'},{id:'wordle',icon:'📝',name:'Wordle'},{id:'sudoku',icon:'🔢',name:'Sudoku'},
+ {id:'solitaire',icon:'🃏',name:'Solitaire'},{id:'dice',icon:'🎲',name:'Dice'},{id:'todo',icon:'✓',name:'Todo'},{id:'notepad',icon:'📄',name:'Notepad'},
+ {id:'markdown',icon:'📋',name:'Markdown'},{id:'sticky',icon:'📌',name:'Sticky'},{id:'pomodoro',icon:'⏱️',name:'Pomodoro'},{id:'tracker',icon:'⏰',name:'Tracker'},
+ {id:'calendar',icon:'📅',name:'Calendar'},{id:'clock',icon:'🕐',name:'Clock'},{id:'habits',icon:'📊',name:'Habits'},{id:'mood',icon:'😊',name:'Mood'},
+ {id:'unit',icon:'⚖️',name:'Unit'},{id:'currency',icon:'💱',name:'Currency'},{id:'password',icon:'🔐',name:'Password'},{id:'qr',icon:'📱',name:'QR'},
+ {id:'color',icon:'🎨',name:'Color'},{id:'base64',icon:'🔤',name:'Base64'},{id:'urlenc',icon:'🌐',name:'URL'},{id:'json',icon:'{ }',name:'JSON'},
+ {id:'hash',icon:'#️⃣',name:'Hash'},{id:'counter',icon:'📊',name:'Counter'},{id:'regex',icon:'🔍',name:'Regex'},{id:'wheel',icon:'🎡',name:'Wheel'},
+ {id:'draw',icon:'🖌️',name:'Draw'},{id:'pixel',icon:'🎮',name:'Pixel'},{id:'resize',icon:'📐',name:'Resize'},{id:'audio',icon:'🎵',name:'Audio'},
+ {id:'tts',icon:'🔊',name:'TTS'},{id:'gif',icon:'🎬',name:'GIF'},{id:'crypto',icon:'₿',name:'Crypto'},{id:'stocks',icon:'📈',name:'Stocks'},
+ {id:'news',icon:'📰',name:'News'},{id:'dict',icon:'📖',name:'Dict'},{id:'ip',icon:'🌍',name:'IP'},{id:'astronomy',icon:'🌌',name:'Stars'},
+ {id:'api',icon:'🔗',name:'API'},{id:'beautify',icon:'✨',name:'Code'},{id:'sql',icon:'🗄️',name:'SQL'},{id:'console',icon:'⌨️',name:'Console'},
+ {id:'debug',icon:'🐛',name:'Debug'},{id:'bmi',icon:'⚖️',name:'BMI'},{id:'mortgage',icon:'🏠',name:'Mortgage'},{id:'loan',icon:'💰',name:'Loan'},
+ {id:'tip',icon:'💵',name:'Tip'},{id:'age',icon:'🎂',name:'Age'},{id:'birthday',icon:'🎉',name:'Birthday'},{id:'temp',icon:'🌡️',name:'Temp'}
+];
+function getInstalled(){try{return JSON.parse(localStorage.getItem('khaios_installed')||'[]');}catch(e){return [];}}
+function setInstalled(l){try{localStorage.setItem('khaios_installed',JSON.stringify(l));}catch(e){}}
+function isInstalled(id){return getInstalled().indexOf(id)>-1;}
+function appMeta(id){for(var i=0;i<APP_CATALOG.length;i++){if(APP_CATALOG[i].id===id)return APP_CATALOG[i];}return null;}
+function downloadApp(id){var l=getInstalled();if(l.indexOf(id)===-1){l.push(id);setInstalled(l);}renderCarousel();renderStore();}
+function uninstallApp(id){setInstalled(getInstalled().filter(function(x){return x!==id;}));renderCarousel();renderStore();}
+function launchApp(id){if(document.getElementById('fw-'+id)){openApp(id);return;}var w=document.getElementById('window-'+id);if(w){w.style.display='block';w.style.zIndex=getTopZ();if(typeof makeWindowDraggable==='function')makeWindowDraggable(w);}}
+function openAICore(){openApp('chat');}
+function openStore(){var w=document.getElementById('window-store');if(w){w.style.display='block';w.style.zIndex=getTopZ();if(typeof makeWindowDraggable==='function')makeWindowDraggable(w);renderStore();}}
+function renderCarousel(){var t=document.getElementById('carouselTrack');if(!t)return;carouselOffset=0;t.style.transform='translateX(0)';var h='<div class="carousel-app-tile" onclick="openStore()" style="border-color:#ffcc44;color:#ffcc44;"><span>🛍️</span>App Store</div>';var inst=getInstalled();for(var i=0;i<inst.length;i++){var a=appMeta(inst[i]);if(!a)continue;h+='<div class="carousel-app-tile" onclick="launchApp(\''+a.id+'\')"><span>'+a.icon+'</span>'+a.name+'</div>';}if(inst.length===0){h+='<div class="carousel-app-tile" onclick="openStore()" style="opacity:.6;"><span>➕</span>Get Apps</div>';}t.innerHTML=h;}
+function renderStore(){var g=document.getElementById('storeGrid');if(!g)return;var h='';for(var i=0;i<APP_CATALOG.length;i++){var a=APP_CATALOG[i];var ins=isInstalled(a.id);h+='<div class="store-item"><div class="store-icon">'+a.icon+'</div><div class="store-name">'+a.name+'</div><button class="store-btn'+(ins?' installed':'')+'" onclick="'+(ins?'uninstallApp':'downloadApp')+'(\''+a.id+'\')">'+(ins?'✓ Installed':'Download')+'</button></div>';}g.innerHTML=h;}
+document.addEventListener('DOMContentLoaded',function(){try{renderCarousel();renderStore();}catch(e){}});
 </script>
 </body>
 </html>
