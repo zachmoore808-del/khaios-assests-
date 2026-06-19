@@ -162,7 +162,11 @@ html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-fami
 <canvas id="matrixCanvas"></canvas>
 <style>
 /* 3D AI AVATAR HOLOGRAM */
-#avatarHolo{position:fixed;left:24px;bottom:60px;width:300px;height:430px;z-index:1200;display:none;pointer-events:none;}
+#avatarHolo{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:680px;height:600px;z-index:1200;display:none;pointer-events:none;}
+.holo-tray{position:absolute;left:50%;bottom:34px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;pointer-events:auto;width:560px;max-width:94%;}
+.holo-window{flex:1;overflow:hidden;padding:6px 4px;}
+.holo-arrow{width:36px;height:64px;display:flex;align-items:center;justify-content:center;color:#3fa9ff;font-size:30px;cursor:pointer;background:rgba(0,15,40,0.65);border:1px solid #3fa9ff;border-radius:6px;user-select:none;box-shadow:0 0 10px rgba(63,169,255,0.4);}
+.holo-arrow:hover{background:rgba(0,40,90,0.85);box-shadow:0 0 16px rgba(63,169,255,0.7);}
 #avatarHolo.show{display:block;}
 #avatarCanvas{width:100%;height:100%;display:block;}
 #avatarCaption{position:absolute;bottom:6px;left:0;right:0;text-align:center;color:#8fdfff;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1px;text-shadow:0 0 8px #00aaff;padding:0 10px;pointer-events:none;}
@@ -193,9 +197,9 @@ function initAvatar(){
   if(inited)return;inited=true;
   var canvas=document.getElementById('avatarCanvas');
   renderer=new THREE.WebGLRenderer({canvas:canvas,antialias:true,alpha:true});
-  renderer.setSize(300,430);renderer.setPixelRatio(window.devicePixelRatio||1);renderer.setClearColor(0x000000,0);
+  renderer.setSize(680,600);renderer.setPixelRatio(window.devicePixelRatio||1);renderer.setClearColor(0x000000,0);
   scene=new THREE.Scene();
-  camera=new THREE.PerspectiveCamera(45,300/430,0.1,100);camera.position.set(0,1.1,5.2);camera.lookAt(0,0.95,0);
+  camera=new THREE.PerspectiveCamera(45,680/600,0.1,100);camera.position.set(0,1.05,4.6);camera.lookAt(0,1.0,0);
   scene.add(new THREE.AmbientLight(0x88bbff,1.2));
   var p=new THREE.PointLight(0x33aaff,3,20);p.position.set(0,2,4);scene.add(p);
   holo=new THREE.Group();scene.add(holo);
@@ -243,11 +247,16 @@ if('speechSynthesis' in window){speechSynthesis.getVoices();}
 <div id="avatarHolo">
   <canvas id="avatarCanvas"></canvas>
   <div id="avatarCaption"></div>
+  <div class="holo-tray">
+    <div class="holo-arrow" onclick="scrollCarouselLeft()">‹</div>
+    <div class="holo-window"><div class="carousel-track" id="carouselTrack" style="display:flex;gap:14px;transition:transform .3s ease;"></div></div>
+    <div class="holo-arrow" onclick="scrollCarouselRight()">›</div>
+  </div>
   <button id="avatarClose" onclick="dismissAvatar()">✕</button>
 </div>
 <!-- TASKBAR -->
 <div id="taskbar">
-  <div class="tb-start tb-avatar" style="margin:0;" onclick="toggleAvatar()" title="AI Core"><span style="font-size:20px;">🤖</span></div>
+  <div class="tb-start tb-avatar" style="margin:0;position:absolute;left:50%;transform:translateX(-50%);" onclick="toggleAvatar()" title="AI Core"><span style="font-size:20px;">🤖</span></div>
   <div class="tb-app" onclick="openStore()" title="App Store"><span class="tb-app-icon">🛍️</span></div>
   <div class="tb-scroll-left" onclick="scrollAppsLeft()">&lt;</div>
   <div class="tb-apps-container"><div class="tb-apps"></div></div>
@@ -487,25 +496,6 @@ if('speechSynthesis' in window){speechSynthesis.getVoices();}
   </div>
 </div>
 
-<!-- APP LAUNCHER WINDOW (carousel) -->
-<div class="app-window" id="window-launcher" style="left:50%;top:50%;transform:translate(-50%,-50%);width:900px;height:350px;background:#000510;display:none;">
-  <div class="window-header">
-    <span class="window-title">APPLICATION LIBRARY</span>
-    <div class="window-buttons">
-      <button onclick="closeApp('launcher')">✕</button>
-    </div>
-  </div>
-  <div class="window-content" style="padding:20px;display:flex;align-items:center;justify-content:space-between;">
-    <button onclick="scrollCarouselLeft()" style="background:#3fa9ff;color:#000;border:none;padding:10px 15px;cursor:pointer;font-weight:bold;font-size:18px;">◀</button>
-    
-    <div class="carousel-container" style="flex:1;overflow:hidden;margin:0 20px;">
-      <div class="carousel-track" id="carouselTrack" style="display:flex;gap:20px;transition:transform .3s ease;">
-      </div>
-    </div>
-    
-    <button onclick="scrollCarouselRight()" style="background:#3fa9ff;color:#000;border:none;padding:10px 15px;cursor:pointer;font-weight:bold;font-size:18px;">▶</button>
-  </div>
-</div>
 
 <!-- PASSWORD GENERATOR APP -->
 <div class="app-window" id="window-password" style="display:none;left:250px;top:250px;">
@@ -730,7 +720,7 @@ function enterDesktop(){
     me.style.display='none';
     document.getElementById('desktop').style.display='block';
     document.getElementById('taskbar').style.display='flex';
-    document.getElementById('window-launcher').style.display='block';
+    summonAvatar();
     renderCarousel();
   },800);
 }
@@ -1165,15 +1155,15 @@ var APP_CATALOG=[
  {id:'debug',icon:'🐛',name:'Debug'},{id:'bmi',icon:'⚖️',name:'BMI'},{id:'mortgage',icon:'🏠',name:'Mortgage'},{id:'loan',icon:'💰',name:'Loan'},
  {id:'tip',icon:'💵',name:'Tip'},{id:'age',icon:'🎂',name:'Age'},{id:'birthday',icon:'🎉',name:'Birthday'},{id:'temp',icon:'🌡️',name:'Temp'}
 ];
-function getInstalled(){try{return JSON.parse(localStorage.getItem('khaios_installed')||'[]');}catch(e){return [];}}
+function getInstalled(){try{var v=localStorage.getItem('khaios_installed');if(v===null){var d=['calculator','notes','todo','weather'];localStorage.setItem('khaios_installed',JSON.stringify(d));return d;}return JSON.parse(v||'[]');}catch(e){return ['calculator','notes','todo','weather'];}}
 function setInstalled(l){try{localStorage.setItem('khaios_installed',JSON.stringify(l));}catch(e){}}
 function isInstalled(id){return getInstalled().indexOf(id)>-1;}
 function appMeta(id){for(var i=0;i<APP_CATALOG.length;i++){if(APP_CATALOG[i].id===id)return APP_CATALOG[i];}return null;}
 function downloadApp(id){var l=getInstalled();if(l.indexOf(id)===-1){l.push(id);setInstalled(l);}renderCarousel();renderStore();}
 function uninstallApp(id){setInstalled(getInstalled().filter(function(x){return x!==id;}));renderCarousel();renderStore();}
-function launchApp(id){if(document.getElementById('fw-'+id)){openApp(id);return;}var w=document.getElementById('window-'+id);if(w){w.style.display='block';w.style.zIndex=getTopZ();if(typeof makeWindowDraggable==='function')makeWindowDraggable(w);}}
+function launchApp(id){if(window.dismissAvatar){dismissAvatar();}if(document.getElementById('fw-'+id)){openApp(id);return;}var w=document.getElementById('window-'+id);if(w){w.style.display='block';w.style.zIndex=getTopZ();if(typeof makeWindowDraggable==='function')makeWindowDraggable(w);}}
 function openAICore(){openApp('chat');}
-function openStore(){var w=document.getElementById('window-store');if(w){w.style.display='block';w.style.zIndex=getTopZ();if(typeof makeWindowDraggable==='function')makeWindowDraggable(w);renderStore();}}
+function openStore(){if(window.dismissAvatar){dismissAvatar();}var w=document.getElementById('window-store');if(w){w.style.display='block';w.style.zIndex=getTopZ();if(typeof makeWindowDraggable==='function')makeWindowDraggable(w);renderStore();}}
 function renderCarousel(){var t=document.getElementById('carouselTrack');if(!t)return;carouselOffset=0;t.style.transform='translateX(0)';var h='<div class="carousel-app-tile" onclick="openStore()" style="border-color:#ffcc44;color:#ffcc44;"><span>🛍️</span>App Store</div>';var inst=getInstalled();for(var i=0;i<inst.length;i++){var a=appMeta(inst[i]);if(!a)continue;h+='<div class="carousel-app-tile" onclick="launchApp(\''+a.id+'\')"><span>'+a.icon+'</span>'+a.name+'</div>';}if(inst.length===0){h+='<div class="carousel-app-tile" onclick="openStore()" style="opacity:.6;"><span>➕</span>Get Apps</div>';}t.innerHTML=h;}
 function renderStore(){var g=document.getElementById('storeGrid');if(!g)return;var h='';for(var i=0;i<APP_CATALOG.length;i++){var a=APP_CATALOG[i];var ins=isInstalled(a.id);h+='<div class="store-item"><div class="store-icon">'+a.icon+'</div><div class="store-name">'+a.name+'</div><button class="store-btn'+(ins?' installed':'')+'" onclick="'+(ins?'uninstallApp':'downloadApp')+'(\''+a.id+'\')">'+(ins?'✓ Installed':'Download')+'</button></div>';}g.innerHTML=h;}
 document.addEventListener('DOMContentLoaded',function(){try{renderCarousel();renderStore();}catch(e){}});
