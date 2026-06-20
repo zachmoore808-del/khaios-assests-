@@ -152,6 +152,14 @@ html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-fami
 .store-btn:hover{box-shadow:0 0 10px rgba(63,169,255,0.6);}
 .store-btn.installed{background:transparent;color:#3fa9ff;}
 .tb-avatar{border-radius:50%!important;overflow:hidden;background:radial-gradient(circle at 30% 30%,#1a4488,#000510)!important;}
+/* WIN11-STYLE TASKBAR */
+#taskbar{position:fixed;bottom:0;left:0;right:0;height:48px;background:linear-gradient(180deg,rgba(4,10,26,0.96),rgba(0,4,14,0.99));border-top:1px solid rgba(63,169,255,0.45);box-shadow:0 -2px 20px rgba(0,60,160,0.3);z-index:500;display:none;align-items:center;justify-content:center;padding:0;}
+.tb-center{display:flex;align-items:center;gap:7px;}
+.tb-icon{display:flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:10px;background:rgba(20,44,86,0.35);border:1px solid rgba(63,169,255,0.22);cursor:pointer;font-size:20px;line-height:1;transition:all .15s;}
+.tb-icon:hover{background:rgba(63,169,255,0.22);border-color:#3fa9ff;box-shadow:0 0 12px rgba(63,169,255,0.5);transform:translateY(-1px);}
+.tb-avatar{border-radius:50%!important;overflow:hidden;background:radial-gradient(circle at 30% 30%,#1a4488,#000510)!important;border:1px solid #3fa9ff!important;}
+.tb-apps{display:flex;align-items:center;gap:7px;transition:none;}
+.tb-clock{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-family:'Share Tech Mono',monospace;font-size:9px;color:#6ab4e8;letter-spacing:1px;text-align:right;line-height:1.4;}
 #khHeader{position:fixed;top:0;left:0;right:0;height:54px;display:none;flex-direction:column;align-items:center;justify-content:center;gap:1px;z-index:400;background:linear-gradient(180deg,rgba(0,8,24,0.92),rgba(0,8,24,0.35));border-bottom:1px solid rgba(63,169,255,0.5);box-shadow:0 2px 22px rgba(0,60,160,0.35);pointer-events:none;}
 .kh-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:24px;letter-spacing:14px;text-indent:14px;background:linear-gradient(90deg,#bfe4ff,#3fa9ff,#bfe4ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .kh-sub{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:6px;text-indent:6px;color:#5aa8e0;}
@@ -258,12 +266,12 @@ if('speechSynthesis' in window){speechSynthesis.getVoices();}
 </div>
 <!-- TASKBAR -->
 <div id="taskbar">
-  <div class="tb-start tb-avatar" style="margin:0;position:absolute;left:50%;transform:translateX(-50%);" onclick="toggleAvatar()" title="AI Core"><span style="font-size:20px;">🤖</span></div>
-  <div class="tb-app" onclick="openStore()" title="App Store"><span class="tb-app-icon">🛍️</span></div>
-  <div class="tb-scroll-left" onclick="scrollAppsLeft()">&lt;</div>
-  <div class="tb-apps-container"><div class="tb-apps"></div></div>
-  <div class="tb-scroll-right" onclick="scrollAppsRight()">&gt;</div>
-  <div class="tb-right"><div class="tb-clock" id="tbClock">──<br>──</div></div>
+  <div class="tb-center">
+    <div class="tb-icon tb-avatar" onclick="toggleAvatar()" title="AI Core"><span>🤖</span></div>
+    <div class="tb-icon" onclick="openStore()" title="App Store"><span>🛍️</span></div>
+    <div class="tb-apps" id="tbApps"></div>
+  </div>
+  <div class="tb-clock" id="tbClock">──<br>──</div>
 </div>
 
 <!-- CHAT WINDOW -->
