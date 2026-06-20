@@ -189,6 +189,7 @@ html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-fami
 <!-- DESKTOP (empty - just matrix rain) -->
 <div id="desktop"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 <script>
 (function(){
 var inited=false,scene,camera,renderer,holo,core,baseRing,talking=false,voicePulse=0,t=0,visible=false;
@@ -203,18 +204,10 @@ function initAvatar(){
   scene.add(new THREE.AmbientLight(0x88bbff,1.2));
   var p=new THREE.PointLight(0x33aaff,3,20);p.position.set(0,2,4);scene.add(p);
   holo=new THREE.Group();scene.add(holo);
-  (function(){
-    var prof=[[0.00,0.00],[0.46,0.02],[0.42,0.18],[0.34,0.42],[0.26,0.66],[0.21,0.9],[0.155,1.12],[0.2,1.34],[0.235,1.5],[0.17,1.66],[0.085,1.78],[0.05,1.86]];
-    var pts=[];for(var i=0;i<prof.length;i++)pts.push(new THREE.Vector2(prof[i][0],prof[i][1]));
-    holo.add(new THREE.Mesh(new THREE.LatheGeometry(pts,32),mkMat(0.4)));
-    var head=new THREE.Mesh(new THREE.SphereGeometry(0.17,24,24),mkMat(0.55));head.position.set(0,2.02,0);head.scale.set(0.82,1.08,0.82);holo.add(head);
-    [-1,1].forEach(function(s){var h=new THREE.Mesh(new THREE.ConeGeometry(0.1,0.5,8),mkMat(0.3));h.position.set(s*0.1,1.78,-0.08);h.rotation.set(0.3,0,s*0.15);holo.add(h);});
-    [-1,1].forEach(function(s){var arm=new THREE.Mesh(new THREE.CylinderGeometry(0.035,0.05,0.78,8),mkMat(0.4));arm.position.set(s*0.24,1.28,0.02);arm.rotation.z=s*0.18;holo.add(arm);});
-    core=new THREE.Mesh(new THREE.SphereGeometry(0.09,16,16),new THREE.MeshBasicMaterial({color:0x99eeff,transparent:true,opacity:0.9}));core.position.set(0,1.42,0.15);holo.add(core);
-    var aura=new THREE.Mesh(new THREE.SphereGeometry(1.05,16,16),new THREE.MeshBasicMaterial({color:0x0066ff,transparent:true,opacity:0.05,side:THREE.BackSide}));aura.position.y=1.1;holo.add(aura);
-    baseRing=new THREE.Mesh(new THREE.TorusGeometry(0.6,0.035,8,40),new THREE.MeshBasicMaterial({color:0x33aaff,transparent:true,opacity:0.85}));baseRing.rotation.x=Math.PI/2;baseRing.position.y=0.02;holo.add(baseRing);
-    var cone=new THREE.Mesh(new THREE.ConeGeometry(0.6,2.0,24,1,true),new THREE.MeshBasicMaterial({color:0x0088ff,transparent:true,opacity:0.06,side:THREE.DoubleSide}));cone.position.y=1.0;holo.add(cone);
-  })();
+  core=new THREE.Mesh(new THREE.SphereGeometry(0.09,16,16),new THREE.MeshBasicMaterial({color:0x99eeff,transparent:true,opacity:0.9}));core.position.set(0,1.3,0.2);holo.add(core);
+  baseRing=new THREE.Mesh(new THREE.TorusGeometry(0.55,0.035,8,40),new THREE.MeshBasicMaterial({color:0x33aaff,transparent:true,opacity:0.85}));baseRing.rotation.x=Math.PI/2;baseRing.position.y=0.02;holo.add(baseRing);
+  (function(){var aura=new THREE.Mesh(new THREE.SphereGeometry(1.2,16,16),new THREE.MeshBasicMaterial({color:0x0066ff,transparent:true,opacity:0.05,side:THREE.BackSide}));aura.position.y=1.0;holo.add(aura);var cone=new THREE.Mesh(new THREE.ConeGeometry(0.55,2.0,24,1,true),new THREE.MeshBasicMaterial({color:0x0088ff,transparent:true,opacity:0.06,side:THREE.DoubleSide}));cone.position.y=1.0;holo.add(cone);})();
+  (function(){var AVATAR_URL='https://models.readyplayer.me/6185a4acfb622cf1cdc49348.glb?meshLod=2&textureSizeLimit=512';try{var loader=new THREE.GLTFLoader();loader.load(AVATAR_URL,function(gltf){var m=gltf.scene;m.position.set(0,0,0);m.traverse(function(o){if(o.isMesh)o.frustumCulled=false;});holo.add(m);window._rpm=m;},undefined,function(err){console.error('avatar load failed',err);});}catch(e){console.error(e);}})();
   loop();
 }
 function loop(){
