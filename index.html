@@ -834,7 +834,7 @@ function enterDesktop(){
   setTimeout(function(){
     me.style.display='none';
     document.getElementById('desktop').style.display='block';
-    document.getElementById('taskbar').style.display='flex';document.getElementById('khHeader').style.display='flex';
+    document.getElementById('taskbar').style.display='flex';document.getElementById('khHeader').style.display='flex';if(typeof toggleBoth==='function')toggleBoth();
     summonAvatar();
     renderCarousel();
   },800);
