@@ -228,15 +228,15 @@ function avatarSpeak(text){
     var vs=speechSynthesis.getVoices();
     var pick=vs.filter(function(v){return /female|zira|samantha|hazel|susan|aria|jenny/i.test(v.name);})[0]||vs.filter(function(v){return /^en/i.test(v.lang);})[0];
     if(pick)u.voice=pick;u.rate=1;u.pitch=1.1;
-    u.onstart=function(){talking=true;};u.onend=function(){talking=false;};u.onboundary=function(){voicePulse=1;};
+    u.onstart=function(){talking=true;if(window.playGesture){var gg=['Yes','ThumbsUp','Wave'];window.playGesture(gg[Math.floor(Math.random()*gg.length)]);}};u.onend=function(){talking=false;};u.onboundary=function(){voicePulse=1;};
     speechSynthesis.cancel();speechSynthesis.speak(u);
   }catch(e){}
 }
 function setCaption(txt){var c=document.getElementById('avatarCaption');if(c)c.textContent=txt;}
-function summonAvatar(){initAvatar();document.getElementById('avatarHolo').classList.add('show');visible=true;if(holo)holo.scale.setScalar(0.01);setCaption('KHAIOS online.');avatarSpeak('KHAIOS online. How can I help you?');if(window.playGesture)window.playGesture('Wave');}
+function summonAvatar(){initAvatar();var _t=document.querySelector('.holo-tray');if(_t)_t.style.display='';document.getElementById('avatarHolo').classList.add('show');visible=true;if(holo)holo.scale.setScalar(0.01);setCaption('KHAIOS online.');avatarSpeak('KHAIOS online. How can I help you?');if(window.playGesture)window.playGesture('Wave');}
 function dismissAvatar(){document.getElementById('avatarHolo').classList.remove('show');visible=false;try{speechSynthesis.cancel();}catch(e){}talking=false;}
 function toggleAvatar(){document.getElementById('avatarHolo').classList.contains('show')?dismissAvatar():summonAvatar();}
-window.summonAvatar=summonAvatar;window.dismissAvatar=dismissAvatar;window.toggleAvatar=toggleAvatar;window.avatarSpeak=avatarSpeak;window.avatarSetCaption=setCaption;
+window.summonAvatar=summonAvatar;window.dismissAvatar=dismissAvatar;window.toggleAvatar=toggleAvatar;window.avatarSpeak=avatarSpeak;window.avatarSetCaption=setCaption;window.avatarSay=function(text){initAvatar();var ov=document.getElementById('avatarHolo');ov.classList.add('show');visible=true;var tr=ov.querySelector('.holo-tray');if(tr)tr.style.display='none';if(holo&&holo.scale.x<0.9)holo.scale.setScalar(0.01);avatarSpeak(text);};
 if('speechSynthesis' in window){speechSynthesis.getVoices();}
 })();
 </script>
@@ -768,7 +768,7 @@ async function sendMsg(text){
   try{
     var response=await callAPI([{role:'system',content:SYSTEM}].concat(chatHistory));
     chatHistory.push({role:'assistant',content:response});
-    thinking.remove();addMsg('ai',response);speak(response);
+    thinking.remove();addMsg('ai',response);if(window.avatarSay){window.avatarSay(response);}else{speak(response);}
     document.getElementById('statusText').textContent='ONLINE';
   }catch(e){thinking.remove();addMsg('ai','Systems recalibrating, Commander.');document.getElementById('statusText').textContent='ERROR';}
   busy=false;document.getElementById('sbtn').disabled=false;
