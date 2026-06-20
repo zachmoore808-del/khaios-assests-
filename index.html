@@ -283,7 +283,7 @@ if('speechSynthesis' in window){speechSynthesis.getVoices();}
 <!-- TASKBAR -->
 <div id="taskbar">
   <div class="tb-center">
-    <div class="tb-icon tb-avatar" onclick="toggleAvatar()" title="AI Core"><span>🤖</span></div>
+    <div class="tb-icon tb-avatar" onclick="toggleAvatar()" title="AI Core"><span>🤖</span></div><div class="tb-icon" onclick="openAIChat()" title="AI Core Chat"><span>💬</span></div>
     <div class="tb-icon" onclick="openStore()" title="App Store"><span>🛍️</span></div>
     <div class="tb-apps" id="tbApps"></div>
   </div>
@@ -1188,7 +1188,7 @@ function appMeta(id){for(var i=0;i<APP_CATALOG.length;i++){if(APP_CATALOG[i].id=
 function downloadApp(id){var l=getInstalled();if(l.indexOf(id)===-1){l.push(id);setInstalled(l);}renderCarousel();renderStore();}
 function uninstallApp(id){setInstalled(getInstalled().filter(function(x){return x!==id;}));renderCarousel();renderStore();}
 function launchApp(id){if(window.dismissAvatar){dismissAvatar();}if(document.getElementById('fw-'+id)){openApp(id);return;}var w=document.getElementById('window-'+id);if(w){w.style.display='block';w.style.zIndex=getTopZ();if(typeof makeWindowDraggable==='function')makeWindowDraggable(w);}}
-function openAICore(){openApp('chat');}
+function openAICore(){openApp("chat");}function openAIChat(){openApp("chat");if(!window._aiGreeted){window._aiGreeted=true;if(typeof sendGreeting==="function")sendGreeting();}}
 function openStore(){if(window.dismissAvatar){dismissAvatar();}var w=document.getElementById('window-store');if(w){w.style.display='block';w.style.zIndex=getTopZ();if(typeof makeWindowDraggable==='function')makeWindowDraggable(w);renderStore();}}
 function renderCarousel(){var t=document.getElementById('carouselTrack');if(!t)return;carouselOffset=0;t.style.transform='translateX(0)';var h='<div class="carousel-app-tile" onclick="openStore()" style="border-color:#ffcc44;color:#ffcc44;"><span>🛍️</span>App Store</div>';var inst=getInstalled();for(var i=0;i<inst.length;i++){var a=appMeta(inst[i]);if(!a)continue;h+='<div class="carousel-app-tile" onclick="launchApp(\''+a.id+'\')"><span>'+a.icon+'</span>'+a.name+'</div>';}if(inst.length===0){h+='<div class="carousel-app-tile" onclick="openStore()" style="opacity:.6;"><span>➕</span>Get Apps</div>';}t.innerHTML=h;}
 function renderStore(){var g=document.getElementById('storeGrid');if(!g)return;var h='';for(var i=0;i<APP_CATALOG.length;i++){var a=APP_CATALOG[i];var ins=isInstalled(a.id);h+='<div class="store-item"><div class="store-icon">'+a.icon+'</div><div class="store-name">'+a.name+'</div><button class="store-btn'+(ins?' installed':'')+'" onclick="'+(ins?'uninstallApp':'downloadApp')+'(\''+a.id+'\')">'+(ins?'✓ Installed':'Download')+'</button></div>';}g.innerHTML=h;}
