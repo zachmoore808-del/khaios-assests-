@@ -329,11 +329,11 @@ if('speechSynthesis' in window){speechSynthesis.getVoices();}
 <!-- TASKBAR -->
 <div id="taskbar">
   <div class="tb-center">
-    <div class="tb-icon" onclick="toggleAgentPanel()" title="Agent Team">👥</div><div class="tb-icon tb-avatar" onclick="toggleAvatar()" title="AI Core"><span>🤖</span></div><div class="tb-icon" onclick="toggleChat()" title="KHAIOS Chat"><span>💬</span></div>
+    <div class="tb-icon" onclick="toggleAgentPanel()" title="Agent Team">👥</div><div class="tb-icon tb-avatar" onclick="toggleAvatar()" title="AI Core"><span>🤖</span></div><div class="tb-icon" onclick="toggleChat()" title="KHAIOS Chat"><span>💬</span></div><div class="tb-icon" id="tbMic" onclick="toggleVoice()" title="Talk to KHAIOS"><span>🎤</span></div>
     <div class="tb-icon" onclick="openStore()" title="App Store"><span>🛍️</span></div>
     <div class="tb-apps" id="tbApps"></div>
   </div>
-  <div class="tb-tray"><div class="tb-tray-btn" id="tbMic" onclick="toggleVoice()" title="Talk to KHAIOS">🎤</div><div class="tb-clock" id="tbClock">──<br>──</div></div>
+  <div class="tb-tray"><div class="tb-clock" id="tbClock">──<br>──</div></div>
 </div>
 
 <!-- CHAT WINDOW -->
