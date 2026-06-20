@@ -11,10 +11,15 @@ MODEL = os.environ.get("GROQ_MODEL", "llama-3.3-70b-versatile")
 
 def get_keys():
     keys = []
-    for name in ["GROQ_KEY_1", "GROQ_KEY_2", "GROQ_KEY_3", "GROQ_API_KEY"]:
+    for name in ["GROQ_KEY_1", "GROQ_KEY_2", "GROQ_KEY_3", "GROQ_KEY1", "GROQ_KEY2", "GROQ_KEY3", "GROQ_API_KEY"]:
         v = (os.environ.get(name) or "").strip()
-        if v and v not in keys:
+        if v.startswith("gsk_") and v not in keys:
             keys.append(v)
+    for k, val in os.environ.items():
+        for cand in (k, val):
+            cand = (cand or "").strip()
+            if cand.startswith("gsk_") and cand not in keys:
+                keys.append(cand)
     return keys
 
 @app.route("/")
