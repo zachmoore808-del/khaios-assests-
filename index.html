@@ -215,6 +215,11 @@ html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-fami
 .bot.left .bot-lbl{text-align:right;}
 .bot-name{font-family:'Orbitron',sans-serif;font-size:9px;font-weight:700;letter-spacing:1px;color:#cfeaff;line-height:1.2;}
 .bot-desc{font-family:'Share Tech Mono',monospace;font-size:7.5px;color:#7fb0d8;line-height:1.25;}
+/* AGENT TEAM PANEL */
+#agentPanel{position:fixed;top:0;left:0;right:auto;bottom:0;height:100vh;width:330px;max-width:84vw;background:rgba(6,14,34,0.22);backdrop-filter:blur(9px) saturate(1.1);-webkit-backdrop-filter:blur(9px) saturate(1.1);border-right:1px solid rgba(63,169,255,0.4);box-shadow:10px 0 44px rgba(0,30,100,0.4);overflow:hidden;transform:translateX(-108%);transition:transform .38s cubic-bezier(.2,.85,.25,1);z-index:1300;display:flex;flex-direction:column;}
+#agentPanel.open{transform:translateX(0);}
+#agentPanel #chatNews{flex:1;max-height:none;border-bottom:none;padding:14px;}
+#agentPanel .news-h{padding-bottom:10px;border-bottom:1px solid rgba(63,169,255,0.25);margin-bottom:10px;}
 #khHeader{position:fixed;top:0;left:0;right:0;height:54px;display:none;flex-direction:column;align-items:center;justify-content:center;gap:1px;z-index:400;background:linear-gradient(180deg,rgba(0,8,24,0.92),rgba(0,8,24,0.35));border-bottom:1px solid rgba(63,169,255,0.5);box-shadow:0 2px 22px rgba(0,60,160,0.35);pointer-events:none;}
 .kh-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:24px;letter-spacing:14px;text-indent:14px;background:linear-gradient(90deg,#bfe4ff,#3fa9ff,#bfe4ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .kh-sub{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:6px;text-indent:6px;color:#5aa8e0;}
@@ -256,6 +261,8 @@ html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-fami
 <div id="desktop"></div>
 <!-- KHAIOS HEADER -->
 <div id="khHeader"><div class="kh-brand">KHAIOS</div><div class="kh-sub">A.I.O.S. MULTITOOL</div></div>
+<!-- AGENT TEAM PANEL (LEFT) -->
+<div id="agentPanel"><div id="chatNews"><div class="news-h">AGENT NETWORK</div></div></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 <script>
@@ -322,11 +329,11 @@ if('speechSynthesis' in window){speechSynthesis.getVoices();}
 <!-- TASKBAR -->
 <div id="taskbar">
   <div class="tb-center">
-    <div class="tb-icon tb-avatar" onclick="toggleAvatar()" title="AI Core"><span>🤖</span></div>
+    <div class="tb-icon" onclick="toggleAgentPanel()" title="Agent Team">👥</div><div class="tb-icon tb-avatar" onclick="toggleAvatar()" title="AI Core"><span>🤖</span></div><div class="tb-icon" onclick="toggleChat()" title="KHAIOS Chat"><span>💬</span></div>
     <div class="tb-icon" onclick="openStore()" title="App Store"><span>🛍️</span></div>
     <div class="tb-apps" id="tbApps"></div>
   </div>
-  <div class="tb-tray"><div class="tb-tray-btn" id="tbMic" onclick="toggleVoice()" title="Talk to KHAIOS">🎤</div><div class="tb-tray-btn" onclick="toggleChat()" title="Chat / Updates">💬</div><div class="tb-clock" id="tbClock">──<br>──</div></div>
+  <div class="tb-tray"><div class="tb-tray-btn" id="tbMic" onclick="toggleVoice()" title="Talk to KHAIOS">🎤</div><div class="tb-clock" id="tbClock">──<br>──</div></div>
 </div>
 
 <!-- CHAT WINDOW -->
@@ -339,7 +346,7 @@ if('speechSynthesis' in window){speechSynthesis.getVoices();}
       <button class="fw-btn close" onclick="toggleChat()">✕</button>
     </div>
   </div>
-  <div class="fw-body"><div id="chatNews"><div class="news-h">AGENT NETWORK</div></div>
+  <div class="fw-body">
     <div class="chat" id="chat"></div>
     <div class="irow">
       <textarea class="ifield" id="ifield" placeholder="Commander..." rows="1"></textarea>
@@ -848,6 +855,7 @@ document.getElementById('ifield').addEventListener('keydown',function(e){if(e.ke
 document.getElementById('ifield').addEventListener('input',function(){this.style.height='';this.style.height=Math.min(this.scrollHeight,60)+'px';});
 /* CHAT TOGGLE + NEWS + VOICE */
 function toggleChat(){var fw=document.getElementById("fw-chat");var op=fw.classList.toggle("open");if(op&&!window._aiGreeted){window._aiGreeted=true;if(typeof sendGreeting==="function")sendGreeting();}}
+function toggleAgentPanel(){var p=document.getElementById("agentPanel");if(p)p.classList.toggle("open");}
 function addNews(title,body){var n=document.getElementById("chatNews");if(!n)return;var c=document.createElement("div");c.className="news-card";var t=document.createElement("div");t.className="news-title";t.textContent=title;var b=document.createElement("div");b.className="news-body";b.textContent=body;c.appendChild(t);c.appendChild(b);n.appendChild(c);}
 setTimeout(function(){if(typeof addNews==="function"){addNews("KHAIOS 2.2 ONLINE","Voice core and animated avatar active. Tap the mic to talk live.");addNews("NEW: APP RING","Radial app launcher arriving around the core soon.");addNews("SYSTEMS NOMINAL","All subsystems operational, Commander.");}},150);
 var _rec=null,_voiceOn=false;
