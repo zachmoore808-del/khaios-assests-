@@ -338,7 +338,7 @@ if('speechSynthesis' in window){speechSynthesis.getVoices();}
 <!-- TASKBAR -->
 <div id="taskbar">
   <div class="tb-center">
-    <div class="tb-icon" onclick="toggleAgentPanel()" title="Agent Team">👥</div><div class="tb-icon tb-avatar" onclick="toggleAvatar()" title="AI Core"><span>🤖</span></div><div class="tb-icon" onclick="toggleChat()" title="KHAIOS Chat"><span>💬</span></div><div class="tb-icon" id="tbMic" onclick="toggleVoice()" title="Talk to KHAIOS"><span>🎤</span></div>
+    <div class="tb-icon tb-avatar" onclick="toggleAvatar()" title="AI Core"><span>🤖</span></div><div class="tb-icon" onclick="toggleBoth()" title="Open Chats"><span>💬</span></div><div class="tb-icon" id="tbMic" onclick="toggleVoice()" title="Talk to KHAIOS"><span>🎤</span></div>
     <div class="tb-icon" onclick="openStore()" title="App Store"><span>🛍️</span></div>
     <div class="tb-apps" id="tbApps"></div>
   </div>
@@ -865,6 +865,7 @@ document.getElementById('ifield').addEventListener('input',function(){this.style
 /* CHAT TOGGLE + NEWS + VOICE */
 function toggleChat(){var fw=document.getElementById("fw-chat");var op=fw.classList.toggle("open");if(op&&!window._aiGreeted){window._aiGreeted=true;if(typeof sendGreeting==="function")sendGreeting();}}
 function toggleAgentPanel(){var p=document.getElementById("agentPanel");if(p)p.classList.toggle("open");}
+function toggleBoth(){var fw=document.getElementById("fw-chat");var ap=document.getElementById("agentPanel");var open=fw&&fw.classList.contains("open");if(open){if(fw)fw.classList.remove("open");if(ap)ap.classList.remove("open");}else{if(fw){fw.classList.add("open");if(!window._aiGreeted){window._aiGreeted=true;if(typeof sendGreeting==="function")sendGreeting();}}if(ap)ap.classList.add("open");}}
 function addNews(title,body){var n=document.getElementById("chatNews");if(!n)return;var c=document.createElement("div");c.className="news-card";var t=document.createElement("div");t.className="news-title";t.textContent=title;var b=document.createElement("div");b.className="news-body";b.textContent=body;c.appendChild(t);c.appendChild(b);n.appendChild(c);}
 setTimeout(function(){if(typeof addNews==="function"){addNews("KHAIOS 2.2 ONLINE","Voice core and animated avatar active. Tap the mic to talk live.");addNews("NEW: APP RING","Radial app launcher arriving around the core soon.");addNews("SYSTEMS NOMINAL","All subsystems operational, Commander.");}},150);
 var _rec=null,_voiceOn=false;
