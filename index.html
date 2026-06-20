@@ -201,6 +201,11 @@ html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-fami
 .news-card{background:rgba(12,28,60,0.4);border:1px solid rgba(63,169,255,0.2);border-left:3px solid #3fa9ff;border-radius:8px;padding:8px 10px;margin-bottom:7px;}
 .news-title{font-size:11px;color:#e6f2ff;font-weight:600;margin-bottom:2px;}
 .news-body{font-size:10px;color:#a6c8e8;line-height:1.4;}
+/* WIDGET RING */
+#widgetRing{position:absolute;inset:0;pointer-events:none;z-index:3;}
+.wdg{position:absolute;transform:translate(-50%,-50%);width:62px;height:62px;border-radius:50%;background:rgba(8,20,46,0.55);border:1px solid rgba(63,169,255,0.35);box-shadow:0 0 16px rgba(0,80,200,0.3),inset 0 0 12px rgba(0,60,160,0.2);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;}
+.wdg-ic{font-size:17px;line-height:1;}
+.wdg-val{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:0.5px;color:#bfe6ff;text-align:center;}
 #khHeader{position:fixed;top:0;left:0;right:0;height:54px;display:none;flex-direction:column;align-items:center;justify-content:center;gap:1px;z-index:400;background:linear-gradient(180deg,rgba(0,8,24,0.92),rgba(0,8,24,0.35));border-bottom:1px solid rgba(63,169,255,0.5);box-shadow:0 2px 22px rgba(0,60,160,0.35);pointer-events:none;}
 .kh-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:24px;letter-spacing:14px;text-indent:14px;background:linear-gradient(90deg,#bfe4ff,#3fa9ff,#bfe4ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .kh-sub{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:6px;text-indent:6px;color:#5aa8e0;}
@@ -296,7 +301,7 @@ if('speechSynthesis' in window){speechSynthesis.getVoices();}
 </script>
 <!-- 3D AI AVATAR -->
 <div id="avatarHolo">
-  <canvas id="avatarCanvas"></canvas>
+  <canvas id="avatarCanvas"></canvas><div id="widgetRing"></div>
   <div id="avatarCaption"></div>
   <div class="holo-tray">
     <div class="holo-arrow" onclick="scrollCarouselLeft()">‹</div>
@@ -841,6 +846,11 @@ function _initRec(){var SR=window.SpeechRecognition||window.webkitSpeechRecognit
 window._voiceListen=function(){if(_voiceOn&&_rec&&!window._aiSpeaking){try{_rec.start();}catch(e){}}};
 window._voiceStopListening=function(){if(_rec){try{_rec.stop();}catch(e){}}};
 function toggleVoice(){var btn=document.getElementById("tbMic");if(!_voiceOn){if(!_rec)_rec=_initRec();if(!_rec){alert("Voice input needs Chrome or Edge.");return;}_voiceOn=true;if(btn)btn.classList.add("mic-on");var fw=document.getElementById("fw-chat");if(fw&&!fw.classList.contains("open"))openAIChat();window._voiceListen();}else{_voiceOn=false;if(btn)btn.classList.remove("mic-on");if(_rec){try{_rec.stop();}catch(e){}}}}
+/* WIDGET RING */
+function renderWidgetRing(){var ring=document.getElementById("widgetRing");if(!ring)return;var W=[{id:"wClock",ic:"🕐"},{id:"wDate",ic:"📅"},{id:"wCpu",ic:"🧠"},{id:"wRam",ic:"💾"},{id:"wNet",ic:"📶"},{id:"wBat",ic:"⚡"}];var ang=[160,180,200,20,0,340];var R=275;ring.innerHTML="";W.forEach(function(w,i){var a=ang[i]*Math.PI/180;var x=Math.cos(a)*R,y=-Math.sin(a)*R;var el=document.createElement("div");el.className="wdg";el.id=w.id;el.style.left="calc(50% + "+x.toFixed(0)+"px)";el.style.top="calc(50% + "+y.toFixed(0)+"px)";el.innerHTML='<div class="wdg-ic">'+w.ic+'</div><div class="wdg-val">--</div>';ring.appendChild(el);});updateWidgets();}
+function _wv(id,val){var e=document.getElementById(id);if(e){var v=e.querySelector(".wdg-val");if(v)v.textContent=val;}}
+function updateWidgets(){var n=new Date();_wv("wClock",n.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}));_wv("wDate",n.toLocaleDateString([],{month:"short",day:"numeric"}));_wv("wCpu",(30+Math.floor(Math.random()*40))+"%");_wv("wRam",(42+Math.floor(Math.random()*34))+"%");_wv("wNet",navigator.onLine?"ON":"OFF");if(navigator.getBattery){navigator.getBattery().then(function(b){_wv("wBat",Math.round(b.level*100)+"%");});}else{_wv("wBat","AC");}}
+setTimeout(renderWidgetRing,200);setInterval(updateWidgets,1000);
 
 // ── WINDOW MANAGEMENT ────────────────────────────────────────────────────
 var appNames={chat:'💬 AI CORE',emulator:'🕹 EMULATOR',calculator:'🔢 CALC',notes:'📋 NOTES',browser:'🌐 BROWSER',weather:'⛅ WEATHER',maps:'🗺 MAPS'};
