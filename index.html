@@ -1594,5 +1594,13 @@ window.localAI={
   })();
 })();
 </script>
+<script>
+(function(){
+  window._booted=false;
+  (function chk(){var d=document.getElementById("desktop");if(d&&getComputedStyle(d).display!=="none"){window._booted=true;}else{setTimeout(chk,400);}})();
+  var _origNotify=window.khNotify;
+  window.khNotify=function(msg,ms){ if(!window._booted)return; if(_origNotify)_origNotify(msg,ms); };
+})();
+</script>
 </body>
 </html>
