@@ -7,7 +7,8 @@ app = Flask(__name__)
 CORS(app)
 
 GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
-MODEL = os.environ.get("GROQ_MODEL", "llama-3.3-70b-versatile")
+MODEL = os.environ.get("GROQ_MODEL", "openai/gpt-oss-120b")
+MODEL_FAST = os.environ.get("GROQ_MODEL_FAST", "openai/gpt-oss-20b")
 
 def get_keys():
     keys = []
@@ -24,7 +25,7 @@ def get_keys():
 
 @app.route("/")
 def health():
-    return jsonify({"status": "ok", "service": "khaios-backend", "keys_loaded": len(get_keys())})
+    return jsonify({"status": "ok", "service": "khaios-backend", "keys_loaded": len(get_keys()), "model": MODEL, "model_fast": MODEL_FAST})
 
 @app.route("/api/chat", methods=["POST", "OPTIONS"])
 def chat():
@@ -34,6 +35,8 @@ def chat():
     messages = body.get("messages", [])
     if not messages:
         return jsonify({"content": "No messages received, Commander.", "provider": "none"}), 400
+    want_fast = (body.get("model") or "").strip().lower() == "fast"
+    use_model = MODEL_FAST if want_fast else MODEL
     keys = get_keys()
     if not keys:
         return jsonify({"content": "No API keys are configured on the server, Commander.", "provider": "none"}), 500
@@ -43,7 +46,7 @@ def chat():
             r = requests.post(
                 GROQ_URL,
                 headers={"Authorization": "Bearer " + key, "Content-Type": "application/json"},
-                json={"model": MODEL, "messages": messages, "temperature": 0.7, "max_tokens": 1024},
+                json={"model": use_model, "messages": messages, "temperature": 0.7, "max_tokens": 1024},
                 timeout=60,
             )
             if r.status_code in (429, 401, 403):
@@ -52,7 +55,7 @@ def chat():
             r.raise_for_status()
             data = r.json()
             content = data["choices"][0]["message"]["content"]
-            return jsonify({"content": content, "provider": "groq"})
+            return jsonify({"content": content, "provider": "groq", "model": use_model})
         except Exception as e:
             last_err = "key %d -> %s" % (i + 1, str(e))
             continue
