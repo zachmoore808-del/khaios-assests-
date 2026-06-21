@@ -1729,5 +1729,40 @@ window.localAI={
   (function tryInject(){injectMission();if(!document.getElementById("missionBar"))setTimeout(tryInject,1500);})();
 })();
 </script>
+<style>
+@keyframes appOpen{from{transform:scale(.94);opacity:.25}to{transform:scale(1);opacity:1}}
+.cv-copy{cursor:pointer;}
+#copyMissionBtn{font-size:10px;}
+</style>
+<script>
+(function(){
+  var _origOpenApp=window.openApp;
+  window.openApp=function(name){
+    if(_origOpenApp)_origOpenApp(name);
+    var fw=document.getElementById("fw-"+name);
+    if(fw){fw.classList.add("maximized");fw.style.animation="none";void fw.offsetWidth;fw.style.animation="appOpen .22s ease";}
+  };
+
+  window.copyConvo=function(id,label){
+    var el=document.getElementById(id);if(!el)return;
+    var text=(el.innerText||el.textContent||"").trim();
+    if(!text){if(window.khNotify)khNotify("Nothing to copy yet",2000);return;}
+    function done(){if(window.khNotify)khNotify("\u2705 Copied "+(label||"")+" to clipboard",2500);}
+    function fallback(t){try{var ta=document.createElement("textarea");ta.value=t;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);}catch(e){}}
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done).catch(function(){fallback(text);done();});}
+    else{fallback(text);done();}
+  };
+
+  function injectCopy(){
+    var cc=document.querySelector("#fw-chat .fw-controls");
+    if(cc&&!document.getElementById("copyChatBtn")){var b=document.createElement("button");b.id="copyChatBtn";b.className="fw-btn";b.title="Copy conversation";b.textContent="\uD83D\uDCCB";b.onclick=function(){copyConvo("chat","KHAIOS chat");};cc.insertBefore(b,cc.firstChild);}
+    var ah=document.querySelector("#agentPanel .ap-header");
+    if(ah&&!document.getElementById("copyRoomBtn")){var b2=document.createElement("span");b2.id="copyRoomBtn";b2.className="ap-conf cv-copy";b2.style.marginRight="10px";b2.textContent="\uD83D\uDCCB Copy";b2.onclick=function(){copyConvo("chatNews","agent room");};var conf=ah.querySelector(".ap-conf");if(conf)ah.insertBefore(b2,conf);else ah.appendChild(b2);}
+    var mb=document.getElementById("missionBar");
+    if(mb&&!document.getElementById("copyMissionBtn")){var b3=document.createElement("button");b3.id="copyMissionBtn";b3.className="mc-go";b3.style.marginLeft="8px";b3.style.background="rgba(63,169,255,.3)";b3.textContent="\uD83D\uDCCB COPY OUTPUT";b3.onclick=function(){copyConvo("missionOut","mission");};var go=document.getElementById("missionGo");if(go&&go.parentNode)go.parentNode.insertBefore(b3,go.nextSibling);}
+  }
+  (function tryCopy(){injectCopy();setTimeout(tryCopy,2000);})();
+})();
+</script>
 </body>
 </html>
