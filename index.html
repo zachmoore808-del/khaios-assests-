@@ -1477,5 +1477,61 @@ document.addEventListener('DOMContentLoaded',function(){try{renderCarousel();ren
   };
 })();
 </script>
+<style>
+#offlineBtn{position:fixed;left:14px;bottom:78px;z-index:3500;background:rgba(8,18,40,.92);border:1px solid rgba(127,90,240,.6);color:#cdbcff;font-family:'Orbitron',sans-serif;font-size:10px;letter-spacing:1px;padding:8px 12px;border-radius:8px;cursor:pointer;box-shadow:0 0 14px rgba(127,90,240,.35);}
+#offlineBtn.ready{border-color:rgba(80,230,160,.7);color:#a8ffd6;box-shadow:0 0 14px rgba(80,230,160,.4);}
+</style>
+<button id="offlineBtn" onclick="if(window.localAI)window.localAI.init();">&#129504; LOAD OFFLINE AI</button>
+<script type="module">
+import * as webllm from "https://esm.run/@mlc-ai/web-llm";
+window.localAI={
+  engine:null, ready:false, loading:false,
+  async init(){
+    if(this.ready||this.loading)return;
+    if(!navigator.gpu){ if(window.khNotify)khNotify("\u26A0\uFE0F This device has no WebGPU \u2014 offline AI unavailable",6000); return; }
+    this.loading=true;
+    var btn=document.getElementById("offlineBtn"); if(btn)btn.textContent="\uD83E\uDDE0 LOADING...";
+    try{
+      this.engine=await webllm.CreateMLCEngine("Llama-3.2-1B-Instruct-q4f16_1-MLC",{initProgressCallback:function(p){var pct=Math.round((p.progress||0)*100);if(window.khNotify)khNotify("\u2B07\uFE0F Loading offline AI \u2014 "+pct+"% (first time only)",0);if(btn)btn.textContent="\uD83E\uDDE0 "+pct+"%";}});
+      this.ready=true; this.loading=false;
+      if(btn){btn.textContent="\uD83E\uDDE0 OFFLINE AI READY"; btn.classList.add("ready");}
+      if(window.khNotify)khNotify("\u2705 Offline AI ready \u2014 it will cover rate limits automatically",4500);
+    }catch(e){ this.loading=false; if(btn)btn.textContent="\uD83E\uDDE0 LOAD OFFLINE AI"; if(window.khNotify)khNotify("\u26A0\uFE0F Offline AI failed to load on this device",5000); console.error("localAI",e); }
+  },
+  async generate(messages,maxTokens){
+    if(!this.ready||!this.engine)return null;
+    try{ var r=await this.engine.chat.completions.create({messages:messages,max_tokens:maxTokens||300,temperature:0.7}); return (r&&r.choices&&r.choices[0]&&r.choices[0].message.content)||null; }
+    catch(e){ console.error("localAI gen",e); return null; }
+  }
+};
+</script>
+<script>
+(function(){
+  window.callAPI=async function(messages,modelHint){
+    try{
+      var _c=new AbortController();var _t=setTimeout(function(){_c.abort();},80000);
+      var res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:messages,model:modelHint||""}),signal:_c.signal}).finally(function(){clearTimeout(_t);});
+      var data=await res.json();
+      var pb=document.getElementById('providerBadge');
+      if(data.provider==="rate_limited"){
+        if(window.localAI&&window.localAI.ready){
+          var loc=await window.localAI.generate(messages,modelHint==="fast"?200:420);
+          if(loc){window._rateLimited=false;if(pb)pb.textContent="LOCAL";return loc;}
+        }
+        window._rateLimited=true; if(window.rateHold)window.rateHold(data.retry_after||30);
+        if(pb)pb.textContent="RATE-LIMIT"; return data.content;
+      }
+      window._rateLimited=false; if(pb)pb.textContent=(data.provider||"AI").toUpperCase();
+      return data.content;
+    }catch(e){
+      if(window.localAI&&window.localAI.ready){
+        var loc2=await window.localAI.generate(messages,modelHint==="fast"?200:420);
+        if(loc2){window._rateLimited=false;var pb2=document.getElementById("providerBadge");if(pb2)pb2.textContent="LOCAL";return loc2;}
+      }
+      throw e;
+    }
+  };
+})();
+</script>
 </body>
 </html>
