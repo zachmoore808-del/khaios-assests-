@@ -1290,7 +1290,7 @@ function updateUnits(){
 <script>
 
 // ── APP STORE / LIBRARY ────────────────────────────────────────────────────
-var APP_CATALOG=[{id:'conference',icon:'🪑',name:'Conference Room'},
+var APP_CATALOG=[{id:'cloudgaming',icon:'&#127918;',name:'Cloud Gaming'},{id:'conference',icon:'🪑',name:'Conference Room'},
  {id:'chat',icon:'💬',name:'AI CORE'},{id:'calculator',icon:'🔢',name:'Calculator'},{id:'emulator',icon:'🕹',name:'Emulator'},
  {id:'notes',icon:'📋',name:'Notes'},{id:'browser',icon:'🌐',name:'Browser'},{id:'weather',icon:'⛅',name:'Weather'},{id:'maps',icon:'🗺',name:'Maps'},
  {id:'2048',icon:'🎮',name:'2048'},{id:'snake',icon:'🐍',name:'Snake'},{id:'tetris',icon:'🧱',name:'Tetris'},{id:'flappy',icon:'🐦',name:'Flappy'},
@@ -1360,6 +1360,55 @@ document.addEventListener('DOMContentLoaded',function(){try{renderCarousel();ren
   window._botsPaused=false;
   setInterval(roomTick,14000);
 })();
+</script>
+<style>
+#fw-cloudgaming .fw-body{padding:14px;overflow:auto;}
+.cg-intro{font-size:11px;color:#bcd8ff;margin-bottom:12px;line-height:1.5;font-family:'Share Tech Mono',monospace;}
+.cg-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.cg-card{background:rgba(12,30,66,0.5);border:1px solid rgba(63,169,255,0.3);border-radius:10px;padding:14px;cursor:pointer;transition:all .15s;text-align:center;}
+.cg-card:hover{border-color:rgba(63,169,255,0.85);box-shadow:0 0 16px rgba(0,120,255,0.4);transform:translateY(-2px);}
+.cg-ico{font-size:30px;margin-bottom:6px;}
+.cg-name{font-family:'Orbitron',sans-serif;font-weight:700;color:#eaf4ff;font-size:14px;margin-bottom:4px;}
+.cg-tag{font-size:9px;color:#9fc3ee;line-height:1.4;margin-bottom:8px;min-height:26px;}
+.cg-go{display:inline-block;font-family:'Orbitron',sans-serif;font-size:10px;letter-spacing:1px;color:#6fd3ff;border:1px solid rgba(63,169,255,0.5);border-radius:5px;padding:3px 12px;}
+</style>
+<div class="fwindow" id="fw-cloudgaming" style="left:90px;top:70px;width:520px;height:430px;">
+  <div class="fw-titlebar" onmousedown="dragStart(event,'fw-cloudgaming')">
+    <div class="fw-title-left"><span class="fw-icon">&#127918;</span><span class="fw-name">CLOUD GAMING</span></div>
+    <div class="fw-controls"><button class="fw-btn" onclick="minimizeApp('cloudgaming')">&#9472;</button><button class="fw-btn" onclick="maximizeApp('fw-cloudgaming')">&#9633;</button><button class="fw-btn close" onclick="closeApp('cloudgaming')">&#10005;</button></div>
+  </div>
+  <div class="fw-body">
+    <div class="cg-intro">Stream real games &mdash; they run on remote servers and play in your browser. Pick a service to launch:</div>
+    <div class="cg-grid">
+      <div class="cg-card" onclick="window.open('https://now.gg/','_blank')">
+        <div class="cg-ico">&#128241;</div>
+        <div class="cg-name">now.gg</div>
+        <div class="cg-tag">Mobile / Android games &middot; free, no install</div>
+        <div class="cg-go">&#9654; Play</div>
+      </div>
+      <div class="cg-card" onclick="window.open('https://www.xbox.com/play','_blank')">
+        <div class="cg-ico">&#127918;</div>
+        <div class="cg-name">Xbox Cloud</div>
+        <div class="cg-tag">Console games &middot; needs Game Pass Ultimate</div>
+        <div class="cg-go">&#9654; Play</div>
+      </div>
+      <div class="cg-card" onclick="window.open('https://play.geforcenow.com/','_blank')">
+        <div class="cg-ico">&#128187;</div>
+        <div class="cg-name">GeForce NOW</div>
+        <div class="cg-tag">Your Steam / Epic PC games &middot; free tier</div>
+        <div class="cg-go">&#9654; Play</div>
+      </div>
+      <div class="cg-card" onclick="window.open('https://boosteroid.com/','_blank')">
+        <div class="cg-ico">&#128640;</div>
+        <div class="cg-name">Boosteroid</div>
+        <div class="cg-tag">Browser cloud gaming &middot; subscription</div>
+        <div class="cg-go">&#9654; Play</div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){try{var k="khaios_installed";var inst=JSON.parse(localStorage.getItem(k)||"[]");if(inst.indexOf("cloudgaming")<0){inst.push("cloudgaming");localStorage.setItem(k,JSON.stringify(inst));}}catch(e){}})();
 </script>
 </body>
 </html>
