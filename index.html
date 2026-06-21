@@ -1663,5 +1663,71 @@ window.localAI={
   };
 })();
 </script>
+<style>
+.mc-bar{margin:0 0 12px 0;padding:12px;background:rgba(8,18,40,.7);border:1px solid rgba(63,169,255,.4);border-radius:10px;}
+.mc-title{font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:1px;color:#7fd6ff;margin-bottom:8px;}
+.mc-input{width:100%;box-sizing:border-box;background:rgba(2,8,22,.8);border:1px solid rgba(63,169,255,.4);border-radius:7px;color:#eaf4ff;font-family:'Share Tech Mono',monospace;font-size:12px;padding:8px;resize:vertical;}
+.mc-go{margin-top:8px;font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:1px;color:#04101f;background:linear-gradient(135deg,#3fa9ff,#7f5af0);border:0;border-radius:7px;padding:8px 16px;cursor:pointer;font-weight:700;}
+.mc-go:disabled{opacity:.5;cursor:default;}
+.mc-out{margin-top:10px;max-height:260px;overflow:auto;}
+.mc-block{margin-bottom:8px;}
+.mc-step{font-size:11px;color:#9fc3ee;font-family:'Share Tech Mono',monospace;padding:3px 0;}
+.mc-assign{font-size:11px;color:#cfe6ff;padding:3px 8px;border-left:2px solid rgba(63,169,255,.6);margin:3px 0;}
+.mc-result{background:rgba(12,30,66,.5);border:1px solid rgba(63,169,255,.3);border-radius:8px;padding:8px;font-size:11px;color:#dceaff;line-height:1.5;}
+.mc-rb{font-family:'Orbitron',sans-serif;font-size:10px;color:#7fd6ff;margin-bottom:4px;}
+.mc-final{background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.5);border-radius:8px;padding:10px;font-size:12px;color:#eaffff;line-height:1.6;}
+.mc-fh{font-family:'Orbitron',sans-serif;font-size:11px;color:#67e8f9;margin-bottom:6px;}
+</style>
+<script>
+(function(){
+  function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+  window.runMission=async function(goal){
+    var out=document.getElementById("missionOut");var btn=document.getElementById("missionGo");
+    if(!out||!goal||!goal.trim())return;
+    out.innerHTML="";if(btn)btn.disabled=true;window._userBusy=true;
+    function add(html){var d=document.createElement("div");d.className="mc-block";d.innerHTML=html;out.appendChild(d);out.scrollTop=out.scrollHeight;return d;}
+    try{
+      var bots=getConfBots().map(function(k){return (BOT_ROSTER[k]||{}).name;}).filter(Boolean);
+      if(!bots.length){add('<div class="mc-step">No worker bots seated. Add some in the conference table first.</div>');return;}
+      add('<div class="mc-step">\uD83E\uDDE0 KHAIOS is planning the mission\u2026</div>');
+      var planSys="You are KHAIOS, an AI project lead. Available worker agents: "+bots.join(", ")+". Break the Commander's goal into 3-4 concrete subtasks and assign each to the single best-fitting agent. Respond ONLY with a JSON array, no prose or markdown: [{\"bot\":\"NAME\",\"task\":\"specific task\"}]. Use only agent names from the list.";
+      var planRaw=await callAPI([{role:"system",content:planSys},{role:"user",content:"Goal: "+goal}]);
+      if(window._rateLimited){add('<div class="mc-step">Rate-limited right now \u2014 wait for the countdown to clear, then try again.</div>');return;}
+      var plan=null;try{planRaw=(planRaw||"").replace(/```json|```/g,"").trim();plan=JSON.parse(planRaw);}catch(e){plan=null;}
+      if(!plan||!plan.length){add('<div class="mc-step">KHAIOS couldn\'t form a clean plan. Try rephrasing the goal.</div>');return;}
+      var ph='<div class="mc-step">\uD83D\uDCCB Mission plan:</div>';
+      plan.forEach(function(p){ph+='<div class="mc-assign"><b>'+esc(p.bot)+'</b>: '+esc(p.task)+'</div>';});
+      add(ph);
+      var results=[];
+      for(var i=0;i<plan.length;i++){
+        var p=plan[i];
+        var d=add('<div class="mc-step">\uD83E\uDD16 '+esc(p.bot)+' working\u2026</div>');
+        var wSys="You are "+p.bot+", a specialist worker agent. Do the assigned task and return a concise, concrete, actionable result \u2014 specific tools, steps, numbers. Under 90 words. No preamble.";
+        var wOut=await callAPI([{role:"system",content:wSys},{role:"user",content:"Task: "+p.task+"\nOverall goal: "+goal}],"fast");
+        if(window._rateLimited){d.innerHTML='<div class="mc-step">Rate-limited mid-mission \u2014 try again shortly.</div>';return;}
+        wOut=(wOut||"(no output)").trim();results.push(p.bot+": "+wOut);
+        d.innerHTML='<div class="mc-result"><div class="mc-rb">\uD83E\uDD16 '+esc(p.bot)+'</div>'+esc(wOut).replace(/\n/g,"<br>")+'</div>';
+      }
+      var d2=add('<div class="mc-step">\uD83E\uDDE0 KHAIOS compiling the final deliverable\u2026</div>');
+      var synSys="You are KHAIOS. Synthesize the worker agents' results into ONE clear, organized deliverable for the Commander that accomplishes the goal. Use short labeled sections. Add any critical missing step. Be practical and specific.";
+      var synth=await callAPI([{role:"system",content:synSys},{role:"user",content:"Goal: "+goal+"\n\nWorker results:\n"+results.join("\n\n")}]);
+      synth=(synth||"(no synthesis)").trim();
+      d2.innerHTML='<div class="mc-final"><div class="mc-fh">\u2705 KHAIOS \u2014 Final Deliverable</div>'+esc(synth).replace(/\n/g,"<br>")+'</div>';
+    }catch(e){add('<div class="mc-step">Something went wrong: '+esc(String(e))+'</div>');}
+    finally{window._userBusy=false;if(btn)btn.disabled=false;}
+  };
+  function injectMission(){
+    var fwb=document.querySelector("#fw-conference .fw-body");
+    if(!fwb||document.getElementById("missionBar"))return;
+    var bar=document.createElement("div");bar.id="missionBar";bar.className="mc-bar";
+    bar.innerHTML='<div class="mc-title">\uD83E\uDDE0 MISSION CONTROL \u2014 tell KHAIOS what you want; the team works it</div>'
+      +'<textarea id="missionGoal" class="mc-input" rows="2" placeholder="e.g. Plan a 7-day launch for my new app with exact daily steps"></textarea>'
+      +'<button id="missionGo" class="mc-go" onclick="runMission(document.getElementById(\'missionGoal\').value)">\u25B6 DELEGATE TO TEAM</button>'
+      +'<div id="missionOut" class="mc-out"></div>';
+    fwb.insertBefore(bar,fwb.firstChild);
+  }
+  (function tryInject(){injectMission();if(!document.getElementById("missionBar"))setTimeout(tryInject,1500);})();
+})();
+</script>
 </body>
 </html>
