@@ -37,6 +37,7 @@ def chat():
         return jsonify({"content": "No messages received, Commander.", "provider": "none"}), 400
     want_fast = (body.get("model") or "").strip().lower() == "fast"
     use_model = MODEL_FAST if want_fast else MODEL
+    max_out = 220 if want_fast else 600
     keys = get_keys()
     if not keys:
         return jsonify({"content": "No API keys are configured on the server, Commander.", "provider": "none"}), 500
@@ -46,7 +47,7 @@ def chat():
             r = requests.post(
                 GROQ_URL,
                 headers={"Authorization": "Bearer " + key, "Content-Type": "application/json"},
-                json={"model": use_model, "messages": messages, "temperature": 0.7, "max_tokens": 1024},
+                json={"model": use_model, "messages": messages, "temperature": 0.7, "max_tokens": max_out},
                 timeout=60,
             )
             if r.status_code in (429, 401, 403):
