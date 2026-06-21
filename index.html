@@ -1822,5 +1822,12 @@ window.localAI={
   (function show(){var d=document.getElementById("desktop");var t=document.getElementById("donateTicker");if(t&&d&&getComputedStyle(d).display!=="none"){t.style.display="block";requestAnimationFrame(function(){t.style.opacity="1";});}else{setTimeout(show,500);}})();
 })();
 </script>
+<style>
+#chatNews, #chatNews *, #chat, #chat *, #missionOut, #missionOut *{
+  -webkit-user-select:text !important;
+  user-select:text !important;
+}
+#chatNews, #chat, #missionOut{cursor:text;}
+</style>
 </body>
 </html>
