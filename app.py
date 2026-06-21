@@ -42,6 +42,7 @@ def chat():
     if not keys:
         return jsonify({"content": "No API keys are configured on the server, Commander.", "provider": "none"}), 500
     last_err = ""
+    retry_after = 0
     for i, key in enumerate(keys):
         try:
             r = requests.post(
@@ -52,6 +53,14 @@ def chat():
             )
             if r.status_code in (429, 401, 403):
                 last_err = "key %d -> HTTP %d" % (i + 1, r.status_code)
+                if r.status_code == 429:
+                    ra = r.headers.get("retry-after") or r.headers.get("Retry-After")
+                    try:
+                        v = int(float(ra)) if ra else 30
+                    except Exception:
+                        v = 30
+                    if v > retry_after:
+                        retry_after = v
                 continue
             r.raise_for_status()
             data = r.json()
@@ -60,7 +69,9 @@ def chat():
         except Exception as e:
             last_err = "key %d -> %s" % (i + 1, str(e))
             continue
-    return jsonify({"content": "All keys are busy or rate-limited right now, Commander. Give it a moment.", "provider": "error", "detail": last_err}), 503
+    if retry_after:
+        return jsonify({"content": "All keys are rate-limited, Commander. Standing by " + str(retry_after) + "s until it clears.", "provider": "rate_limited", "retry_after": retry_after, "detail": last_err}), 503
+    return jsonify({"content": "All keys are busy or unreachable right now, Commander. Give it a moment.", "provider": "error", "detail": last_err}), 503
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
