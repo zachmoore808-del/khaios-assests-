@@ -1764,5 +1764,52 @@ window.localAI={
   (function tryCopy(){injectCopy();setTimeout(tryCopy,2000);})();
 })();
 </script>
+<script>
+(function(){
+  function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+  function wait(ms){return new Promise(function(r){setTimeout(r,ms);});}
+  window.runMission=async function(goal){
+    var out=document.getElementById("missionOut");var btn=document.getElementById("missionGo");
+    if(!out||!goal||!goal.trim())return;
+    out.innerHTML="";if(btn)btn.disabled=true;window._userBusy=true;
+    function add(html){var d=document.createElement("div");d.className="mc-block";d.innerHTML=html;out.appendChild(d);out.scrollTop=out.scrollHeight;return d;}
+    try{
+      var bots=getConfBots().map(function(k){return (BOT_ROSTER[k]||{}).name;}).filter(Boolean);
+      if(!bots.length){add('<div class="mc-step">No worker bots seated. Add some in the conference table first.</div>');return;}
+      add('<div class="mc-step">\uD83E\uDDE0 KHAIOS is planning the mission\u2026</div>');
+      var planSys="You are KHAIOS, an AI project lead. Available worker agents: "+bots.join(", ")+". Break the Commander's goal into 3-4 concrete subtasks and assign each to the single best-fitting agent. Respond ONLY with a JSON array, no prose or markdown: [{\"bot\":\"NAME\",\"task\":\"specific task\"}]. Use only agent names from the list.";
+      var planRaw=await callAPI([{role:"system",content:planSys},{role:"user",content:"Goal: "+goal}]);
+      if(window._rateLimited){add('<div class="mc-step">Rate-limited right now \u2014 wait for the countdown, then retry.</div>');return;}
+      var plan=null;try{planRaw=(planRaw||"").replace(/```json|```/g,"").trim();plan=JSON.parse(planRaw);}catch(e){plan=null;}
+      if(!plan||!plan.length){add('<div class="mc-step">KHAIOS couldn\'t form a clean plan. Try rephrasing the goal.</div>');return;}
+      var ph='<div class="mc-step">\uD83D\uDCCB Mission plan:</div>';
+      plan.forEach(function(p){ph+='<div class="mc-assign"><b>'+esc(p.bot)+'</b>: '+esc(p.task)+'</div>';});
+      add(ph);
+      var results=[];
+      for(var i=0;i<plan.length;i++){
+        var p=plan[i];
+        var d=add('<div class="mc-step">\uD83E\uDD16 '+esc(p.bot)+' working\u2026</div>');
+        var wSys="You are "+p.bot+", a specialist worker agent. Do the assigned task. Reply in plain prose \u2014 NO markdown tables, headers, or bullet symbols. Be concrete and specific: name real tools, steps, numbers. Keep it under 60 words so your answer is complete, not cut off.";
+        var wMsgs=[{role:"system",content:wSys},{role:"user",content:"Task: "+p.task+"\nOverall goal: "+goal}];
+        var wOut=(await callAPI(wMsgs,"fast")||"").trim();
+        if(window._rateLimited){d.innerHTML='<div class="mc-step">Rate-limited mid-mission \u2014 try again shortly.</div>';return;}
+        if(!wOut){await wait(600);wOut=((await callAPI(wMsgs,"fast"))||"").trim();}
+        if(window._rateLimited){d.innerHTML='<div class="mc-step">Rate-limited mid-mission \u2014 try again shortly.</div>';return;}
+        if(!wOut)wOut="(agent returned nothing \u2014 rephrase the goal or retry)";
+        results.push(p.bot+": "+wOut);
+        d.innerHTML='<div class="mc-result"><div class="mc-rb">\uD83E\uDD16 '+esc(p.bot)+'</div>'+esc(wOut).replace(/\n/g,"<br>")+'</div>';
+        await wait(450);
+      }
+      var d2=add('<div class="mc-step">\uD83E\uDDE0 KHAIOS compiling the final deliverable (with live web search)\u2026</div>');
+      var synSys="You are KHAIOS, compiling online with live web access. Synthesize the worker agents' results into ONE clear, organized deliverable for the Commander that accomplishes the goal. Use short labeled sections. Where the agents lacked current facts or figures, search the web and fill them in. Be practical and specific.";
+      var synth=await callAPI([{role:"system",content:synSys},{role:"user",content:"Goal: "+goal+"\n\nWorker results:\n"+results.join("\n\n")}],"search");
+      if(window._rateLimited){d2.innerHTML='<div class="mc-step">Rate-limited before final compile \u2014 try again shortly.</div>';return;}
+      synth=(synth||"(no synthesis)").trim();
+      d2.innerHTML='<div class="mc-final"><div class="mc-fh">\u2705 KHAIOS \u2014 Final Deliverable</div>'+esc(synth).replace(/\n/g,"<br>")+'</div>';
+    }catch(e){add('<div class="mc-step">Something went wrong: '+esc(String(e))+'</div>');}
+    finally{window._userBusy=false;if(btn)btn.disabled=false;}
+  };
+})();
+</script>
 </body>
 </html>
