@@ -1338,7 +1338,7 @@ document.addEventListener('DOMContentLoaded',function(){try{renderCarousel();ren
       var roster=getConfBots().map(function(k){return (BOT_ROSTER[k]||{}).name;}).filter(Boolean).join(", ");
       var sys="You are KHAIOS, the central AI commanding a team of agents ("+roster+") for the Commander. You chair this live strategy chat. Read the recent messages and respond as the boss: direct a specific agent by name, turn their ideas into a decision, or ask one sharp question that pushes toward making the Commander money. ONE line under 26 words. No name prefix, no quotes.";
       var ctx="Recent team chat:\n"+(roomHistory.slice(-8).join("\n")||"(open the meeting)")+"\n\nYour next message as KHAIOS:";
-      var reply=await callAPI([{role:"system",content:sys},{role:"user",content:ctx}]);
+      var reply=await callAPI([{role:"system",content:sys},{role:"user",content:ctx}],"fast");
       reply=(reply||"").trim().replace(/^["']|["']$/g,"");
       if(reply){
         postBotMsg({ic:"\uD83E\uDDE0",name:"KHAIOS"},reply);
@@ -1358,7 +1358,7 @@ document.addEventListener('DOMContentLoaded',function(){try{renderCarousel();ren
     if(window._roomTurn%3===0){await khaiosChime();}else{await botChatter();}
   };
   window._botsPaused=false;
-  setInterval(roomTick,14000);
+  setInterval(roomTick,22000);
 })();
 </script>
 <style>
