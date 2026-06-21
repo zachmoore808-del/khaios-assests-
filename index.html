@@ -1602,5 +1602,66 @@ window.localAI={
   window.khNotify=function(msg,ms){ if(!window._booted)return; if(_origNotify)_origNotify(msg,ms); };
 })();
 </script>
+<script>
+(function(){
+  window.botChatter=async function(){
+    if(window._botsPaused)return;
+    if(!window._booted)return;
+    if(_botBusy||window._userBusy||(window._lastUser&&Date.now()-window._lastUser<15000))return;
+    var n=document.getElementById("chatNews");if(!n)return;_botBusy=true;
+    try{
+      var key=nextBotKey();var b=BOT_ROSTER[key]||{ic:"\uD83E\uDD16",name:key};
+      var roster=getConfBots().map(function(k){return (BOT_ROSTER[k]||{}).name;}).filter(Boolean).join(", ");
+      var sys="You are "+b.name+", a specialist AI agent advising the Commander, in a live working session with other agents ("+roster+") and your boss KHAIOS. Give ONE concrete, real-world recommendation from your domain: name an actual tool, platform, tactic, or number, plus a specific next step. Be specific, never vague hype. Build on or push back on others; never repeat a point already made. 1-2 sentences, under 38 words. No name prefix, no quotes.";
+      var ctx="Recent team chat:\n"+(roomHistory.slice(-7).join("\n")||"(open the discussion)")+"\n\nYour next message as "+b.name+":";
+      var reply=null;
+      if(window.localAI&&window.localAI.ready){
+        reply=await window.localAI.generate([{role:"system",content:sys},{role:"user",content:ctx}],200);
+        if(reply){window._lastSource="local";}
+      }
+      if(!reply){
+        reply=await callAPI([{role:"system",content:sys},{role:"user",content:ctx}],"fast");
+        if(window._rateLimited){_botBusy=false;return;}
+      }
+      reply=(reply||"").trim().replace(/^["']|["']$/g,"");
+      if(reply){postBotMsg(b,reply);roomHistory.push(b.name+": "+reply);if(roomHistory.length>20)roomHistory.shift();}
+    }catch(e){}
+    _botBusy=false;
+  };
+
+  window.khaiosChime=async function(){
+    if(!window._booted)return;
+    if(_botBusy||window._userBusy||(window._lastUser&&Date.now()-window._lastUser<15000))return;
+    var n=document.getElementById("chatNews");if(!n)return;_botBusy=true;
+    try{
+      var roster=getConfBots().map(function(k){return (BOT_ROSTER[k]||{}).name;}).filter(Boolean).join(", ");
+      var sys="You are KHAIOS, the boss AI running ONLINE with fuller, more current knowledge, directing a team of agents ("+roster+") that run on a smaller OFFLINE model and may miss details or get facts wrong. Read the recent discussion and respond as the lead: fill in missing information, correct anything inaccurate, add current real-world specifics the agents lack, then turn the best idea into a clear decision or assign a named agent a concrete task. Be decisive and specific. 1-2 sentences under 40 words. No name prefix, no quotes.";
+      var ctx="Recent team chat:\n"+(roomHistory.slice(-7).join("\n")||"(open the meeting)")+"\n\nYour next message as KHAIOS:";
+      var reply=await callAPI([{role:"system",content:sys},{role:"user",content:ctx}]);
+      if(window._rateLimited){_botBusy=false;return;}
+      reply=(reply||"").trim().replace(/^["']|["']$/g,"");
+      if(reply){postBotMsg({ic:"\uD83E\uDDE0",name:"KHAIOS"},reply);var ms=n.querySelectorAll(".cr-msg");if(ms.length)ms[ms.length-1].classList.add("cr-khaios");roomHistory.push("KHAIOS: "+reply);if(roomHistory.length>20)roomHistory.shift();}
+    }catch(e){}
+    _botBusy=false;
+  };
+
+  window.roomTick=async function(){
+    if(window._botsPaused)return;
+    if(!window._booted)return;
+    var ap=document.getElementById("agentPanel");
+    if(!ap||!ap.classList.contains("open"))return;
+    var rateWait=window._rateUntil&&Date.now()<window._rateUntil;
+    var haveLocal=window.localAI&&window.localAI.ready;
+    window._roomTurn=(window._roomTurn||0)+1;
+    if(window._roomTurn%3===0){
+      if(rateWait)return;
+      await khaiosChime();
+    }else{
+      if(rateWait&&!haveLocal)return;
+      await botChatter();
+    }
+  };
+})();
+</script>
 </body>
 </html>
