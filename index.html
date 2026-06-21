@@ -935,7 +935,7 @@ setTimeout(function(){cannedMsg();cannedMsg();botChatter();},700);
 function renderWidgetRing(){var ring=document.getElementById("widgetRing");if(!ring)return;var W=[{id:"wClock",ic:"🕐"},{id:"wDate",ic:"📅"},{id:"wCpu",ic:"🧠"},{id:"wRam",ic:"💾"},{id:"wNet",ic:"📶"},{id:"wBat",ic:"⚡"}];var ang=[150,180,210,30,0,330];var R=320;ring.innerHTML="";W.forEach(function(w,i){var a=ang[i]*Math.PI/180;var x=Math.cos(a)*R,y=-Math.sin(a)*R;var el=document.createElement("div");el.className="wdg";el.id=w.id;el.style.left="calc(50% + "+x.toFixed(0)+"px)";el.style.top="calc(50% + "+y.toFixed(0)+"px)";el.innerHTML='<div class="wdg-ic">'+w.ic+'</div><div class="wdg-val">--</div>';ring.appendChild(el);});updateWidgets();}
 function _wv(id,val){var e=document.getElementById(id);if(e){var v=e.querySelector(".wdg-val");if(v)v.textContent=val;}}
 function updateWidgets(){var n=new Date();_wv("wClock",n.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}));_wv("wDate",n.toLocaleDateString([],{month:"short",day:"numeric"}));_wv("wCpu",(30+Math.floor(Math.random()*40))+"%");_wv("wRam",(42+Math.floor(Math.random()*34))+"%");_wv("wNet",navigator.onLine?"ON":"OFF");if(navigator.getBattery){navigator.getBattery().then(function(b){_wv("wBat",Math.round(b.level*100)+"%");});}else{_wv("wBat","AC");}}
-window._botsPaused=true;setInterval(botChatter,180000);
+window._botsPaused=true;
 
 // ── WINDOW MANAGEMENT ────────────────────────────────────────────────────
 var appNames={chat:'💬 AI CORE',emulator:'🕹 EMULATOR',calculator:'🔢 CALC',notes:'📋 NOTES',browser:'🌐 BROWSER',weather:'⛅ WEATHER',maps:'🗺 MAPS'};
@@ -1322,6 +1322,44 @@ function openStore(){if(window.dismissAvatar){dismissAvatar();}var w=document.ge
 function renderCarousel(){var t=document.getElementById('carouselTrack');if(!t)return;carouselOffset=0;t.style.transform='translateX(0)';var h='<div class="carousel-app-tile" onclick="openStore()" style="border-color:#ffcc44;color:#ffcc44;"><span>🛍️</span>App Store</div>';var inst=getInstalled();for(var i=0;i<inst.length;i++){var a=appMeta(inst[i]);if(!a)continue;h+='<div class="carousel-app-tile" onclick="launchApp(\''+a.id+'\')"><span>'+a.icon+'</span>'+a.name+'</div>';}if(inst.length===0){h+='<div class="carousel-app-tile" onclick="openStore()" style="opacity:.6;"><span>➕</span>Get Apps</div>';}t.innerHTML=h;}
 function renderStore(){var g=document.getElementById('storeGrid');if(!g)return;var h='';for(var i=0;i<APP_CATALOG.length;i++){var a=APP_CATALOG[i];var ins=isInstalled(a.id);h+='<div class="store-item"><div class="store-icon">'+a.icon+'</div><div class="store-name">'+a.name+'</div><button class="store-btn'+(ins?' installed':'')+'" onclick="'+(ins?'uninstallApp':'downloadApp')+'(\''+a.id+'\')">'+(ins?'✓ Installed':'Download')+'</button></div>';}g.innerHTML=h;}
 document.addEventListener('DOMContentLoaded',function(){try{renderCarousel();renderStore();}catch(e){}});
+</script>
+<style>
+.cr-khaios .cr-av{background:linear-gradient(135deg,#22d3ee,#3b82f6)!important;box-shadow:0 0 12px rgba(34,211,238,.6);}
+.cr-khaios .cr-name{color:#67e8f9;font-weight:700;}
+.cr-khaios .cr-bubble{border:1px solid rgba(34,211,238,.5);background:rgba(34,211,238,.10);}
+</style>
+<script>
+(function(){
+  window.khaiosChime=async function(){
+    if(_botBusy||window._userBusy||(window._lastUser&&Date.now()-window._lastUser<15000))return;
+    var n=document.getElementById("chatNews");if(!n)return;
+    _botBusy=true;
+    try{
+      var roster=getConfBots().map(function(k){return (BOT_ROSTER[k]||{}).name;}).filter(Boolean).join(", ");
+      var sys="You are KHAIOS, the central AI commanding a team of agents ("+roster+") for the Commander. You chair this live strategy chat. Read the recent messages and respond as the boss: direct a specific agent by name, turn their ideas into a decision, or ask one sharp question that pushes toward making the Commander money. ONE line under 26 words. No name prefix, no quotes.";
+      var ctx="Recent team chat:\n"+(roomHistory.slice(-8).join("\n")||"(open the meeting)")+"\n\nYour next message as KHAIOS:";
+      var reply=await callAPI([{role:"system",content:sys},{role:"user",content:ctx}]);
+      reply=(reply||"").trim().replace(/^["']|["']$/g,"");
+      if(reply){
+        postBotMsg({ic:"\uD83E\uDDE0",name:"KHAIOS"},reply);
+        var ms=n.querySelectorAll(".cr-msg");if(ms.length)ms[ms.length-1].classList.add("cr-khaios");
+        roomHistory.push("KHAIOS: "+reply);
+        if(roomHistory.length>20)roomHistory.shift();
+      }
+    }catch(e){}
+    _botBusy=false;
+  };
+  window._roomTurn=0;
+  window.roomTick=async function(){
+    if(window._botsPaused)return;
+    var ap=document.getElementById("agentPanel");
+    if(!ap||!ap.classList.contains("open"))return;
+    window._roomTurn++;
+    if(window._roomTurn%3===0){await khaiosChime();}else{await botChatter();}
+  };
+  window._botsPaused=false;
+  setInterval(roomTick,14000);
+})();
 </script>
 </body>
 </html>
