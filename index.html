@@ -1410,5 +1410,72 @@ document.addEventListener('DOMContentLoaded',function(){try{renderCarousel();ren
 <script>
 (function(){try{var k="khaios_installed";var inst=JSON.parse(localStorage.getItem(k)||"[]");if(inst.indexOf("cloudgaming")<0){inst.push("cloudgaming");localStorage.setItem(k,JSON.stringify(inst));}}catch(e){}})();
 </script>
+<style>
+#khNotify{position:fixed;left:50%;bottom:74px;transform:translateX(-50%) translateY(18px);z-index:4000;background:rgba(8,18,40,.96);border:1px solid rgba(63,169,255,.6);color:#cfeaff;font-family:'Share Tech Mono',monospace;font-size:12px;padding:10px 18px;border-radius:24px;box-shadow:0 0 22px rgba(0,120,255,.45);opacity:0;pointer-events:none;transition:all .25s;white-space:nowrap;max-width:90vw;text-align:center;}
+#khNotify.on{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+<div id="khNotify"></div>
+<script>
+(function(){
+  window._notifyHide=null;
+  window.khNotify=function(msg,ms){var el=document.getElementById("khNotify");if(!el)return;el.textContent=msg;el.classList.add("on");if(window._notifyHide){clearTimeout(window._notifyHide);window._notifyHide=null;}if(ms&&ms>0){window._notifyHide=setTimeout(function(){el.classList.remove("on");},ms);}};
+  window._rateTimer=null;
+  window.rateHold=function(sec){sec=parseInt(sec,10);if(!sec||sec<5)sec=30;if(sec>180)sec=180;window._rateUntil=Date.now()+sec*1000;if(window._rateTimer)return;var tick=function(){var left=Math.ceil((window._rateUntil-Date.now())/1000);if(left>0){khNotify("\u23F3 Rate limit reached \u2014 agents waiting, resuming in "+left+"s",0);}else{clearInterval(window._rateTimer);window._rateTimer=null;khNotify("\u2705 Limit cleared \u2014 agents back online",3500);}};tick();window._rateTimer=setInterval(tick,1000);};
+
+  window.BOT_ROSTER={finance:{ic:"\uD83E\uDD16",name:"FINANCE"},markets:{ic:"\uD83E\uDD16",name:"MARKETS"},social:{ic:"\uD83E\uDD16",name:"SOCIAL"},content:{ic:"\uD83E\uDD16",name:"CONTENT"},music:{ic:"\uD83E\uDD16",name:"MUSIC"},weather:{ic:"\uD83E\uDD16",name:"WEATHER"},trading:{ic:"\uD83E\uDD16",name:"TRADING"},research:{ic:"\uD83E\uDD16",name:"RESEARCH"},email:{ic:"\uD83E\uDD16",name:"EMAIL"},ecom:{ic:"\uD83E\uDD16",name:"COMMERCE"},design:{ic:"\uD83E\uDD16",name:"DESIGN"},security:{ic:"\uD83E\uDD16",name:"SECURITY"}};
+
+  window.callAPI=async function(messages,modelHint){
+    var _c=new AbortController();var _t=setTimeout(function(){_c.abort();},80000);
+    var res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:messages,model:modelHint||""}),signal:_c.signal}).finally(function(){clearTimeout(_t);});
+    var data=await res.json();
+    var pb=document.getElementById('providerBadge');if(pb)pb.textContent=(data.provider||'AI').toUpperCase();
+    if(data.provider==="rate_limited"){window._rateLimited=true;if(window.rateHold)window.rateHold(data.retry_after||30);}else{window._rateLimited=false;}
+    return data.content;
+  };
+
+  window.botChatter=async function(){
+    if(window._botsPaused)return;
+    if(window._rateUntil&&Date.now()<window._rateUntil)return;
+    if(_botBusy||window._userBusy||(window._lastUser&&Date.now()-window._lastUser<15000))return;
+    var n=document.getElementById("chatNews");if(!n)return;_botBusy=true;
+    try{
+      var key=nextBotKey();var b=BOT_ROSTER[key]||{ic:"\uD83E\uDD16",name:key};
+      var roster=getConfBots().map(function(k){return (BOT_ROSTER[k]||{}).name;}).filter(Boolean).join(", ");
+      var sys="You are "+b.name+", a specialist AI agent advising the Commander, in a live working session with other agents ("+roster+") and your boss KHAIOS. Give ONE concrete, real-world recommendation from your domain: name an actual tool, platform, tactic, or number, plus a specific next step the Commander can take. Be practical and specific, never vague hype. Build on or push back on what others said; never repeat a point already made. 1-2 sentences, under 38 words. No name prefix, no quotes.";
+      var ctx="Recent team chat:\n"+(roomHistory.slice(-7).join("\n")||"(open the discussion)")+"\n\nYour next message as "+b.name+":";
+      var reply=await callAPI([{role:"system",content:sys},{role:"user",content:ctx}],"fast");
+      if(window._rateLimited){_botBusy=false;return;}
+      reply=(reply||"").trim().replace(/^["']|["']$/g,"");
+      if(reply){postBotMsg(b,reply);roomHistory.push(b.name+": "+reply);if(roomHistory.length>20)roomHistory.shift();}
+    }catch(e){}
+    _botBusy=false;
+  };
+
+  window.khaiosChime=async function(){
+    if(window._rateUntil&&Date.now()<window._rateUntil)return;
+    if(_botBusy||window._userBusy||(window._lastUser&&Date.now()-window._lastUser<15000))return;
+    var n=document.getElementById("chatNews");if(!n)return;_botBusy=true;
+    try{
+      var roster=getConfBots().map(function(k){return (BOT_ROSTER[k]||{}).name;}).filter(Boolean).join(", ");
+      var sys="You are KHAIOS, the boss AI directing a team of agents ("+roster+") for the Commander. Read the recent recommendations and respond as the lead: pick the strongest idea and turn it into a clear decision, assign a named agent a concrete task, or sharpen a vague point into a real action. Be decisive and specific. 1-2 sentences under 34 words. No name prefix, no quotes.";
+      var ctx="Recent team chat:\n"+(roomHistory.slice(-7).join("\n")||"(open the meeting)")+"\n\nYour next message as KHAIOS:";
+      var reply=await callAPI([{role:"system",content:sys},{role:"user",content:ctx}],"fast");
+      if(window._rateLimited){_botBusy=false;return;}
+      reply=(reply||"").trim().replace(/^["']|["']$/g,"");
+      if(reply){postBotMsg({ic:"\uD83E\uDDE0",name:"KHAIOS"},reply);var ms=n.querySelectorAll(".cr-msg");if(ms.length)ms[ms.length-1].classList.add("cr-khaios");roomHistory.push("KHAIOS: "+reply);if(roomHistory.length>20)roomHistory.shift();}
+    }catch(e){}
+    _botBusy=false;
+  };
+
+  window.roomTick=async function(){
+    if(window._botsPaused)return;
+    if(window._rateUntil&&Date.now()<window._rateUntil)return;
+    var ap=document.getElementById("agentPanel");
+    if(!ap||!ap.classList.contains("open"))return;
+    window._roomTurn=(window._roomTurn||0)+1;
+    if(window._roomTurn%3===0){await khaiosChime();}else{await botChatter();}
+  };
+})();
+</script>
 </body>
 </html>
