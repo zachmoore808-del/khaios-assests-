@@ -1492,7 +1492,7 @@ window.localAI={
     this.loading=true;
     var btn=document.getElementById("offlineBtn"); if(btn)btn.textContent="\uD83E\uDDE0 LOADING...";
     try{
-      this.engine=await webllm.CreateMLCEngine("Llama-3.2-1B-Instruct-q4f16_1-MLC",{initProgressCallback:function(p){var pct=Math.round((p.progress||0)*100);if(window.khNotify)khNotify("\u2B07\uFE0F Loading offline AI \u2014 "+pct+"% (first time only)",0);if(btn)btn.textContent="\uD83E\uDDE0 "+pct+"%";}});
+      this.engine=await webllm.CreateMLCEngine("Llama-3.2-1B-Instruct-q4f32_1-MLC",{initProgressCallback:function(p){var pct=Math.round((p.progress||0)*100);if(window.khNotify)khNotify("\u2B07\uFE0F Loading offline AI \u2014 "+pct+"% (first time only)",0);if(btn)btn.textContent="\uD83E\uDDE0 "+pct+"%";}});
       this.ready=true; this.loading=false;
       if(btn){btn.textContent="\uD83E\uDDE0 OFFLINE AI READY"; btn.classList.add("ready");}
       if(window.khNotify)khNotify("\u2705 Offline AI ready \u2014 it will cover rate limits automatically",4500);
