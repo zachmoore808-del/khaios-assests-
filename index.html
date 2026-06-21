@@ -1533,5 +1533,66 @@ window.localAI={
   };
 })();
 </script>
+<style>
+#offlineBtn{display:none!important;}
+#brainMode{position:fixed;left:14px;bottom:78px;z-index:3500;font-family:'Orbitron',sans-serif;font-size:10px;letter-spacing:1px;padding:7px 12px;border-radius:8px;background:rgba(8,18,40,.92);border:1px solid rgba(63,169,255,.5);color:#9fd6ff;box-shadow:0 0 12px rgba(0,120,255,.3);}
+#brainMode.local{border-color:rgba(127,90,240,.6);color:#cdbcff;box-shadow:0 0 12px rgba(127,90,240,.35);}
+.cr-src{font-size:8px;letter-spacing:.5px;opacity:.8;margin-left:6px;padding:1px 5px;border-radius:6px;}
+.cr-src.online{color:#7fe3ff;border:1px solid rgba(63,169,255,.5);}
+.cr-src.local{color:#c9b3ff;border:1px solid rgba(127,90,240,.6);}
+</style>
+<div id="brainMode">&#128752;&#65039; CLOUD AI</div>
+<script>
+(function(){
+  window._lastSource="online";
+  window.setBrainMode=function(mode){var el=document.getElementById("brainMode");if(!el)return;if(mode==="local"){el.classList.add("local");el.textContent="\uD83E\uDDE0 OFFLINE AI";}else{el.classList.remove("local");el.textContent="\uD83D\uDEF0\uFE0F CLOUD AI";}};
+
+  window.callAPI=async function(messages,modelHint){
+    try{
+      var _c=new AbortController();var _t=setTimeout(function(){_c.abort();},80000);
+      var res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:messages,model:modelHint||""}),signal:_c.signal}).finally(function(){clearTimeout(_t);});
+      var data=await res.json();
+      var pb=document.getElementById('providerBadge');
+      if(data.provider==="rate_limited"){
+        if(window.localAI&&window.localAI.ready){
+          var loc=await window.localAI.generate(messages,modelHint==="fast"?200:420);
+          if(loc){window._rateLimited=false;window._lastSource="local";if(pb)pb.textContent="LOCAL";setBrainMode("local");return loc;}
+        }
+        window._rateLimited=true;window._lastSource="wait";if(window.rateHold)window.rateHold(data.retry_after||30);
+        if(pb)pb.textContent="RATE-LIMIT";return data.content;
+      }
+      window._rateLimited=false;window._lastSource="online";if(pb)pb.textContent=(data.provider||"AI").toUpperCase();setBrainMode("online");
+      return data.content;
+    }catch(e){
+      if(window.localAI&&window.localAI.ready){
+        var loc2=await window.localAI.generate(messages,modelHint==="fast"?200:420);
+        if(loc2){window._rateLimited=false;window._lastSource="local";var pb2=document.getElementById("providerBadge");if(pb2)pb2.textContent="LOCAL";setBrainMode("local");return loc2;}
+      }
+      throw e;
+    }
+  };
+
+  var _origPost=window.postBotMsg;
+  window.postBotMsg=function(b,text){
+    _origPost(b,text);
+    try{
+      var n=document.getElementById("chatNews");if(!n)return;
+      var msgs=n.querySelectorAll(".cr-msg");var last=msgs[msgs.length-1];if(!last)return;
+      var meta=last.querySelector(".cr-meta");if(!meta)return;
+      var src=window._lastSource==="local"?"local":"online";
+      var tag=document.createElement("span");tag.className="cr-src "+src;tag.textContent=(src==="local"?"\uD83E\uDDE0 offline":"\uD83D\uDEF0\uFE0F online");
+      meta.appendChild(tag);
+    }catch(e){}
+  };
+
+  (function watchBoot(){
+    var d=document.getElementById("desktop");
+    if(d&&getComputedStyle(d).display!=="none"){
+      if(window.localAI&&window.localAI.init){window.localAI.init();}
+      else{setTimeout(watchBoot,2000);}
+    }else{setTimeout(watchBoot,1500);}
+  })();
+})();
+</script>
 </body>
 </html>
