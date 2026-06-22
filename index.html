@@ -2082,5 +2082,70 @@ window.localAI={
 .fw-btn.close{color:#ff97a6!important;border-color:rgba(255,90,120,0.55)!important;background:rgba(64,12,22,0.6)!important;}
 .fw-btn.close:hover{background:rgba(210,35,55,0.95)!important;color:#fff!important;border-color:#ff6a86!important;}
 </style>
+<style>
+#fw-browser .fw-body{background:#02030a!important;}
+#fw-browser .brz-bar{display:flex!important;gap:8px!important;padding:9px 12px!important;background:linear-gradient(180deg,rgba(6,16,40,0.98),rgba(2,8,22,0.98))!important;border-bottom:1px solid rgba(63,169,255,0.3)!important;align-items:center!important;flex-shrink:0!important;}
+#browserUrl{flex:1!important;background:rgba(0,8,28,0.9)!important;border:1px solid rgba(63,169,255,0.4)!important;color:#cce4ff!important;font-family:'Share Tech Mono',monospace!important;font-size:13px!important;padding:9px 14px!important;border-radius:10px!important;outline:none!important;}
+.brz-go{background:linear-gradient(135deg,#3fa9ff,#7f5af0)!important;border:0!important;color:#04101f!important;font-family:'Orbitron',sans-serif!important;font-weight:700!important;font-size:12px!important;padding:9px 18px!important;border-radius:10px!important;cursor:pointer!important;letter-spacing:1px!important;}
+</style>
+<script>
+(function(){
+  function go(u){u=(u||'').trim();if(!u)return;if(!/^https?:\/\//i.test(u)){if(u.indexOf('.')>-1&&u.indexOf(' ')<0){u='https://'+u;}else{u='https://duckduckgo.com/?q='+encodeURIComponent(u);}}window.open(u,'_blank','noopener');}
+  window.loadBrowser=function(){var i=document.getElementById('browserUrl');if(i)go(i.value);};
+
+  var HOME=`<!doctype html><html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+*{margin:0;box-sizing:border-box;}
+html,body{height:100%;overflow:hidden;}
+body{background:radial-gradient(ellipse at 50% 28%,#0b224f 0%,#040a1c 55%,#02030a 100%);font-family:'Share Tech Mono',monospace;color:#cfe6ff;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;}
+#bgstars{position:absolute;inset:0;z-index:0;}
+.wrap{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;width:100%;padding:20px;}
+.logo{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(32px,7vw,64px);letter-spacing:10px;color:#7fd6ff;text-shadow:0 0 26px rgba(63,169,255,0.8),0 0 60px rgba(63,169,255,0.4);}
+.sub{font-size:11px;letter-spacing:5px;color:#5f8dc4;margin:6px 0 30px;}
+form{display:flex;gap:10px;width:min(580px,90vw);margin-bottom:30px;}
+input{flex:1;background:rgba(4,12,34,0.85);border:1px solid rgba(63,169,255,0.45);border-radius:30px;color:#eaf4ff;font-size:15px;padding:14px 24px;outline:none;font-family:'Share Tech Mono',monospace;}
+input:focus{border-color:rgba(120,200,255,0.9);box-shadow:0 0 18px rgba(63,169,255,0.35);}
+.sbtn{background:linear-gradient(135deg,#3fa9ff,#7f5af0);border:0;color:#04101f;font-family:'Orbitron',sans-serif;font-weight:700;border-radius:30px;padding:0 28px;cursor:pointer;font-size:14px;letter-spacing:1px;}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:14px;width:min(660px,92vw);}
+a.tile{display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 6px;background:rgba(10,26,60,0.5);border:1px solid rgba(63,169,255,0.25);border-radius:14px;color:#bcd9ff;text-decoration:none;font-size:11px;letter-spacing:1px;transition:all .15s;}
+a.tile:hover{border-color:rgba(63,169,255,0.85);background:rgba(16,40,88,0.75);transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,90,220,0.3);}
+.tile .ic{font-size:26px;}
+.note{margin-top:26px;font-size:10px;letter-spacing:2px;color:#3f618c;}
+</style></head><body>
+<canvas id="bgstars"></canvas>
+<div class="wrap">
+<div class="logo">KHAIOS</div>
+<div class="sub">A.I.O.S. NET GATEWAY</div>
+<form action="https://duckduckgo.com/" target="_blank" method="get"><input name="q" placeholder="Search the net or type a URL..." autocomplete="off"><button class="sbtn">SEARCH</button></form>
+<div class="tiles">
+<a class="tile" target="_blank" href="https://www.nasa.gov"><span class="ic">&#128640;</span>NASA</a>
+<a class="tile" target="_blank" href="https://apod.nasa.gov/apod/"><span class="ic">&#127756;</span>COSMOS</a>
+<a class="tile" target="_blank" href="https://en.wikipedia.org"><span class="ic">&#128218;</span>WIKI</a>
+<a class="tile" target="_blank" href="https://www.youtube.com"><span class="ic">&#9654;</span>YOUTUBE</a>
+<a class="tile" target="_blank" href="https://github.com"><span class="ic">&#128187;</span>GITHUB</a>
+<a class="tile" target="_blank" href="https://news.ycombinator.com"><span class="ic">&#128240;</span>NEWS</a>
+<a class="tile" target="_blank" href="https://www.reddit.com"><span class="ic">&#128125;</span>REDDIT</a>
+<a class="tile" target="_blank" href="https://www.google.com"><span class="ic">&#128269;</span>GOOGLE</a>
+</div>
+<div class="note">DEEP-LINK SECURED &middot; SITES OPEN IN A NEW TAB</div>
+</div>
+<script>
+var cv=document.getElementById('bgstars'),x=cv.getContext('2d');function rs(){cv.width=innerWidth;cv.height=innerHeight;}rs();window.onresize=rs;var st=[];for(var i=0;i<140;i++)st.push({x:Math.random()*cv.width,y:Math.random()*cv.height,s:Math.random()*1.6+0.2,v:Math.random()*0.35+0.05});(function loop(){x.clearRect(0,0,cv.width,cv.height);st.forEach(function(p){p.y+=p.v;if(p.y>cv.height){p.y=0;p.x=Math.random()*cv.width;}x.globalAlpha=0.25+Math.random()*0.55;x.fillStyle='#9fd6ff';x.fillRect(p.x,p.y,p.s,p.s);});x.globalAlpha=1;requestAnimationFrame(loop);})();
+<\/script>
+`;
+
+  function dress(){
+    var fr=document.getElementById('browserFrame');if(!fr)return;
+    var bar=fr.previousElementSibling;if(bar&&bar.tagName==='DIV')bar.className='brz-bar';
+    var btn=bar?bar.querySelector('button'):null;if(btn)btn.className='brz-go';
+    var inp=document.getElementById('browserUrl');if(inp){inp.value='';inp.placeholder='Search the net or type a URL\u2026';inp.onkeydown=function(e){if(e.key==='Enter'){e.preventDefault();window.loadBrowser();}};}
+    if(!fr._dressed){fr.removeAttribute('src');fr.srcdoc=HOME;fr._dressed=true;}
+  }
+  var _o=window.openApp;
+  window.openApp=function(name){if(_o)_o(name);if(name==='browser')setTimeout(dress,60);};
+  setTimeout(dress,1600);setTimeout(dress,4000);
+})();
+</script>
 </body>
 </html>
