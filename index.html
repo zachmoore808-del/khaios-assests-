@@ -2013,5 +2013,63 @@ window.localAI={
 #fw-emulator.maximized .fw-body{padding:18px;}
 #fw-cloudgaming.maximized .fw-body{align-items:stretch;}
 </style>
+<div class="fwindow" id="fw-invaders" style="left:200px;top:80px;width:520px;height:480px;">
+  <div class="fw-titlebar" onmousedown="dragStart(event,'fw-invaders')">
+    <div class="fw-title-left"><span class="fw-icon">&#128126;</span><span class="fw-name">SPACE INVADERS</span></div>
+    <div class="fw-controls">
+      <button class="fw-btn" onclick="minimizeApp('invaders')">&#9472;</button>
+      <button class="fw-btn" onclick="maximizeApp('fw-invaders')">&#9633;</button>
+      <button class="fw-btn close" onclick="closeApp('invaders')">&#10005;</button>
+    </div>
+  </div>
+  <div class="fw-body" style="padding:0;position:relative;background:radial-gradient(circle at 50% 30%,rgba(10,24,60,0.6),#02030a);">
+    <canvas id="invCanvas" style="width:100%;height:100%;display:block;"></canvas>
+    <div style="position:absolute;bottom:10px;left:50%;transform:translateX(-50%);font-family:'Share Tech Mono',monospace;font-size:10px;color:#4a78aa;letter-spacing:1px;pointer-events:none;">&#9668; &#9658; MOVE &nbsp;&middot;&nbsp; SPACE FIRE &nbsp;&middot;&nbsp; R RESTART</div>
+  </div>
+</div>
+<script>
+(function(){
+  var ctx,W,H,player,bullets,ebullets,enemies,keys={},score,lives,gameOver,raf,lastShot=0,dir=1,stars=[];
+  function cv(){return document.getElementById('invCanvas');}
+  function fit(){var c=cv();if(!c)return;var b=c.parentElement;c.width=b.clientWidth||520;c.height=b.clientHeight||440;W=c.width;H=c.height;stars=[];for(var i=0;i<70;i++)stars.push({x:Math.random()*W,y:Math.random()*H,s:Math.random()*1.5+0.3});}
+  function spawnWave(){enemies=[];dir=1;var cols=8,rows=4,gapx=Math.min(64,(W-80)/cols),startx=(W-(cols-1)*gapx)/2;for(var r=0;r<rows;r++)for(var c=0;c<cols;c++)enemies.push({x:startx+c*gapx,y:64+r*42,w:26,h:18,alive:true});}
+  function reset(){fit();player={x:W/2,y:H-44,w:34,h:14,sp:7};bullets=[];ebullets=[];score=0;lives=3;gameOver=false;spawnWave();}
+  function shoot(){var t=Date.now();if(t-lastShot>280){bullets.push({x:player.x,y:player.y-10});lastShot=t;}}
+  function step(){
+    if(!ctx)return;
+    ctx.fillStyle='#02030a';ctx.fillRect(0,0,W,H);
+    ctx.fillStyle='rgba(150,200,255,0.6)';stars.forEach(function(s){s.y+=0.3;if(s.y>H)s.y=0;ctx.fillRect(s.x,s.y,s.s,s.s);});
+    if(keys['ArrowLeft']||keys['a'])player.x-=player.sp;
+    if(keys['ArrowRight']||keys['d'])player.x+=player.sp;
+    player.x=Math.max(20,Math.min(W-20,player.x));
+    bullets.forEach(function(b){b.y-=9;});bullets=bullets.filter(function(b){return b.y>-10;});
+    var minx=1e9,maxx=-1e9,alive=0;
+    enemies.forEach(function(e){if(e.alive){minx=Math.min(minx,e.x);maxx=Math.max(maxx,e.x);alive++;}});
+    var sp=0.5+(1-alive/32)*2.2,drop=false;
+    if(maxx+18>W-10&&dir>0){dir=-1;drop=true;}else if(minx-18<10&&dir<0){dir=1;drop=true;}
+    enemies.forEach(function(e){if(!e.alive)return;e.x+=dir*sp;if(drop)e.y+=18;});
+    if(Math.random()<0.025&&alive){var sh=enemies.filter(function(e){return e.alive;});var s=sh[Math.floor(Math.random()*sh.length)];ebullets.push({x:s.x,y:s.y+10});}
+    ebullets.forEach(function(b){b.y+=4.5;});ebullets=ebullets.filter(function(b){return b.y<H+10;});
+    bullets.forEach(function(b){enemies.forEach(function(e){if(e.alive&&Math.abs(b.x-e.x)<e.w/2+2&&Math.abs(b.y-e.y)<e.h/2+2){e.alive=false;b.y=-999;score+=10;}});});
+    bullets=bullets.filter(function(b){return b.y>-10;});
+    ebullets.forEach(function(b){if(Math.abs(b.x-player.x)<player.w/2&&Math.abs(b.y-player.y)<player.h/2){b.y=H+999;lives--;if(lives<=0)gameOver=true;}});
+    enemies.forEach(function(e){if(e.alive&&e.y>H-64)gameOver=true;});
+    if(alive===0)spawnWave();
+    ctx.fillStyle='#3fa9ff';ctx.fillRect(player.x-player.w/2,player.y-player.h/2,player.w,player.h);ctx.fillStyle='#7f5af0';ctx.fillRect(player.x-4,player.y-player.h/2-6,8,6);
+    ctx.fillStyle='#67e8f9';bullets.forEach(function(b){ctx.fillRect(b.x-2,b.y-8,4,10);});
+    ctx.fillStyle='#ff5a7a';ebullets.forEach(function(b){ctx.fillRect(b.x-2,b.y,4,10);});
+    enemies.forEach(function(e){if(!e.alive)return;ctx.fillStyle='#9fe0ff';ctx.fillRect(e.x-e.w/2,e.y-e.h/2,e.w,e.h);ctx.fillStyle='#02030a';ctx.fillRect(e.x-6,e.y-2,4,4);ctx.fillRect(e.x+2,e.y-2,4,4);});
+    ctx.fillStyle='#9fd6ff';ctx.font='14px monospace';ctx.textAlign='left';ctx.fillText('SCORE '+score,14,24);ctx.fillText('LIVES '+lives,W-92,24);
+    if(gameOver){ctx.fillStyle='rgba(0,8,24,0.82)';ctx.fillRect(0,0,W,H);ctx.fillStyle='#67e8f9';ctx.textAlign='center';ctx.font='bold 34px Orbitron,monospace';ctx.fillText('GAME OVER',W/2,H/2-8);ctx.font='15px monospace';ctx.fillStyle='#9fd6ff';ctx.fillText('Score '+score+'  \u2014  press R to restart',W/2,H/2+24);ctx.textAlign='left';return;}
+    raf=requestAnimationFrame(step);
+  }
+  window._invStart=function(){var c=cv();if(!c)return;ctx=c.getContext('2d');if(raf)cancelAnimationFrame(raf);reset();step();};
+  document.addEventListener('keydown',function(e){var w=document.getElementById('fw-invaders');if(!w||!w.classList.contains('active')||w.style.display==='none')return;keys[e.key]=true;if(e.key===' '){shoot();e.preventDefault();}if(e.key==='ArrowLeft'||e.key==='ArrowRight')e.preventDefault();if((e.key==='r'||e.key==='R')&&gameOver)window._invStart();});
+  document.addEventListener('keyup',function(e){keys[e.key]=false;});
+  window.addEventListener('resize',function(){var w=document.getElementById('fw-invaders');if(w&&w.classList.contains('active')&&w.style.display!=='none')fit();});
+  var _o=window.openApp;
+  window.openApp=function(name){if(_o)_o(name);if(name==='invaders')setTimeout(window._invStart,80);};
+})();
+</script>
 </body>
 </html>
