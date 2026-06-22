@@ -2003,5 +2003,15 @@ window.localAI={
   window.updateTaskbar=tbar;
 })();
 </script>
+<style>
+/* ===== Fullscreen app polish — applies only when a window is maximized ===== */
+#fw-calculator.maximized .fw-body{justify-content:center;align-items:center;}
+#fw-calculator.maximized .calc-display{flex:none;width:min(440px,88vw);box-sizing:border-box;min-height:84px;font-size:40px;border-radius:12px 12px 0 0;}
+#fw-calculator.maximized .calc-grid{flex:none;width:min(440px,88vw);height:min(560px,64vh);border-radius:0 0 12px 12px;}
+#fw-calculator.maximized .calc-btn{font-size:26px;}
+#fw-notes.maximized .notes-area{flex:1;font-size:16px;padding:24px;line-height:1.7;}
+#fw-emulator.maximized .fw-body{padding:18px;}
+#fw-cloudgaming.maximized .fw-body{align-items:stretch;}
+</style>
 </body>
 </html>
