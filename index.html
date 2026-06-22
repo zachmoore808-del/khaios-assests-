@@ -2071,5 +2071,16 @@ window.localAI={
   window.openApp=function(name){if(_o)_o(name);if(name==='invaders')setTimeout(window._invStart,80);};
 })();
 </script>
+<style>
+/* Maximized apps ride above the header so it never covers the titlebar/buttons */
+.fwindow.maximized{z-index:560!important;}
+/* Bigger, clearer window-control buttons */
+.fw-titlebar{min-height:46px!important;align-items:center!important;}
+.fw-controls{gap:7px!important;align-items:center!important;padding-right:8px!important;height:auto!important;}
+.fw-btn{width:42px!important;height:34px!important;font-size:18px!important;line-height:1!important;color:#dbeeff!important;border:1px solid rgba(63,169,255,0.45)!important;border-radius:9px!important;background:rgba(12,30,68,0.75)!important;font-weight:700!important;display:flex!important;align-items:center!important;justify-content:center!important;}
+.fw-btn:hover{background:rgba(24,66,150,0.95)!important;color:#fff!important;border-color:rgba(130,205,255,0.95)!important;}
+.fw-btn.close{color:#ff97a6!important;border-color:rgba(255,90,120,0.55)!important;background:rgba(64,12,22,0.6)!important;}
+.fw-btn.close:hover{background:rgba(210,35,55,0.95)!important;color:#fff!important;border-color:#ff6a86!important;}
+</style>
 </body>
 </html>
