@@ -1886,5 +1886,45 @@ window.localAI={
   },600);
 })();
 </script>
+<style>
+#avatarAi{display:none!important;}
+</style>
+<script>
+(function(){
+  window.bootDone=true;
+
+  function revealBoot(){
+    if(window._aiRevealed)return; window._aiRevealed=true;
+    var el=document.getElementById('boot'); if(el){el.style.transition='opacity 1.5s';el.style.opacity='0';}
+    setTimeout(function(){
+      if(el)el.style.display='none';
+      var bv=document.getElementById('bgVideo'); if(bv)bv.style.opacity='0';
+      var mc=document.getElementById('matrixCanvas'); if(mc)mc.style.opacity='0.5';
+      var me=document.getElementById('matrixEnter'); if(me){me.style.display='flex';me.style.opacity='1';}
+      if(typeof speakBoot==='function'){try{speakBoot('Welcome back, Commander.');}catch(e){}}
+    },1500);
+  }
+
+  function aiState(){
+    var b=document.getElementById("offlineBtn"); var t=b?(b.textContent||""):"";
+    var m=t.match(/(\d+)%/);
+    if(/READY/i.test(t))return "ready";
+    if(/LOADING/i.test(t)||m)return "loading";
+    return "idle";
+  }
+
+  var start=Date.now(), sawLoading=false, SAFETY=300000;
+  (function waitAi(){
+    var s=aiState(); if(s==="loading")sawLoading=true;
+    var elapsed=Date.now()-start; var noGpu=!navigator.gpu;
+    if(s==="ready"){ setTimeout(revealBoot,500); return; }
+    if(noGpu && elapsed>2500){ revealBoot(); return; }
+    if(sawLoading && s==="idle"){ revealBoot(); return; }
+    if(!sawLoading && elapsed>30000){ revealBoot(); return; }
+    if(elapsed>SAFETY){ revealBoot(); return; }
+    setTimeout(waitAi,500);
+  })();
+})();
+</script>
 </body>
 </html>
