@@ -823,7 +823,7 @@ function completeBoot(){
   setTimeout(function(){document.getElementById('bootSub').style.opacity=1;},800);
   setTimeout(function(){
     document.getElementById('bootBar').style.opacity=1;
-    setTimeout(function(){document.getElementById('bootBarFill').style.width='100%';},100);
+    setTimeout(function(){void 0;},100);
   },100);
   setTimeout(completeBoot,5000);
 })();
@@ -1923,6 +1923,31 @@ window.localAI={
     if(!sawLoading && elapsed>30000){ revealBoot(); return; }
     if(elapsed>SAFETY){ revealBoot(); return; }
     setTimeout(waitAi,500);
+  })();
+})();
+</script>
+<style>
+#bootBarFill{transition:width 0.3s linear!important;}
+</style>
+<script>
+(function(){
+  var t0=Date.now();
+  function aiPct(){
+    var b=document.getElementById("offlineBtn"); var t=b?(b.textContent||""):"";
+    if(/READY/i.test(t))return 100;
+    var m=t.match(/(\d+)%/); if(m)return parseInt(m[1],10);
+    return -1;
+  }
+  (function tick(){
+    var fill=document.getElementById("bootBarFill");
+    var boot=document.getElementById("boot");
+    var bootUp=boot&&getComputedStyle(boot).display!=="none";
+    if(fill&&bootUp){
+      var p=aiPct();
+      var w=p>=0?p:Math.min(8,(Date.now()-t0)/1000*1.6);
+      fill.style.width=w+"%";
+    }
+    if(bootUp)setTimeout(tick,180);
   })();
 })();
 </script>
