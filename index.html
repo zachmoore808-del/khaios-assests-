@@ -1951,5 +1951,57 @@ window.localAI={
   })();
 })();
 </script>
+<script>
+(function(){
+  window.minimized=window.minimized||{};
+  window.appNames=window.appNames||{};
+  var L={conference:'\uD83E\uDE91 CONFERENCE',cloudgaming:'\uD83C\uDFAE CLOUD GAMING',chat:'\uD83D\uDCAC AI CORE',emulator:'\uD83D\uDD79 EMULATOR',calculator:'\uD83D\uDD22 CALC',notes:'\uD83D\uDCCB NOTES',browser:'\uD83C\uDF10 BROWSER',weather:'\u26C5 WEATHER',maps:'\uD83D\uDDFA MAPS'};
+  for(var k in L){ if(!window.appNames[k])window.appNames[k]=L[k]; }
+
+  function el(name){ return document.getElementById('fw-'+name)||document.getElementById('window-'+name); }
+
+  window.getTopZ=function(){ var z=100; document.querySelectorAll('.fwindow,.app-window').forEach(function(w){var v=parseInt(w.style.zIndex||0);if(v>z)z=v;}); return z+1; };
+
+  window.openApp=function(name){
+    var fw=el(name); if(!fw)return;
+    fw.classList.add('active'); fw.style.display='flex'; fw.classList.add('maximized'); fw.style.zIndex=window.getTopZ();
+    fw.style.animation='none'; void fw.offsetWidth; fw.style.animation='appOpen .22s ease';
+    window.minimized[name]=false; tbar(name,true);
+  };
+  window.closeApp=function(name){
+    var fw=el(name); if(!fw)return;
+    fw.classList.remove('active'); fw.style.display='none'; delete window.minimized[name];
+    var b=document.getElementById('tb-'+name); if(b)b.remove();
+  };
+  window.minimizeApp=function(name){
+    var fw=el(name); if(!fw)return;
+    fw.style.display='none'; window.minimized[name]=true; tbar(name,true);
+  };
+  window.maximizeApp=function(id){
+    var fw=document.getElementById(id)||el(id); if(!fw)return; fw.classList.toggle('maximized');
+  };
+  window.toggleApp=function(name){
+    var fw=el(name); if(!fw)return;
+    var hidden=fw.style.display==='none'||getComputedStyle(fw).display==='none';
+    if(window.minimized[name]||hidden){ fw.style.display='flex'; fw.classList.add('active'); window.minimized[name]=false; fw.style.zIndex=window.getTopZ(); tbar(name,true); }
+    else { window.minimizeApp(name); }
+  };
+
+  function tbar(name,show){
+    try{
+      var ex=document.getElementById('tb-'+name);
+      var label=window.appNames[name]||('\uD83D\uDDD4 '+name.toUpperCase());
+      var host=document.getElementById('tbApps'); if(!host)return;
+      if(show&&!ex){
+        var btn=document.createElement('div'); btn.className='tb-app open'; btn.id='tb-'+name;
+        var p=label.split(' '); btn.innerHTML='<span class="tb-app-icon">'+p[0]+'</span>'+p.slice(1).join(' ');
+        btn.onclick=function(){window.toggleApp(name);};
+        host.appendChild(btn);
+      } else if(ex){ ex.classList.toggle('open', !window.minimized[name]); }
+    }catch(e){}
+  }
+  window.updateTaskbar=tbar;
+})();
+</script>
 </body>
 </html>
