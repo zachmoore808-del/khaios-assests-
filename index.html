@@ -2323,5 +2323,50 @@ var cv=document.getElementById('bgstars'),x=cv.getContext('2d');function rs(){cv
   setTimeout(function(){hook();},2200);
 })();
 </script>
+<script>
+/* LEFT "Agent Network" feed -> offline brain only.
+   Never calls the cloud, so Groq quota is reserved for the right chat + Conference Room.
+   On devices where the offline brain can't load, the feed uses built-in canned chatter (still free). */
+(function(){
+  function roster(){try{return getConfBots().map(function(k){return (BOT_ROSTER[k]||{}).name;}).filter(Boolean).join(", ");}catch(e){return "";}}
+
+  window.botChatter=async function(){
+    if(window._botsPaused)return;
+    if(!window._booted)return;
+    if(_botBusy||window._userBusy||(window._lastUser&&Date.now()-window._lastUser<15000))return;
+    var n=document.getElementById("chatNews");if(!n)return;_botBusy=true;
+    try{
+      var key=nextBotKey();var b=BOT_ROSTER[key]||{ic:"\uD83E\uDD16",name:key};
+      if(window.localAI&&window.localAI.ready){
+        var sys="You are "+b.name+", a specialist AI agent advising the Commander in a live team session with other agents ("+roster()+") and your boss KHAIOS. Reply with ONE short, punchy in-character line under 22 words that builds on the chat. No name prefix, no quotes.";
+        var ctx="Recent team chat:\n"+(roomHistory.slice(-7).join("\n")||"(open the discussion)")+"\n\nYour next message as "+b.name+":";
+        var reply=await window.localAI.generate([{role:"system",content:sys},{role:"user",content:ctx}],200);
+        reply=(reply||"").trim().replace(/^["']|["']$/g,"");
+        if(reply){window._lastSource="local";postBotMsg(b,reply);roomHistory.push(b.name+": "+reply);if(roomHistory.length>20)roomHistory.shift();}
+        else{cannedMsg();}
+      }else{
+        cannedMsg();
+      }
+    }catch(e){cannedMsg();}
+    _botBusy=false;
+  };
+
+  window.khaiosChime=async function(){
+    if(!window._booted)return;
+    if(_botBusy||window._userBusy||(window._lastUser&&Date.now()-window._lastUser<15000))return;
+    var n=document.getElementById("chatNews");if(!n)return;_botBusy=true;
+    try{
+      if(window.localAI&&window.localAI.ready){
+        var sys="You are KHAIOS, the boss AI directing a team of agents ("+roster()+"). Reply with ONE short, decisive in-character line under 24 words that steers the team. No name prefix, no quotes.";
+        var ctx="Recent team chat:\n"+(roomHistory.slice(-7).join("\n")||"(open the meeting)")+"\n\nYour next message as KHAIOS:";
+        var reply=await window.localAI.generate([{role:"system",content:sys},{role:"user",content:ctx}],200);
+        reply=(reply||"").trim().replace(/^["']|["']$/g,"");
+        if(reply){window._lastSource="local";postBotMsg({ic:"\uD83E\uDDE0",name:"KHAIOS"},reply);roomHistory.push("KHAIOS: "+reply);if(roomHistory.length>20)roomHistory.shift();var ms=n.querySelectorAll(".cr-msg");if(ms.length)ms[ms.length-1].classList.add("cr-khaios");}
+      }
+    }catch(e){}
+    _botBusy=false;
+  };
+})();
+</script>
 </body>
 </html>
