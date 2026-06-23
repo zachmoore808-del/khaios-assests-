@@ -2398,5 +2398,152 @@ var cv=document.getElementById('bgstars'),x=cv.getContext('2d');function rs(){cv
   document.addEventListener('DOMContentLoaded',slim);
 })();
 </script>
+<style>
+#fw-documents .fw-body{padding:0!important;}
+.doc-app{display:flex;height:100%;width:100%;background:#070d1c;color:#dceafb;font-family:'Share Tech Mono',monospace;}
+.doc-side{width:210px;flex-shrink:0;border-right:1px solid rgba(63,169,255,0.25);display:flex;flex-direction:column;padding:10px;gap:8px;overflow:auto;}
+.doc-new{background:linear-gradient(135deg,#3fa9ff,#7f5af0);border:0;color:#04101f;font-weight:700;padding:10px;border-radius:9px;cursor:pointer;font-family:inherit;}
+.doc-list{display:flex;flex-direction:column;gap:6px;overflow:auto;}
+.doc-item{display:flex;justify-content:space-between;align-items:center;gap:6px;padding:8px 10px;background:rgba(12,30,68,0.6);border:1px solid rgba(63,169,255,0.2);border-radius:8px;cursor:pointer;font-size:12px;}
+.doc-item:hover{border-color:rgba(63,169,255,0.7);}
+.doc-item-t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.doc-del{color:#ff8a9a;flex-shrink:0;opacity:.6;}
+.doc-del:hover{opacity:1;}
+.doc-empty2{font-size:11px;color:#5b7a99;opacity:.8;padding:6px;}
+.doc-main{flex:1;display:flex;flex-direction:column;min-width:0;}
+.doc-controls{display:flex;gap:8px;padding:10px;border-bottom:1px solid rgba(63,169,255,0.2);flex-shrink:0;}
+.doc-type{background:#0a1733;border:1px solid rgba(63,169,255,0.4);color:#cfe6ff;border-radius:8px;padding:8px;font-family:inherit;}
+.doc-prompt{flex:1;background:#0a1733;border:1px solid rgba(63,169,255,0.4);color:#eaf4ff;border-radius:8px;padding:8px 12px;font-family:inherit;outline:none;min-width:0;}
+.doc-gen{background:linear-gradient(135deg,#3fa9ff,#7f5af0);border:0;color:#04101f;font-weight:700;padding:8px 16px;border-radius:8px;cursor:pointer;font-family:inherit;white-space:nowrap;}
+.doc-gen:disabled{opacity:.5;cursor:default;}
+.doc-status{padding:6px 12px;font-size:12px;color:#7fb6ff;min-height:18px;flex-shrink:0;}
+.doc-page{flex:1;overflow:auto;background:#fbfdff;color:#15233a;margin:0 14px 8px;border-radius:10px;padding:34px 44px;font-family:Georgia,'Times New Roman',serif;line-height:1.6;outline:none;}
+.doc-page h1{font-size:26px;color:#10233f;margin:0 0 14px;font-family:'Orbitron',sans-serif;}
+.doc-page h2{font-size:19px;color:#1f4a82;margin:20px 0 8px;font-family:'Orbitron',sans-serif;}
+.doc-page p{margin:0 0 10px;}
+.doc-empty{color:#8aa4b8;font-style:italic;font-family:'Share Tech Mono',monospace;}
+.doc-actions{display:flex;gap:8px;padding:10px 14px;border-top:1px solid rgba(63,169,255,0.2);flex-shrink:0;flex-wrap:wrap;}
+.doc-actions button{background:rgba(12,30,68,0.8);border:1px solid rgba(63,169,255,0.4);color:#cfe6ff;padding:8px 14px;border-radius:8px;cursor:pointer;font-family:inherit;font-size:12px;}
+.doc-actions button:hover{background:rgba(24,66,150,0.9);color:#fff;}
+</style>
+<div class="fwindow" id="fw-documents">
+  <div class="fw-titlebar" onmousedown="dragStart(event,'fw-documents')">
+    <div class="fw-title-left"><span class="fw-icon">&#128196;</span><span class="fw-name">DOCUMENTS</span></div>
+    <div class="fw-controls">
+      <button class="fw-btn" onclick="minimizeApp('documents')">&#9472;</button>
+      <button class="fw-btn" onclick="maximizeApp('fw-documents')">&#9633;</button>
+      <button class="fw-btn close" onclick="closeApp('documents')">&#10005;</button>
+    </div>
+  </div>
+  <div class="fw-body">
+    <div class="doc-app">
+      <div class="doc-side">
+        <button class="doc-new" onclick="docNew()">+ New Document</button>
+        <div class="doc-list" id="docList"></div>
+      </div>
+      <div class="doc-main">
+        <div class="doc-controls">
+          <select class="doc-type" id="docType"><option>Business Plan</option><option>Report</option><option>Proposal</option><option>Essay</option><option>Letter</option><option>Guide</option><option>Outline</option></select>
+          <input class="doc-prompt" id="docPrompt" placeholder="Describe the document you want the agents to write...">
+          <button class="doc-gen" id="docGen" onclick="docGenerate()">&#9889; Generate</button>
+        </div>
+        <div class="doc-status" id="docStatus"></div>
+        <div class="doc-page" id="docPage" contenteditable="true"><div class="doc-empty">Pick a type, describe your document, and hit Generate. KHAIOS will plan the sections and assign them to the worker agents, then assemble the draft here for you to edit and download.</div></div>
+        <div class="doc-actions">
+          <button onclick="docSave()">&#128190; Save</button>
+          <button onclick="docCopy()">&#128203; Copy</button>
+          <button onclick="docDownloadWord()">&#11015; Word</button>
+          <button onclick="docDownloadText()">&#11015; Text</button>
+          <button onclick="docPrint()">&#128424; Print / PDF</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY='khaios_docs';
+  function load(){try{return JSON.parse(localStorage.getItem(KEY)||'[]');}catch(e){return [];}}
+  function store(list){try{localStorage.setItem(KEY,JSON.stringify(list));}catch(e){}}
+  window._docCur=null;
+  function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  function paras(txt){return (txt||'').split(/\n{2,}/).map(function(p){p=p.trim();return p?'<p>'+esc(p).replace(/\n/g,'<br>')+'</p>':'';}).join('');}
+  function setStatus(t){var st=document.getElementById('docStatus');if(st)st.textContent=t||'';}
+  function safe(t){return (t||'document').replace(/[^a-z0-9]+/gi,'_').replace(/^_+|_+$/g,'').slice(0,40)||'document';}
+  function cur(){var pg=document.getElementById('docPage');var html=pg?pg.innerHTML:'';var h1=pg?pg.querySelector('h1'):null;var title=h1?h1.textContent:'KHAIOS Document';return {title:title,html:html,pg:pg};}
+
+  window.docNew=function(){window._docCur=null;var pg=document.getElementById('docPage');if(pg)pg.innerHTML='<div class="doc-empty">Describe a document and hit Generate.</div>';var pr=document.getElementById('docPrompt');if(pr)pr.value='';setStatus('');};
+
+  window.docGenerate=async function(){
+    var promptEl=document.getElementById('docPrompt'),typeEl=document.getElementById('docType'),pg=document.getElementById('docPage'),btn=document.getElementById('docGen');
+    if(!promptEl||!pg)return;
+    var topic=(promptEl.value||'').trim();
+    if(!topic){setStatus('Describe the document first.');return;}
+    if(typeof callAPI!=='function'){setStatus('AI core unavailable.');return;}
+    var dtype=typeEl?typeEl.value:'Document';
+    btn.disabled=true;window._userBusy=true;
+    try{
+      setStatus('KHAIOS is planning the document...');
+      var planSys='You are KHAIOS, a document architect. Return ONLY valid JSON, no prose: {"title":"...","sections":["Heading A","Heading B"]} for a '+dtype+'. Give a strong title and 4 to 7 section headings in logical order. JSON only.';
+      var planRaw=await callAPI([{role:'system',content:planSys},{role:'user',content:'Topic / request: '+topic}]);
+      var plan=null;try{var jm=(planRaw||'').match(/\{[\s\S]*\}/);plan=JSON.parse(jm?jm[0]:planRaw);}catch(e){}
+      if(!plan||!plan.sections||!plan.sections.length){
+        setStatus('Writing document...');
+        var oneSys='You are KHAIOS, an expert writer. Write a complete, well-structured '+dtype+'. First line is the title, then sections with short headings and concise paragraphs. Plain text with line breaks, no markdown symbols.';
+        var one=await callAPI([{role:'system',content:oneSys},{role:'user',content:topic}]);
+        var lines=(one||'').trim().split(/\n/);var t0=(lines.shift()||dtype).replace(/^#+\s*/,'');
+        pg.innerHTML='<h1>'+esc(t0)+'</h1>'+paras(lines.join('\n'));
+        setStatus('Draft ready - edit it, then Save or Download.');window._docCur=null;btn.disabled=false;window._userBusy=false;return;
+      }
+      var title=(plan.title||dtype).replace(/^#+\s*/,'');
+      var html='<h1>'+esc(title)+'</h1>';
+      pg.innerHTML=html+'<p><em>Drafting...</em></p>';
+      for(var i=0;i<plan.sections.length;i++){
+        var heading=String(plan.sections[i]||'').replace(/^#+\s*/,'');
+        setStatus('Worker agents writing section '+(i+1)+' of '+plan.sections.length+': '+heading);
+        var wSys='You are a specialist worker agent on KHAIOS\u2019s team. Write the "'+heading+'" section of a '+dtype+' titled "'+title+'". Topic: '+topic+'. Write 2 to 4 clear, substantive paragraphs of plain prose. Do NOT repeat the heading. No markdown, no preamble.';
+        var body='';
+        try{body=await callAPI([{role:'system',content:wSys},{role:'user',content:'Write the "'+heading+'" section now.'}],'fast');}catch(e){}
+        if(window._rateLimited){setStatus('Rate limit hit - pausing. Save what is here and try again shortly.');break;}
+        body=(body||'').trim();
+        if(!body){await new Promise(function(r){setTimeout(r,500);});try{body=((await callAPI([{role:'system',content:wSys},{role:'user',content:'Write the "'+heading+'" section now.'}],'fast'))||'').trim();}catch(e){}}
+        html+='<h2>'+esc(heading)+'</h2>'+(body?paras(body):'<p><em>(section skipped)</em></p>');
+        pg.innerHTML=html;
+        pg.scrollTop=pg.scrollHeight;
+      }
+      setStatus('Draft ready - edit it, then Save or Download.');window._docCur=null;
+    }catch(e){setStatus('Something went wrong generating the document.');}
+    btn.disabled=false;window._userBusy=false;
+  };
+
+  window.docSave=function(){
+    var c=cur();if(!c.pg)return;var list=load();
+    if(window._docCur){for(var i=0;i<list.length;i++){if(list[i].id===window._docCur){list[i].title=c.title;list[i].html=c.html;list[i].date=Date.now();}}}
+    else{var id='d'+Date.now();list.unshift({id:id,title:c.title,html:c.html,date:Date.now()});window._docCur=id;}
+    store(list);renderList();setStatus('Saved.');
+  };
+  window.docOpen=function(id){var list=load();for(var i=0;i<list.length;i++){if(list[i].id===id){var pg=document.getElementById('docPage');if(pg)pg.innerHTML=list[i].html;window._docCur=id;setStatus('Opened: '+list[i].title);}}};
+  window.docDelete=function(id,ev){if(ev)ev.stopPropagation();store(load().filter(function(d){return d.id!==id;}));renderList();if(window._docCur===id)docNew();};
+  function renderList(){var el=document.getElementById('docList');if(!el)return;var list=load();if(!list.length){el.innerHTML='<div class="doc-empty2">No saved documents yet.</div>';return;}var h='';for(var i=0;i<list.length;i++){var d=list[i];h+='<div class="doc-item" onclick="docOpen(\''+d.id+'\')"><span class="doc-item-t">'+esc(d.title)+'</span><span class="doc-del" onclick="docDelete(\''+d.id+'\',event)">&#10005;</span></div>';}el.innerHTML=h;}
+
+  window.docCopy=function(){var pg=document.getElementById('docPage');if(!pg)return;var txt=pg.innerText||pg.textContent||'';if(navigator.clipboard){navigator.clipboard.writeText(txt).then(function(){setStatus('Copied to clipboard.');},function(){setStatus('Copy failed.');});}else{setStatus('Copy not supported here.');}};
+  function dl(filename,content,mime){try{var blob=new Blob([content],{type:mime});var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(url);},800);setStatus('Downloaded '+filename);}catch(e){setStatus('Download failed.');}}
+  window.docDownloadWord=function(){var c=cur();var d='<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>'+esc(c.title)+'</title></head><body style="font-family:Calibri,Arial,sans-serif;">'+c.html+'<\/body><\/html>';dl(safe(c.title)+'.doc',d,'application/msword');};
+  window.docDownloadText=function(){var pg=document.getElementById('docPage');var txt=pg?(pg.innerText||pg.textContent||''):'';dl(safe(cur().title)+'.txt',txt,'text/plain');};
+  window.docPrint=function(){var c=cur();var w=window.open('','_blank');if(!w){setStatus('Popup blocked - allow popups to print.');return;}w.document.write('<html><head><title>'+esc(c.title)+'</title><style>body{font-family:Georgia,serif;max-width:720px;margin:40px auto;line-height:1.6;padding:0 20px;color:#15233a;}h1{font-size:26px;}h2{font-size:19px;color:#1f4a82;}</style></head><body>'+c.html+'<scr'+'ipt>window.onload=function(){window.print();}<\/scr'+'ipt>');w.document.close();};
+
+  try{if(typeof APP_CATALOG!=='undefined'){var has=false;for(var i=0;i<APP_CATALOG.length;i++)if(APP_CATALOG[i].id==='documents')has=true;if(!has)APP_CATALOG.push({id:'documents',icon:'&#128196;',name:'Documents'});}}catch(e){}
+  function boot(){
+    try{var grid=document.querySelector('#startMenu .sm-grid');if(grid&&!document.getElementById('smDocTile')){var t=document.createElement('div');t.className='sm-tile';t.id='smDocTile';t.setAttribute('onclick',"openApp('documents');toggleStartMenu()");t.innerHTML='<div class="sm-tile-icon">&#128196;</div><div class="sm-tile-name">DOCS</div>';grid.insertBefore(t,grid.firstChild);}}catch(e){}
+    try{if(typeof renderStore==='function')renderStore();}catch(e){}
+    try{if(typeof renderCarousel==='function')renderCarousel();}catch(e){}
+    renderList();
+  }
+  var _op=window.openApp;
+  window.openApp=function(name){if(_op)_op(name);if(name==='documents')renderList();};
+  if(document.readyState!=='loading')boot();
+  document.addEventListener('DOMContentLoaded',boot);
+})();
+</script>
 </body>
 </html>
