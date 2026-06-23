@@ -2221,5 +2221,33 @@ var cv=document.getElementById('bgstars'),x=cv.getContext('2d');function rs(){cv
   setTimeout(dress,1800);setTimeout(dress,4300);
 })();
 </script>
+<script>
+(function(){
+  function fr(){return document.getElementById('browserFrame');}
+  var BLOCK=/(^|\.)(google\.|youtube\.|youtu\.be|reddit\.|twitter\.|x\.com|facebook\.|instagram\.|bing\.|duckduckgo\.|pinterest\.|linkedin\.|tiktok\.|netflix\.|amazon\.)/i;
+  function isSearch(v){v=(v||'').trim();return !!v && (v.indexOf(' ')>-1 || v.indexOf('.')<0);}
+  function norm(u){u=(u||'').trim();if(!u)return '';if(!/^https?:\/\//i.test(u))u='https://'+u;return u;}
+  function host(u){try{return new URL(u).hostname;}catch(e){return '';}}
+  window._brzLast='';
+  window.loadBrowser=function(){
+    var i=document.getElementById('browserUrl');if(!i)return;
+    var v=(i.value||'').trim();if(!v)return;
+    if(isSearch(v)){window.open('https://www.google.com/search?q='+encodeURIComponent(v),'_blank','noopener');return;}
+    var u=norm(v);window._brzLast=u;
+    if(BLOCK.test(host(u))){window.open(u,'_blank','noopener');return;}
+    var f=fr();if(f){f.removeAttribute('srcdoc');f.src=u;}
+  };
+  window._brzTab=function(){var u=window._brzLast;if(!u){var i=document.getElementById('browserUrl');u=norm(i?i.value:'');}if(u)window.open(u,'_blank','noopener');};
+  function patchHome(){
+    var f=fr();if(!f)return;var d;try{d=f.contentDocument;}catch(e){return;}if(!d)return;
+    var form=d.querySelector('form');if(form){form.setAttribute('action','https://www.google.com/search');form.setAttribute('target','_blank');}
+    var tiles=d.querySelectorAll('a.tile');for(var k=0;k<tiles.length;k++){try{if(BLOCK.test(host(tiles[k].href)))tiles[k].setAttribute('target','_blank');}catch(e){}}
+  }
+  function hook(){var f=fr();if(f){f.removeEventListener('load',patchHome);f.addEventListener('load',patchHome);patchHome();}}
+  var _o=window.openApp;
+  window.openApp=function(name){if(_o)_o(name);if(name==='browser')setTimeout(hook,140);};
+  setTimeout(hook,2100);setTimeout(patchHome,4600);
+})();
+</script>
 </body>
 </html>
