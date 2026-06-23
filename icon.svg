@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0b224f"/><stop offset="0.6" stop-color="#04101f"/><stop offset="1" stop-color="#02030a"/></linearGradient>
+<radialGradient id="glow" cx="0.5" cy="0.42" r="0.5"><stop offset="0" stop-color="#3fa9ff" stop-opacity="0.55"/><stop offset="1" stop-color="#3fa9ff" stop-opacity="0"/></radialGradient>
+</defs>
+<rect width="512" height="512" rx="104" fill="url(#bg)"/>
+<circle cx="256" cy="216" r="150" fill="url(#glow)"/>
+<circle cx="256" cy="216" r="120" fill="none" stroke="#3fa9ff" stroke-width="6" opacity="0.7"/>
+<circle cx="256" cy="216" r="120" fill="none" stroke="#7fd6ff" stroke-width="2" opacity="0.9" stroke-dasharray="6 18"/>
+<text x="256" y="266" font-family="Arial Black, Arial, sans-serif" font-size="155" font-weight="900" fill="#bfe4ff" text-anchor="middle">K</text>
+<text x="256" y="432" font-family="Arial, sans-serif" font-size="56" font-weight="700" letter-spacing="8" fill="#5f8dc4" text-anchor="middle">KHAIOS</text>
+</svg>

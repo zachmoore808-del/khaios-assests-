@@ -1,0 +1,15 @@
+{
+  "name": "KHAIOS A.I.O.S. Multitool",
+  "short_name": "KHAIOS",
+  "description": "An in-browser AI operating system.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#02030a",
+  "theme_color": "#04101f",
+  "orientation": "any",
+  "icons": [
+    {"src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any"},
+    {"src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable"}
+  ]
+}

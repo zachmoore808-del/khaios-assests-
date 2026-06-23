@@ -2696,5 +2696,21 @@ var cv=document.getElementById('bgstars'),x=cv.getContext('2d');function rs(){cv
   window.openApp=function(name){if(_op)_op(name);if(name==='documents')fillSelect();};
 })();
 </script>
+<script>
+/* PWA: register manifest + offline service worker so KHAIOS installs as a desktop app */
+(function(){
+  try{
+    var h=document.head||document.getElementsByTagName('head')[0];
+    if(h&&!document.querySelector('link[rel="manifest"]')){
+      var l=document.createElement('link');l.rel='manifest';l.href='manifest.json';h.appendChild(l);
+      var m=document.createElement('meta');m.name='theme-color';m.content='#04101f';h.appendChild(m);
+      var ai=document.createElement('link');ai.rel='apple-touch-icon';ai.href='icon.svg';h.appendChild(ai);
+    }
+  }catch(e){}
+  if('serviceWorker' in navigator){
+    window.addEventListener('load',function(){navigator.serviceWorker.register('service-worker.js').catch(function(){});});
+  }
+})();
+</script>
 </body>
 </html>
