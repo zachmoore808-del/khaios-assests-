@@ -2249,5 +2249,79 @@ var cv=document.getElementById('bgstars'),x=cv.getContext('2d');function rs(){cv
   setTimeout(hook,2100);setTimeout(patchHome,4600);
 })();
 </script>
+<script>
+(function(){
+  var CX='8678ee40e48284e86';
+  function fr(){return document.getElementById('browserFrame');}
+  var BLOCK=/(^|\.)(google\.|youtube\.|youtu\.be|reddit\.|twitter\.|x\.com|facebook\.|instagram\.|bing\.|duckduckgo\.|pinterest\.|linkedin\.|tiktok\.|netflix\.|amazon\.)/i;
+  function isSearch(v){v=(v||'').trim();return !!v && (v.indexOf(' ')>-1 || v.indexOf('.')<0);}
+  function norm(u){u=(u||'').trim();if(!u)return '';if(!/^https?:\/\//i.test(u))u='https://'+u;return u;}
+  function host(u){try{return new URL(u).hostname;}catch(e){return '';}}
+  window._brzLast='';
+  window.loadBrowser=function(){
+    var i=document.getElementById('browserUrl');if(!i)return;
+    var v=(i.value||'').trim();if(!v)return;
+    if(isSearch(v)){window.open('https://www.google.com/search?q='+encodeURIComponent(v),'_blank','noopener');return;}
+    var u=norm(v);window._brzLast=u;
+    if(BLOCK.test(host(u))){window.open(u,'_blank','noopener');return;}
+    var f=fr();if(f){f.removeAttribute('srcdoc');f.src=u;}
+  };
+
+  window._brzHOME=`<!doctype html><html><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+*{margin:0;box-sizing:border-box;}
+html,body{height:100%;overflow:auto;}
+body{background:radial-gradient(ellipse at 50% 24%,#0b224f 0%,#040a1c 55%,#02030a 100%);font-family:'Share Tech Mono',monospace;color:#cfe6ff;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;position:relative;min-height:100%;padding-top:6vh;}
+#bgstars{position:fixed;inset:0;z-index:0;}
+.wrap{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;width:100%;padding:20px;}
+.logo{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(30px,7vw,60px);letter-spacing:10px;color:#7fd6ff;text-shadow:0 0 26px rgba(63,169,255,0.8),0 0 60px rgba(63,169,255,0.4);}
+.sub{font-size:11px;letter-spacing:5px;color:#5f8dc4;margin:6px 0 26px;}
+.cse-host{width:min(620px,92vw);margin:0 auto 28px;background:rgba(4,12,34,0.55);border:1px solid rgba(63,169,255,0.3);border-radius:16px;padding:12px 16px;}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:14px;width:min(660px,92vw);}
+a.tile{display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 6px;background:rgba(10,26,60,0.5);border:1px solid rgba(63,169,255,0.25);border-radius:14px;color:#bcd9ff;text-decoration:none;font-size:11px;letter-spacing:1px;transition:all .15s;}
+a.tile:hover{border-color:rgba(63,169,255,0.85);background:rgba(16,40,88,0.75);transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,90,220,0.3);}
+.tile .ic{font-size:26px;}
+.note{margin:26px 0 10px;font-size:10px;letter-spacing:2px;color:#3f618c;text-align:center;}
+.gsc-control-cse{background:transparent!important;border:0!important;padding:0!important;font-family:'Share Tech Mono',monospace!important;}
+.gsc-input-box{border-radius:22px!important;}
+table.gsc-search-box td{vertical-align:middle!important;}
+</style></head><body>
+<canvas id="bgstars"></canvas>
+<div class="wrap">
+<div class="logo">KHAIOS</div>
+<div class="sub">A.I.O.S. NET GATEWAY</div>
+<div class="cse-host"><div class="gcse-search"></div></div>
+<div class="tiles">
+<a class="tile" target="_self" href="https://en.wikipedia.org"><span class="ic">&#128218;</span>WIKI</a>
+<a class="tile" target="_self" href="https://apod.nasa.gov/apod/"><span class="ic">&#127756;</span>COSMOS</a>
+<a class="tile" target="_self" href="https://www.nasa.gov"><span class="ic">&#128640;</span>NASA</a>
+<a class="tile" target="_self" href="https://archive.org"><span class="ic">&#128230;</span>ARCHIVE</a>
+<a class="tile" target="_blank" href="https://github.com"><span class="ic">&#128187;</span>GITHUB</a>
+<a class="tile" target="_self" href="https://news.ycombinator.com"><span class="ic">&#128240;</span>NEWS</a>
+<a class="tile" target="_blank" href="https://www.reddit.com"><span class="ic">&#128125;</span>REDDIT</a>
+<a class="tile" target="_blank" href="https://www.google.com"><span class="ic">&#128269;</span>GOOGLE</a>
+</div>
+<div class="note">GOOGLE-POWERED SEARCH &middot; TILES &amp; URLS LOAD IN-WINDOW WHEN ALLOWED</div>
+</div>
+<script async src="https://cse.google.com/cse.js?cx=${CX}"><\/script>
+<script>
+var cv=document.getElementById('bgstars'),x=cv.getContext('2d');function rs(){cv.width=innerWidth;cv.height=innerHeight;}rs();window.onresize=rs;var st=[];for(var i=0;i<140;i++)st.push({x:Math.random()*cv.width,y:Math.random()*cv.height,s:Math.random()*1.6+0.2,v:Math.random()*0.35+0.05});(function loop(){x.clearRect(0,0,cv.width,cv.height);st.forEach(function(p){p.y+=p.v;if(p.y>cv.height){p.y=0;p.x=Math.random()*cv.width;}x.globalAlpha=0.25+Math.random()*0.55;x.fillStyle='#9fd6ff';x.fillRect(p.x,p.y,p.s,p.s);});x.globalAlpha=1;requestAnimationFrame(loop);})();
+<\/script>
+`;
+
+  function patchTiles(){
+    var f=fr();if(!f)return;var d;try{d=f.contentDocument;}catch(e){return;}if(!d)return;
+    var tiles=d.querySelectorAll('a.tile');for(var k=0;k<tiles.length;k++){try{if(BLOCK.test(host(tiles[k].href)))tiles[k].setAttribute('target','_blank');}catch(e){}}
+  }
+  function showHome(){var f=fr();if(f){f.removeAttribute('src');f.srcdoc=window._brzHOME;f._dz=true;}}
+  window._brzHome=function(){showHome();var i=document.getElementById('browserUrl');if(i)i.value='';window._brzLast='';};
+  function hook(){var f=fr();if(f){f.removeEventListener('load',patchTiles);f.addEventListener('load',patchTiles);}}
+  var _o=window.openApp;
+  window.openApp=function(name){if(_o)_o(name);if(name==='browser'){setTimeout(function(){hook();if(!window._brzInit){window._brzInit=true;showHome();}},170);}};
+  setTimeout(function(){hook();},2200);
+})();
+</script>
 </body>
 </html>
