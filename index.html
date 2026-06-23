@@ -2368,5 +2368,35 @@ var cv=document.getElementById('bgstars'),x=cv.getContext('2d');function rs(){cv
   };
 })();
 </script>
+<script>
+/* Slim the app roster down to the keeper set. Trims App Store + carousel (both read APP_CATALOG)
+   and removes the leftover EMULATOR start-menu tile. */
+(function(){
+  try{
+    APP_CATALOG=[
+      {id:'chat',icon:'&#128172;',name:'AI CORE'},
+      {id:'browser',icon:'&#127760;',name:'Browser'},
+      {id:'conference',icon:'&#129681;',name:'Conference Room'},
+      {id:'cloudgaming',icon:'&#127918;',name:'Cloud Gaming'},
+      {id:'invaders',icon:'&#128126;',name:'Invaders'},
+      {id:'calculator',icon:'&#128290;',name:'Calculator'},
+      {id:'notes',icon:'&#128203;',name:'Notes'},
+      {id:'todo',icon:'&#10003;',name:'Todo'},
+      {id:'weather',icon:'&#9925;',name:'Weather'},
+      {id:'maps',icon:'&#128506;',name:'Maps'}
+    ];
+  }catch(e){}
+  function slim(){
+    try{
+      var tiles=document.querySelectorAll('.sm-tile');
+      for(var i=0;i<tiles.length;i++){var oc=tiles[i].getAttribute('onclick')||'';if(/openApp\('emulator'\)/.test(oc)){tiles[i].parentNode.removeChild(tiles[i]);}}
+    }catch(e){}
+    try{if(typeof renderStore==='function')renderStore();}catch(e){}
+    try{if(typeof renderCarousel==='function')renderCarousel();}catch(e){}
+  }
+  slim();
+  document.addEventListener('DOMContentLoaded',slim);
+})();
+</script>
 </body>
 </html>
