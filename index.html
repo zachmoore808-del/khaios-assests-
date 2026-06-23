@@ -2712,5 +2712,58 @@ var cv=document.getElementById('bgstars'),x=cv.getContext('2d');function rs(){cv
   }
 })();
 </script>
+<style>
+#pwaInstallBtn{display:none;align-items:center;gap:7px;background:linear-gradient(135deg,#3fa9ff,#7f5af0);border:0;color:#04101f;font-family:'Orbitron',sans-serif;font-weight:700;font-size:11px;letter-spacing:1px;padding:8px 14px;border-radius:10px;cursor:pointer;white-space:nowrap;}
+#pwaInstallBtn:hover{opacity:.88;}
+#pwaInstallBtn.visible{display:flex;}
+</style>
+<script>
+(function(){
+  try{
+    var hd=document.head||document.getElementsByTagName('head')[0];
+    if(hd){
+      if(!document.querySelector('link[rel="manifest"]')){var lm=document.createElement('link');lm.rel='manifest';lm.href='manifest.json';hd.appendChild(lm);}
+      if(!document.querySelector('meta[name="theme-color"]')){var mc=document.createElement('meta');mc.name='theme-color';mc.content='#04101f';hd.appendChild(mc);}
+      if(!document.querySelector('link[rel="apple-touch-icon"]')){var ai=document.createElement('link');ai.rel='apple-touch-icon';ai.href='icon-192.png';hd.appendChild(ai);}
+    }
+  }catch(e){}
+  if('serviceWorker' in navigator){
+    window.addEventListener('load',function(){navigator.serviceWorker.register('service-worker.js').catch(function(){});});
+  }
+  var _deferredPrompt=null;
+  window.addEventListener('beforeinstallprompt',function(e){
+    e.preventDefault();
+    _deferredPrompt=e;
+    var btn=document.getElementById('pwaInstallBtn');
+    if(btn)btn.classList.add('visible');
+  });
+  window.addEventListener('appinstalled',function(){
+    _deferredPrompt=null;
+    var btn=document.getElementById('pwaInstallBtn');
+    if(btn){btn.classList.remove('visible');btn.style.display='none';}
+    try{if(typeof khNotify==='function')khNotify('KHAIOS installed! Launch it from your Start menu.');}catch(e){}
+  });
+  window.pwaInstall=function(){
+    if(!_deferredPrompt){
+      var b=document.getElementById('pwaInstallBtn');if(b)b.style.display='none';
+      alert('Install prompt not ready yet.\n\nIn Edge: \u22ef menu \u2192 Apps \u2192 Install this site as an app.\nIn Chrome: \u22ee menu \u2192 Cast, save, and share \u2192 Install page as app.');
+      return;
+    }
+    _deferredPrompt.prompt();
+    _deferredPrompt.userChoice.then(function(r){if(r.outcome==='accepted')_deferredPrompt=null;});
+  };
+  function addBtn(){
+    var hdr=document.getElementById('khHeader');
+    if(!hdr||document.getElementById('pwaInstallBtn'))return;
+    var btn=document.createElement('button');
+    btn.id='pwaInstallBtn';btn.onclick=window.pwaInstall;
+    btn.innerHTML='&#11015; Install KHAIOS';
+    var right=hdr.querySelector('.kh-right')||hdr;
+    right.insertBefore(btn,right.firstChild);
+  }
+  if(document.readyState!=='loading')addBtn();
+  document.addEventListener('DOMContentLoaded',addBtn);
+})();
+</script>
 </body>
 </html>
