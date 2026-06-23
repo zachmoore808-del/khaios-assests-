@@ -2545,5 +2545,156 @@ var cv=document.getElementById('bgstars'),x=cv.getContext('2d');function rs(){cv
   document.addEventListener('DOMContentLoaded',boot);
 })();
 </script>
+<script>
+(function(){
+  var CATS=[
+    {cat:'General',items:[
+      {name:'Auto \u2014 KHAIOS plans it',sections:null}
+    ]},
+    {cat:'Business & Strategy',items:[
+      {name:'Business Plan',sections:['Executive Summary','Company Overview','Market Analysis','Products & Services','Marketing & Sales Strategy','Operations Plan','Financial Plan','Conclusion']},
+      {name:'Executive Summary',sections:['Overview','Problem & Opportunity','Solution','Market','Financials','The Ask']},
+      {name:'Strategic Plan',sections:['Vision & Mission','Current Situation','Strategic Goals','Key Initiatives','Implementation','Metrics & Review']},
+      {name:'SWOT Analysis',sections:['Overview','Strengths','Weaknesses','Opportunities','Threats','Strategic Implications']},
+      {name:'Company Profile',sections:['About Us','Mission & Vision','Products & Services','Our History','Leadership Team','Contact']},
+      {name:'Annual Report',sections:['Overview','Year Highlights','Financial Performance','Operations Review','Outlook','Acknowledgements']},
+      {name:'Budget Proposal',sections:['Purpose','Budget Overview','Line-Item Breakdown','Justification','Funding Sources','Summary']}
+    ]},
+    {cat:'Proposals & Sales',items:[
+      {name:'Project Proposal',sections:['Overview','Problem Statement','Objectives','Proposed Approach','Scope & Deliverables','Timeline','Budget','Expected Outcomes']},
+      {name:'Sales Proposal',sections:['Introduction','Understanding Your Needs','Proposed Solution','Pricing','Why Choose Us','Next Steps']},
+      {name:'Grant Proposal',sections:['Summary','Statement of Need','Goals & Objectives','Methods & Approach','Evaluation Plan','Budget Justification']},
+      {name:'Statement of Work',sections:['Project Overview','Scope of Work','Deliverables','Timeline & Milestones','Payment Terms','Acceptance Criteria']},
+      {name:'Request for Proposal',sections:['Introduction','Background','Scope of Work','Submission Requirements','Evaluation Criteria','Timeline']},
+      {name:'Partnership Proposal',sections:['Introduction','The Opportunity','Proposed Partnership','Mutual Benefits','Terms','Next Steps']}
+    ]},
+    {cat:'Marketing & Content',items:[
+      {name:'Marketing Plan',sections:['Executive Summary','Target Market','Positioning','Marketing Channels','Campaign Plan','Budget & Metrics']},
+      {name:'Social Media Strategy',sections:['Goals','Target Audience','Platforms','Content Strategy','Posting Plan','Metrics']},
+      {name:'Blog Post',sections:['Introduction','Background','Main Points','Practical Tips','Conclusion','Call to Action']},
+      {name:'Article',sections:['Headline & Hook','Introduction','Body','Supporting Evidence','Conclusion']},
+      {name:'Newsletter',sections:['Intro','Top Story','Updates','Tips & Resources','Closing & CTA']},
+      {name:'Press Release',sections:['Headline','Summary','Body','About the Company','Contact Information']},
+      {name:'Case Study',sections:['Background','The Challenge','The Solution','Implementation','Results','Conclusion']},
+      {name:'White Paper',sections:['Abstract','Introduction','Problem Statement','Proposed Solution','Evidence & Analysis','Conclusion']},
+      {name:'Product Description',sections:['Overview','Key Features','Benefits','Specifications','Use Cases']}
+    ]},
+    {cat:'Career & Letters',items:[
+      {name:'Cover Letter',sections:['Opening','Why This Role','Relevant Experience & Skills','Closing']},
+      {name:'Resume / CV',sections:['Professional Summary','Work Experience','Education','Skills','Achievements']},
+      {name:'Personal Statement',sections:['Introduction','Background & Motivation','Achievements','Goals','Conclusion']},
+      {name:'Recommendation Letter',sections:['Introduction','Relationship to Candidate','Strengths & Qualities','Specific Examples','Recommendation']},
+      {name:'Resignation Letter',sections:['Statement of Resignation','Last Working Day','Reason','Gratitude','Transition Support']},
+      {name:'Thank You Letter',sections:['Greeting','Expression of Thanks','Specific Details','Closing']},
+      {name:'Business Letter',sections:['Sender & Date','Recipient','Subject','Body','Closing']}
+    ]},
+    {cat:'Academic',items:[
+      {name:'Essay',sections:['Introduction','First Main Point','Second Main Point','Third Main Point','Conclusion']},
+      {name:'Research Paper',sections:['Abstract','Introduction','Literature Review','Methodology','Results','Discussion','Conclusion','References']},
+      {name:'Literature Review',sections:['Introduction','Themes & Trends','Key Studies','Gaps in Research','Conclusion']},
+      {name:'Lab Report',sections:['Objective','Introduction','Materials & Methods','Results','Discussion','Conclusion']},
+      {name:'Book Report',sections:['Summary','Main Characters','Themes','Analysis','Personal Reflection']},
+      {name:'Thesis Proposal',sections:['Introduction','Problem Statement','Literature Review','Research Questions','Methodology','Timeline']}
+    ]},
+    {cat:'Technical & Product',items:[
+      {name:'User Guide / How-To',sections:['Overview','Requirements','Getting Started','Step-by-Step Instructions','Troubleshooting','FAQ']},
+      {name:'Standard Operating Procedure',sections:['Purpose','Scope','Responsibilities','Procedure','Safety & Compliance','References']},
+      {name:'Technical Specification',sections:['Overview','Requirements','Architecture','Components','Interfaces','Constraints']},
+      {name:'Product Requirements Doc',sections:['Overview','Goals','User Stories','Features & Requirements','Success Metrics','Out of Scope']},
+      {name:'Software README',sections:['Introduction','Features','Installation','Usage','Configuration','Contributing','License']},
+      {name:'Release Notes',sections:['Summary','New Features','Improvements','Bug Fixes','Known Issues']},
+      {name:'Test Plan',sections:['Objective','Scope','Test Strategy','Test Cases','Environment','Pass/Fail Criteria']},
+      {name:'Design Document',sections:['Overview','Goals & Non-Goals','Proposed Design','Alternatives Considered','Risks','Rollout Plan']}
+    ]},
+    {cat:'Reports & Operations',items:[
+      {name:'Report',sections:['Introduction','Background','Findings','Analysis','Recommendations','Conclusion']},
+      {name:'Memo',sections:['Purpose','Background','Discussion','Recommendation','Action Items']},
+      {name:'Meeting Agenda',sections:['Meeting Details','Objectives','Agenda Items','Discussion Topics','Action Items','Next Steps']},
+      {name:'Meeting Minutes',sections:['Meeting Details','Attendees','Discussion Summary','Decisions Made','Action Items','Next Meeting']},
+      {name:'Policy Document',sections:['Purpose','Scope','Policy Statement','Procedures','Compliance','Review']}
+    ]},
+    {cat:'Events & Education',items:[
+      {name:'Event Plan',sections:['Overview','Objectives','Venue & Logistics','Schedule','Budget','Promotion','Contingencies']},
+      {name:'Lesson Plan',sections:['Objectives','Materials','Introduction','Main Activities','Assessment','Wrap-Up']},
+      {name:'Course Syllabus',sections:['Course Description','Objectives','Schedule','Materials','Grading','Policies']},
+      {name:'Training Manual',sections:['Introduction','Objectives','Modules','Procedures','Assessment','Resources']},
+      {name:'Speech',sections:['Opening Hook','Introduction','Main Points','Supporting Stories','Call to Action','Closing']}
+    ]},
+    {cat:'Creative',items:[
+      {name:'Short Story',sections:['Setup','Inciting Incident','Rising Action','Climax','Resolution']},
+      {name:'Screenplay Outline',sections:['Logline','Act One','Act Two','Act Three','Characters','Themes']}
+    ]}
+  ];
+  var FLAT={};for(var c=0;c<CATS.length;c++)for(var j=0;j<CATS[c].items.length;j++)FLAT[CATS[c].items[j].name]=CATS[c].items[j];
+  function tplByName(n){return FLAT[n]||null;}
+  window._docTemplates=FLAT;
+
+  function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  function paras(txt){return (txt||'').split(/\n{2,}/).map(function(p){p=p.trim();return p?'<p>'+esc(p).replace(/\n/g,'<br>')+'</p>':'';}).join('');}
+  function setStatus(t){var st=document.getElementById('docStatus');if(st)st.textContent=t||'';}
+
+  function fillSelect(){
+    var sel=document.getElementById('docType');if(!sel)return;
+    if(sel.getAttribute('data-tpl')==='all')return;
+    var ns=sel.cloneNode(false);
+    var h='';
+    for(var ci=0;ci<CATS.length;ci++){var grp=CATS[ci];var inner='';for(var jj=0;jj<grp.items.length;jj++){inner+='<option>'+grp.items[jj].name+'</option>';}h+=(grp.cat==='General')?inner:('<optgroup label="'+grp.cat+'">'+inner+'</optgroup>');}
+    ns.innerHTML=h;
+    ns.setAttribute('data-tpl','all');
+    ns.onchange=function(){var t=tplByName(ns.value);if(t&&t.sections){setStatus('Template: '+t.name+' \u2014 '+t.sections.join(' \u00B7 '));}else{setStatus('KHAIOS will design the outline for you.');}};
+    sel.parentNode.replaceChild(ns,sel);
+  }
+
+  window.docGenerate=async function(){
+    var promptEl=document.getElementById('docPrompt'),typeEl=document.getElementById('docType'),pg=document.getElementById('docPage'),btn=document.getElementById('docGen');
+    if(!promptEl||!pg)return;
+    var topic=(promptEl.value||'').trim();
+    if(!topic){setStatus('Describe the document first.');return;}
+    if(typeof callAPI!=='function'){setStatus('AI core unavailable.');return;}
+    var tplName=typeEl?typeEl.value:'';var tpl=tplByName(tplName);
+    var dtype=(tpl&&tpl.sections)?tpl.name:(tplName||'Document');
+    btn.disabled=true;window._userBusy=true;
+    try{
+      var title, sections;
+      if(tpl&&tpl.sections){
+        sections=tpl.sections.slice();
+        setStatus('KHAIOS is titling your '+tpl.name+'...');
+        var tSys='Return ONLY a short, specific document title (no quotes, no prose) for a '+tpl.name+' about the topic. Max 12 words.';
+        var tRaw='';try{tRaw=await callAPI([{role:'system',content:tSys},{role:'user',content:topic}],'fast');}catch(e){}
+        title=((tRaw||'').trim().split(/\n/)[0]||tpl.name).replace(/^["'#\s]+|["']+$/g,'').slice(0,120)||tpl.name;
+      }else{
+        setStatus('KHAIOS is planning the document...');
+        var planSys='You are KHAIOS, a document architect. Return ONLY valid JSON: {"title":"...","sections":["Heading A","Heading B"]} for a '+dtype+'. Strong title and 4 to 7 logical section headings. JSON only.';
+        var planRaw=await callAPI([{role:'system',content:planSys},{role:'user',content:'Topic / request: '+topic}]);
+        var plan=null;try{var jm=(planRaw||'').match(/\{[\s\S]*\}/);plan=JSON.parse(jm?jm[0]:planRaw);}catch(e){}
+        if(!plan||!plan.sections||!plan.sections.length){setStatus('Could not plan the document - try again.');btn.disabled=false;window._userBusy=false;return;}
+        title=(plan.title||dtype).replace(/^#+\s*/,'');sections=plan.sections;
+      }
+      var html='<h1>'+esc(title)+'</h1>';
+      pg.innerHTML=html+'<p><em>Drafting...</em></p>';
+      for(var i=0;i<sections.length;i++){
+        var heading=String(sections[i]||'').replace(/^#+\s*/,'');
+        setStatus('Worker agents writing section '+(i+1)+' of '+sections.length+': '+heading);
+        var wSys='You are a specialist worker agent on KHAIOS\u2019s team. Write the "'+heading+'" section of a '+dtype+' titled "'+title+'". Topic: '+topic+'. Write 2 to 4 clear, substantive paragraphs of plain prose. Do NOT repeat the heading. No markdown, no preamble.';
+        var body='';
+        try{body=await callAPI([{role:'system',content:wSys},{role:'user',content:'Write the "'+heading+'" section now.'}],'fast');}catch(e){}
+        if(window._rateLimited){setStatus('Rate limit hit - pausing. Save what is here and try again shortly.');break;}
+        body=(body||'').trim();
+        if(!body){await new Promise(function(r){setTimeout(r,500);});try{body=((await callAPI([{role:'system',content:wSys},{role:'user',content:'Write the "'+heading+'" section now.'}],'fast'))||'').trim();}catch(e){}}
+        html+='<h2>'+esc(heading)+'</h2>'+(body?paras(body):'<p><em>(section skipped)</em></p>');
+        pg.innerHTML=html;pg.scrollTop=pg.scrollHeight;
+      }
+      setStatus('Draft ready - edit it, then Save or Download.');window._docCur=null;
+    }catch(e){setStatus('Something went wrong generating the document.');}
+    btn.disabled=false;window._userBusy=false;
+  };
+
+  function boot(){fillSelect();}
+  if(document.readyState!=='loading')boot();
+  document.addEventListener('DOMContentLoaded',boot);
+  var _op=window.openApp;
+  window.openApp=function(name){if(_op)_op(name);if(name==='documents')fillSelect();};
+})();
+</script>
 </body>
 </html>
