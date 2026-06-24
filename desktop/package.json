@@ -1,0 +1,25 @@
+{
+  "name": "khaios-desktop",
+  "version": "1.0.0",
+  "description": "KHAIOS A.I.O.S. Multitool",
+  "author": "Zachary Moore",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --publish always"
+  },
+  "devDependencies": {
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "io.github.zachmoore808del.khaios",
+    "productName": "KHAIOS",
+    "files": ["main.js", "package.json"],
+    "win": { "target": "nsis" },
+    "nsis": { "oneClick": true, "perMachine": false, "allowToChangeInstallationDirectory": false },
+    "publish": [
+      { "provider": "github", "owner": "zachmoore808-del", "repo": "khaios-assests-" }
+    ]
+  }
+}
