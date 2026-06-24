@@ -2765,5 +2765,16 @@ var cv=document.getElementById('bgstars'),x=cv.getContext('2d');function rs(){cv
   document.addEventListener('DOMContentLoaded',addBtn);
 })();
 </script>
+<style>
+#pwaInstallBtn{position:fixed!important;top:10px!important;right:14px!important;left:auto!important;bottom:auto!important;z-index:450!important;margin:0!important;}
+</style>
+<script>
+(function(){
+  function place(){var b=document.getElementById('pwaInstallBtn');if(b&&b.parentNode!==document.body){document.body.appendChild(b);}}
+  if(document.readyState!=='loading')place();
+  document.addEventListener('DOMContentLoaded',place);
+  setTimeout(place,1500);setTimeout(place,4000);
+})();
+</script>
 </body>
 </html>
