@@ -2,7 +2,7 @@
   "name": "KHAIOS A.I.O.S. Multitool",
   "short_name": "KHAIOS",
   "description": "An in-browser AI operating system.",
-  "start_url": "./",
+  "start_url": "app.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#02030a",
