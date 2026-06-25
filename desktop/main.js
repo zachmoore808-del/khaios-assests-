@@ -37,7 +37,6 @@ function createMain() {
       preload: path.join(__dirname, 'bridge-preload.js')
     }
   });
-  mainWin.loadURL('https://zachmoore808-del.github.io/khaios-assests-/app.html');
   mainWin.webContents.setWindowOpenHandler(({ url }) => {
     shell.openExternal(url);
     return { action: 'deny' };
@@ -47,6 +46,8 @@ function createMain() {
     if (launcherWin && !launcherWin.isDestroyed()) { launcherWin.close(); }
     launcherWin = null;
   });
+  const fresh = 'https://zachmoore808-del.github.io/khaios-assests-/app.html?d=' + Date.now();
+  mainWin.webContents.session.clearCache().then(() => mainWin.loadURL(fresh)).catch(() => mainWin.loadURL(fresh));
 }
 
 function send(channel, data) {
