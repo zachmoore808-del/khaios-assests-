@@ -1,6 +1,6 @@
 {
   "name": "khaios-desktop",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "KHAIOS A.I.O.S. Multitool",
   "author": "Zachary Moore",
   "main": "main.js",
@@ -15,11 +15,12 @@
   "build": {
     "appId": "io.github.zachmoore808del.khaios",
     "productName": "KHAIOS",
+    "artifactName": "KHAIOS-Setup.${ext}",
     "files": ["main.js", "package.json"],
     "win": { "target": "nsis" },
     "nsis": { "oneClick": true, "perMachine": false, "allowToChangeInstallationDirectory": false },
     "publish": [
-      { "provider": "github", "owner": "zachmoore808-del", "repo": "khaios-assests-" }
+      { "provider": "github", "owner": "zachmoore808-del", "repo": "khaios-assests-", "releaseType": "release" }
     ]
   }
 }
