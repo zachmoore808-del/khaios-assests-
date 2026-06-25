@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;background:#02030a;color:#dce8f6;font-family:'Share Tech Mono',monospace;overflow:hidden;user-select:none}
+.wrap{height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;-webkit-app-region:drag;background:radial-gradient(ellipse at 50% 28%,#0c2858,#05132a 60%,#02030a)}
+#stars{position:absolute;inset:0;z-index:0}
+.close{position:absolute;top:10px;right:14px;z-index:5;-webkit-app-region:no-drag;color:#5f8dc4;font-size:17px;cursor:pointer;background:none;border:none;font-family:inherit;line-height:1}
+.close:hover{color:#7fd6ff}
+.content{position:relative;z-index:2;text-align:center;width:100%;padding:0 50px}
+.word{font-family:'Orbitron',sans-serif;font-weight:900;font-size:62px;letter-spacing:8px;color:#cfe8ff;text-shadow:0 0 30px rgba(63,169,255,0.6),0 0 70px rgba(63,169,255,0.3)}
+.sub{font-size:12px;letter-spacing:5px;color:#3fa9ff;margin-top:6px}
+.status{margin-top:40px;font-size:14px;letter-spacing:1px;color:#7fd6ff;min-height:20px}
+.barwrap{margin:18px auto 0;width:72%;height:10px;border-radius:8px;background:rgba(20,40,80,0.5);border:1px solid rgba(63,169,255,0.25);overflow:hidden;position:relative}
+.bar{height:100%;width:0%;border-radius:8px;background:linear-gradient(90deg,#3fa9ff,#7f5af0);box-shadow:0 0 14px rgba(63,169,255,0.7);transition:width .25s ease}
+.bar.indet{width:34%;animation:slide 1.2s ease-in-out infinite}
+@keyframes slide{0%{margin-left:-34%}100%{margin-left:100%}}
+.meta{margin-top:12px;font-size:11px;letter-spacing:1px;color:#5f8dc4;min-height:14px}
+.pct{font-family:'Orbitron',sans-serif;font-weight:700;font-size:13px;color:#bfe4ff}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <canvas id="stars"></canvas>
+  <button class="close" onclick="window.updater&&window.updater.quit&&window.updater.quit()">&#10005;</button>
+  <div class="content">
+    <div class="word">KHAIOS</div>
+    <div class="sub">A.I.O.S. MULTITOOL</div>
+    <div class="status" id="status">Starting up...</div>
+    <div class="barwrap"><div class="bar indet" id="bar"></div></div>
+    <div class="meta" id="meta"></div>
+  </div>
+</div>
+<script>
+var bar=document.getElementById('bar'),statusEl=document.getElementById('status'),meta=document.getElementById('meta');
+function setIndet(on){ if(on){bar.classList.add('indet');bar.style.width='34%';} else {bar.classList.remove('indet');bar.style.marginLeft='0';} }
+function setPct(p){ setIndet(false); bar.style.width=Math.max(0,Math.min(100,p))+'%'; }
+function fmtMB(b){ return (b/1048576).toFixed(1)+' MB'; }
+function fmtSpeed(s){ return s?(s/1048576).toFixed(1)+' MB/s':''; }
+function onStatus(d){
+  statusEl.textContent=d.text||'';
+  if(d.state==='checking'||d.state==='dev'){ setIndet(true); meta.textContent=''; }
+  else if(d.state==='available'){ setPct(0); meta.textContent='Preparing download...'; }
+  else if(d.state==='installing'){ setPct(100); meta.textContent=''; bar.style.background='linear-gradient(90deg,#27e07a,#3fa9ff)'; }
+  else if(d.state==='latest'||d.state==='launching'){ setPct(100); meta.textContent=''; }
+  else if(d.state==='error'){ setIndet(false); bar.style.width='100%'; bar.style.background='#5f8dc4'; meta.textContent=''; }
+}
+function onProgress(d){
+  setPct(d.percent||0);
+  meta.innerHTML='<span class="pct">'+Math.floor(d.percent||0)+'%</span> &nbsp; '+fmtMB(d.transferred||0)+' / '+fmtMB(d.total||0)+' &nbsp; '+fmtSpeed(d.speed);
+}
+(function(){var c=document.getElementById('stars'),x=c.getContext('2d');c.width=760;c.height=460;var st=[];for(var i=0;i<70;i++)st.push({x:Math.random()*760,y:Math.random()*460,s:Math.random()*1.5+0.3,v:Math.random()*0.25+0.05});(function loop(){x.clearRect(0,0,760,460);for(var i=0;i<st.length;i++){var p=st[i];p.y+=p.v;if(p.y>460)p.y=0;x.globalAlpha=0.3+Math.random()*0.5;x.fillStyle='#9fd6ff';x.fillRect(p.x,p.y,p.s,p.s);}x.globalAlpha=1;requestAnimationFrame(loop);})();})();
+window.__onStatus=onStatus;window.__onProgress=onProgress;
+if(window.updater){ window.updater.onStatus(onStatus); window.updater.onProgress(onProgress); window.updater.ready&&window.updater.ready(); }
+</script>
+</body>
+</html>

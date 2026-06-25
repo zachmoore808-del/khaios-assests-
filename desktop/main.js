@@ -1,7 +1,28 @@
-const { app, BrowserWindow, shell } = require('electron');
+const { app, BrowserWindow, ipcMain, shell } = require('electron');
+const path = require('path');
+const { autoUpdater } = require('electron-updater');
 
-function createWindow() {
-  const win = new BrowserWindow({
+let launcherWin = null;
+let mainWin = null;
+
+autoUpdater.autoDownload = true;
+autoUpdater.autoInstallOnAppQuit = false;
+
+function createLauncher() {
+  launcherWin = new BrowserWindow({
+    width: 760,
+    height: 460,
+    frame: false,
+    resizable: false,
+    center: true,
+    backgroundColor: '#02030a',
+    webPreferences: { preload: path.join(__dirname, 'launcher-preload.js') }
+  });
+  launcherWin.loadFile('launcher.html');
+}
+
+function createMain() {
+  mainWin = new BrowserWindow({
     width: 1280,
     height: 820,
     minWidth: 900,
@@ -9,22 +30,74 @@ function createWindow() {
     backgroundColor: '#02030a',
     autoHideMenuBar: true,
     title: 'KHAIOS',
+    show: false,
     webPreferences: { contextIsolation: true }
   });
-  win.loadURL('https://zachmoore808-del.github.io/khaios-assests-/app.html');
-  win.webContents.setWindowOpenHandler(({ url }) => {
+  mainWin.loadURL('https://zachmoore808-del.github.io/khaios-assests-/app.html');
+  mainWin.webContents.setWindowOpenHandler(({ url }) => {
     shell.openExternal(url);
     return { action: 'deny' };
   });
+  mainWin.once('ready-to-show', () => {
+    mainWin.show();
+    if (launcherWin && !launcherWin.isDestroyed()) { launcherWin.close(); }
+    launcherWin = null;
+  });
+}
+
+function send(channel, data) {
+  if (launcherWin && !launcherWin.isDestroyed()) {
+    launcherWin.webContents.send(channel, data);
+  }
+}
+
+function launchApp() {
+  if (mainWin) return;
+  send('status', { state: 'launching', text: 'Launching KHAIOS...' });
+  createMain();
+}
+
+function startUpdateFlow() {
+  if (!app.isPackaged) {
+    send('status', { state: 'dev', text: 'Developer mode \u2014 skipping update check' });
+    setTimeout(launchApp, 1400);
+    return;
+  }
+  send('status', { state: 'checking', text: 'Checking for updates...' });
+
+  autoUpdater.on('update-available', (info) => {
+    send('status', { state: 'available', text: 'Update found \u2014 downloading v' + info.version });
+  });
+  autoUpdater.on('update-not-available', () => {
+    send('status', { state: 'latest', text: 'You are up to date' });
+    setTimeout(launchApp, 1100);
+  });
+  autoUpdater.on('download-progress', (p) => {
+    send('progress', { percent: p.percent, speed: p.bytesPerSecond, transferred: p.transferred, total: p.total });
+  });
+  autoUpdater.on('update-downloaded', () => {
+    send('status', { state: 'installing', text: 'Installing update...' });
+    setTimeout(() => autoUpdater.quitAndInstall(false, true), 1600);
+  });
+  autoUpdater.on('error', () => {
+    send('status', { state: 'error', text: 'Update check failed \u2014 launching anyway' });
+    setTimeout(launchApp, 1600);
+  });
+
+  autoUpdater.checkForUpdates().catch(() => {});
 }
 
 app.whenReady().then(() => {
-  createWindow();
+  createLauncher();
+  setTimeout(startUpdateFlow, 1000);
   app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
+    if (BrowserWindow.getAllWindows().length === 0) createLauncher();
   });
 });
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
 });
+
+ipcMain.on('launcher-ready', () => {});
+ipcMain.on('launcher-quit', () => { app.quit(); });
