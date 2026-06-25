@@ -2794,5 +2794,58 @@ var cv=document.getElementById('bgstars'),x=cv.getContext('2d');function rs(){cv
   if(window.khaios.version){ window.khaios.version().then(function(v){ makeBadge('\u25C9 DESKTOP v'+v); }).catch(function(){}); }
 })();
 </script>
+<style>
+#fw-cloudgaming .fw-body{padding:0 !important;overflow:hidden;background:#00050a;}
+#fw-cloudgaming .cgx{position:relative;width:100%;height:100%;min-height:100%;overflow:hidden;font-family:'Share Tech Mono',monospace;color:#27e07a;background:#00050a;}
+#fw-cloudgaming .cgx-rain{position:absolute;inset:0;z-index:0;opacity:0.5;}
+#fw-cloudgaming .cgx-scan{position:absolute;inset:0;z-index:1;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0 2px,rgba(0,12,7,0.4) 2px 3px);}
+#fw-cloudgaming .cgx-content{position:relative;z-index:2;height:100%;overflow:auto;padding:14px 16px 18px;}
+#fw-cloudgaming .cgx-head{font-size:13px;color:#aef9d6;letter-spacing:1px;text-shadow:0 0 8px rgba(39,224,122,0.6);}
+#fw-cloudgaming .cgx-prompt{color:#3fa9ff;}
+#fw-cloudgaming .cgx-cur{animation:cgxblink 1s steps(1) infinite;}
+@keyframes cgxblink{50%{opacity:0;}}
+#fw-cloudgaming .cgx-boot{margin:10px 0 14px;font-size:12px;line-height:1.7;color:#27e07a;min-height:20px;}
+#fw-cloudgaming .cgx-bootline{white-space:pre;text-shadow:0 0 6px rgba(39,224,122,0.4);}
+#fw-cloudgaming .cgx-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;}
+#fw-cloudgaming .cgx-card{position:relative;text-align:left;background:rgba(0,20,12,0.55);border:1px solid rgba(39,224,122,0.32);border-radius:4px;padding:12px 12px 10px;cursor:pointer;color:#27e07a;font-family:inherit;transition:all .15s;}
+#fw-cloudgaming .cgx-card:hover{border-color:rgba(39,224,122,0.9);box-shadow:0 0 16px rgba(39,224,122,0.35);transform:translateY(-2px);background:rgba(0,30,18,0.7);}
+#fw-cloudgaming .cgx-card-top{display:flex;justify-content:space-between;font-size:9px;letter-spacing:1px;margin-bottom:8px;}
+#fw-cloudgaming .cgx-tag{color:#3fa9ff;}
+#fw-cloudgaming .cgx-stat{color:#27e07a;}
+#fw-cloudgaming .cgx-card-name{font-size:15px;color:#eafff5;font-weight:bold;letter-spacing:1px;margin-bottom:4px;text-shadow:0 0 8px rgba(39,224,122,0.5);}
+#fw-cloudgaming .cgx-card-desc{font-size:10.5px;color:#1f9a63;line-height:1.4;min-height:28px;}
+#fw-cloudgaming .cgx-card-go{margin-top:10px;font-size:10px;letter-spacing:1px;color:#27e07a;border-top:1px solid rgba(39,224,122,0.2);padding-top:7px;}
+#fw-cloudgaming .cgx-card:hover .cgx-card-go{color:#aef9d6;}
+#fw-cloudgaming #cgxStatus{margin-top:9px;font-size:11px;color:#3fa9ff;min-height:15px;text-shadow:0 0 6px rgba(63,169,255,0.5);}
+#fw-cloudgaming .cgx-foot{margin-top:12px;font-size:10px;color:#1f7a4f;letter-spacing:1px;line-height:1.5;}
+</style>
+<script>
+(function(){
+  var NODES=[
+    {code:'NODE_01',name:'GeForce NOW',url:'https://play.geforcenow.com/',desc:'Stream your Steam / Epic library. Free tier.'},
+    {code:'NODE_02',name:'Xbox Cloud',url:'https://www.xbox.com/play',desc:'Console + Game Pass library. Subscription.'},
+    {code:'NODE_03',name:'Amazon Luna',url:'https://luna.amazon.com/',desc:'Channel-based cloud games. Subscription.'},
+    {code:'NODE_04',name:'Boosteroid',url:'https://boosteroid.com/',desc:'Browser cloud gaming. Subscription.'},
+    {code:'NODE_05',name:'now.gg',url:'https://now.gg/',desc:'Android games in the cloud. Free, no install.'}
+  ];
+  function cardHTML(n){return '<button class="cgx-card" data-url="'+n.url+'" data-code="'+n.code+'"><div class="cgx-card-top"><span class="cgx-tag">'+n.code+'</span><span class="cgx-stat">&#9679; ONLINE</span></div><div class="cgx-card-name">'+n.name+'</div><div class="cgx-card-desc">'+n.desc+'</div><div class="cgx-card-go">[ ESTABLISH UPLINK ]</div></button>';}
+  function build(){
+    var w=document.getElementById('fw-cloudgaming'); if(!w) return;
+    var body=w.querySelector('.fw-body'); if(!body||body.getAttribute('data-cgx')) return;
+    body.setAttribute('data-cgx','1');
+    body.innerHTML='<div class="cgx"><canvas class="cgx-rain"></canvas><div class="cgx-scan"></div><div class="cgx-content"><div class="cgx-head"><span class="cgx-prompt">root@khaios</span>:~/cloud_gaming$ <span class="cgx-cmd" id="cgxCmd"></span><span class="cgx-cur">_</span></div><div class="cgx-boot" id="cgxBoot"></div><div class="cgx-grid">'+NODES.map(cardHTML).join('')+'</div><div id="cgxStatus"></div><div class="cgx-foot">// STREAMS ON REMOTE GPU &mdash; YOUR MACHINE RENDERS NOTHING. SELECT A NODE TO ESTABLISH UPLINK.</div></div></div>';
+    var btns=body.querySelectorAll('.cgx-card');
+    for(var i=0;i<btns.length;i++){ (function(c){ c.addEventListener('click',function(){ var s=body.querySelector('#cgxStatus'); var code=c.getAttribute('data-code'),url=c.getAttribute('data-url'); if(s)s.textContent='> ESTABLISHING UPLINK :: '+code+' ...'; setTimeout(function(){ try{window.open(url,'_blank');}catch(e){} if(s)s.textContent='> UPLINK DISPATCHED :: '+code+' [ OK ]'; },650); }); })(btns[i]); }
+    typeCmd(body.querySelector('#cgxCmd'));
+    startBoot(body.querySelector('#cgxBoot'));
+    startRain(body.querySelector('.cgx-rain'));
+  }
+  function typeCmd(el){ if(!el)return; var t='launch cloud_gaming_grid',i=0; (function s(){ if(i<=t.length){el.textContent=t.slice(0,i);i++;setTimeout(s,40);} })(); }
+  function startBoot(el){ if(!el)return; var lines=['> initializing uplink protocol ......... [ OK ]','> routing through remote GPU cluster ... [ OK ]','> KHAIOS net handshake ................. [ OK ]','> 5 game nodes online.']; el.innerHTML=''; var li=0; (function nx(){ if(li>=lines.length)return; var d=document.createElement('div'); d.className='cgx-bootline'; el.appendChild(d); var txt=lines[li],i=0; (function ty(){ if(i<=txt.length){d.textContent=txt.slice(0,i);i++;setTimeout(ty,11);} else {li++;setTimeout(nx,150);} })(); })(); }
+  function startRain(cv){ if(!cv)return; var ctx=cv.getContext('2d'); var chars='01<>[]{}|/=+*#KHAIOS'.split(''); var fs=12,drops; function rs(){ cv.width=cv.offsetWidth||500; cv.height=cv.offsetHeight||360; var cols=Math.max(1,Math.floor(cv.width/fs)); drops=[]; for(var i=0;i<cols;i++)drops[i]=Math.random()*cv.height/fs; } rs(); if(window.ResizeObserver){try{new ResizeObserver(rs).observe(cv);}catch(e){}} (function fr(){ if(cv.offsetParent!==null&&cv.width>0){ ctx.fillStyle='rgba(0,5,8,0.12)'; ctx.fillRect(0,0,cv.width,cv.height); ctx.font=fs+'px monospace'; for(var i=0;i<drops.length;i++){ var ch=chars[Math.floor(Math.random()*chars.length)]; var x=i*fs,y=drops[i]*fs; ctx.fillStyle=Math.random()<0.04?'#aef9d6':'rgba(39,224,122,0.6)'; ctx.fillText(ch,x,y); if(y>cv.height&&Math.random()>0.975)drops[i]=0; drops[i]+=0.5; } } requestAnimationFrame(fr); })(); }
+  if(document.readyState!=='loading') build(); else document.addEventListener('DOMContentLoaded',build);
+  setTimeout(build,1500);
+})();
+</script>
 </body>
 </html>
