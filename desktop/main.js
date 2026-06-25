@@ -1,5 +1,6 @@
-const { app, BrowserWindow, ipcMain, shell } = require('electron');
+const { app, BrowserWindow, ipcMain, shell, Notification } = require('electron');
 const path = require('path');
+const os = require('os');
 const { autoUpdater } = require('electron-updater');
 
 let launcherWin = null;
@@ -31,7 +32,10 @@ function createMain() {
     autoHideMenuBar: true,
     title: 'KHAIOS',
     show: false,
-    webPreferences: { contextIsolation: true }
+    webPreferences: {
+      contextIsolation: true,
+      preload: path.join(__dirname, 'bridge-preload.js')
+    }
   });
   mainWin.loadURL('https://zachmoore808-del.github.io/khaios-assests-/app.html');
   mainWin.webContents.setWindowOpenHandler(({ url }) => {
@@ -86,6 +90,32 @@ function startUpdateFlow() {
 
   autoUpdater.checkForUpdates().catch(() => {});
 }
+
+ipcMain.handle('khaios:version', () => app.getVersion());
+ipcMain.handle('khaios:systemInfo', () => {
+  const c = os.cpus() || [];
+  return {
+    platform: process.platform,
+    arch: process.arch,
+    cpuModel: (c[0] || {}).model || 'unknown',
+    cpuCount: c.length,
+    totalMemGB: +(os.totalmem() / 1073741824).toFixed(1),
+    freeMemGB: +(os.freemem() / 1073741824).toFixed(1),
+    hostname: os.hostname(),
+    osRelease: os.release()
+  };
+});
+ipcMain.handle('khaios:notify', (e, payload) => {
+  try {
+    new Notification({
+      title: String((payload && payload.title) || 'KHAIOS'),
+      body: String((payload && payload.body) || '')
+    }).show();
+    return true;
+  } catch (err) {
+    return false;
+  }
+});
 
 app.whenReady().then(() => {
   createLauncher();

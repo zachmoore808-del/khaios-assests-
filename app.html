@@ -2776,5 +2776,23 @@ var cv=document.getElementById('bgstars'),x=cv.getContext('2d');function rs(){cv
   setTimeout(place,1500);setTimeout(place,4000);
 })();
 </script>
+<script>
+(function(){
+  if(!(window.khaios && window.khaios.isDesktop)) return;
+  function makeBadge(label){
+    var b=document.getElementById('khDeskBadge');
+    if(!b){
+      b=document.createElement('div');b.id='khDeskBadge';
+      b.style.cssText='position:fixed;bottom:9px;left:9px;z-index:2147483000;font-family:monospace;font-size:11px;letter-spacing:1px;color:#7fd6ff;background:rgba(8,20,46,0.88);border:1px solid rgba(63,169,255,0.45);border-radius:8px;padding:5px 10px;cursor:pointer;user-select:none;box-shadow:0 0 12px rgba(63,169,255,0.25)';
+      b.title='Click to test a native notification';
+      b.onclick=function(){ if(window.khaios.notify) window.khaios.notify('KHAIOS','Native notifications are working \u2713'); };
+      document.body.appendChild(b);
+    }
+    b.textContent=label;
+  }
+  makeBadge('\u25C9 DESKTOP MODE');
+  if(window.khaios.version){ window.khaios.version().then(function(v){ makeBadge('\u25C9 DESKTOP v'+v); }).catch(function(){}); }
+})();
+</script>
 </body>
 </html>
