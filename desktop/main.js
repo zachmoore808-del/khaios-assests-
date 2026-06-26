@@ -123,6 +123,31 @@ function startUpdateFlow() {
   setTimeout(() => { if (!updating) launchApp(); }, 12000);
 }
 
+const GAME_HOSTS = ['play.geforcenow.com', 'xbox.com', 'luna.amazon.com', 'boosteroid.com', 'now.gg'];
+function createGameWindow(url) {
+  let u;
+  try { u = new URL(url); } catch (e) { return false; }
+  if (u.protocol !== 'https:') return false;
+  const ok = GAME_HOSTS.some((h) => u.hostname === h || u.hostname.endsWith('.' + h));
+  if (!ok) return false;
+  const gw = new BrowserWindow({
+    width: 1280,
+    height: 800,
+    backgroundColor: '#000000',
+    autoHideMenuBar: true,
+    title: 'KHAIOS \u2014 Cloud Gaming',
+    webPreferences: {
+      preload: path.join(__dirname, 'game-preload.js'),
+      contextIsolation: true,
+      sandbox: true,
+      nodeIntegration: false
+    }
+  });
+  gw.webContents.setWindowOpenHandler(() => ({ action: 'allow' }));
+  gw.loadURL(url);
+  return true;
+}
+
 ipcMain.handle('khaios:version', () => app.getVersion());
 ipcMain.handle('khaios:systemInfo', () => {
   const c = os.cpus() || [];
@@ -150,6 +175,12 @@ ipcMain.handle('khaios:notify', (e, payload) => {
 });
 ipcMain.on('launcher-ready', () => {});
 ipcMain.on('launcher-quit', () => { app.quit(); });
+ipcMain.handle('khaios:openGameWindow', (e, url) => createGameWindow(url));
+ipcMain.on('game:openExternal', (e, url) => {
+  try { if (typeof url === 'string' && /^https:\/\//i.test(url)) shell.openExternal(url); } catch (err) {}
+  const w = BrowserWindow.fromWebContents(e.sender);
+  if (w && !w.isDestroyed()) w.close();
+});
 
 if (!app.requestSingleInstanceLock()) {
   app.quit();
