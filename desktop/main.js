@@ -3,8 +3,13 @@ const path = require('path');
 const os = require('os');
 const { autoUpdater } = require('electron-updater');
 
+const APP_ORIGIN = 'https://zachmoore808-del.github.io';
+const APP_URL = APP_ORIGIN + '/khaios-assests-/app.html';
+
 let launcherWin = null;
 let mainWin = null;
+let launched = false;
+let updating = false;
 
 autoUpdater.autoDownload = true;
 autoUpdater.autoInstallOnAppQuit = false;
@@ -17,9 +22,18 @@ function createLauncher() {
     resizable: false,
     center: true,
     backgroundColor: '#02030a',
-    webPreferences: { preload: path.join(__dirname, 'launcher-preload.js') }
+    webPreferences: {
+      preload: path.join(__dirname, 'launcher-preload.js'),
+      contextIsolation: true,
+      sandbox: true,
+      nodeIntegration: false
+    }
   });
   launcherWin.loadFile('launcher.html');
+}
+
+function openExternal(url) {
+  try { shell.openExternal(url); } catch (e) {}
 }
 
 function createMain() {
@@ -33,20 +47,34 @@ function createMain() {
     title: 'KHAIOS',
     show: false,
     webPreferences: {
+      preload: path.join(__dirname, 'bridge-preload.js'),
       contextIsolation: true,
-      preload: path.join(__dirname, 'bridge-preload.js')
+      sandbox: true,
+      nodeIntegration: false
     }
   });
+
   mainWin.webContents.setWindowOpenHandler(({ url }) => {
-    shell.openExternal(url);
+    openExternal(url);
     return { action: 'deny' };
   });
+
+  mainWin.webContents.on('will-navigate', (e, url) => {
+    let origin = null;
+    try { origin = new URL(url).origin; } catch (err) {}
+    if (origin !== APP_ORIGIN) {
+      e.preventDefault();
+      if (origin) openExternal(url);
+    }
+  });
+
   mainWin.once('ready-to-show', () => {
     mainWin.show();
     if (launcherWin && !launcherWin.isDestroyed()) { launcherWin.close(); }
     launcherWin = null;
   });
-  const fresh = 'https://zachmoore808-del.github.io/khaios-assests-/app.html?d=' + Date.now();
+
+  const fresh = APP_URL + '?d=' + Date.now();
   mainWin.webContents.session.clearCache().then(() => mainWin.loadURL(fresh)).catch(() => mainWin.loadURL(fresh));
 }
 
@@ -57,7 +85,8 @@ function send(channel, data) {
 }
 
 function launchApp() {
-  if (mainWin) return;
+  if (launched || mainWin) return;
+  launched = true;
   send('status', { state: 'launching', text: 'Launching KHAIOS...' });
   createMain();
 }
@@ -71,6 +100,7 @@ function startUpdateFlow() {
   send('status', { state: 'checking', text: 'Checking for updates...' });
 
   autoUpdater.on('update-available', (info) => {
+    updating = true;
     send('status', { state: 'available', text: 'Update found \u2014 downloading v' + info.version });
   });
   autoUpdater.on('update-not-available', () => {
@@ -90,6 +120,7 @@ function startUpdateFlow() {
   });
 
   autoUpdater.checkForUpdates().catch(() => {});
+  setTimeout(() => { if (!updating) launchApp(); }, 12000);
 }
 
 ipcMain.handle('khaios:version', () => app.getVersion());
@@ -117,18 +148,29 @@ ipcMain.handle('khaios:notify', (e, payload) => {
     return false;
   }
 });
-
-app.whenReady().then(() => {
-  createLauncher();
-  setTimeout(startUpdateFlow, 1000);
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) createLauncher();
-  });
-});
-
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') app.quit();
-});
-
 ipcMain.on('launcher-ready', () => {});
 ipcMain.on('launcher-quit', () => { app.quit(); });
+
+if (!app.requestSingleInstanceLock()) {
+  app.quit();
+} else {
+  app.on('second-instance', () => {
+    const w = mainWin || launcherWin;
+    if (w && !w.isDestroyed()) {
+      if (w.isMinimized()) w.restore();
+      w.focus();
+    }
+  });
+
+  app.whenReady().then(() => {
+    createLauncher();
+    setTimeout(startUpdateFlow, 1000);
+    app.on('activate', () => {
+      if (BrowserWindow.getAllWindows().length === 0) createLauncher();
+    });
+  });
+
+  app.on('window-all-closed', () => {
+    if (process.platform !== 'darwin') app.quit();
+  });
+}
