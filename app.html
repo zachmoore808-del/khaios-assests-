@@ -2847,5 +2847,21 @@ var cv=document.getElementById('bgstars'),x=cv.getContext('2d');function rs(){cv
   setTimeout(build,1500);
 })();
 </script>
+<script>
+(function(){
+  function disable(){
+    try{ if('serviceWorker' in navigator){ navigator.serviceWorker.getRegistrations().then(function(rs){ rs.forEach(function(r){ try{r.unregister();}catch(e){} }); }).catch(function(){}); } }catch(e){}
+    try{ if(window.caches&&caches.keys){ caches.keys().then(function(ks){ ks.forEach(function(k){ try{caches.delete(k);}catch(e){} }); }).catch(function(){}); } }catch(e){}
+    try{ var m=document.querySelector('link[rel="manifest"]'); if(m&&m.parentNode) m.parentNode.removeChild(m); }catch(e){}
+    try{ var b=document.getElementById('pwaInstallBtn'); if(b&&b.parentNode) b.parentNode.removeChild(b); }catch(e){}
+  }
+  try{ if('serviceWorker' in navigator){ navigator.serviceWorker.register=function(){ return Promise.reject(new Error('pwa-disabled')); }; } }catch(e){}
+  try{ window.pwaInstall=function(){}; }catch(e){}
+  disable();
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',disable);
+  window.addEventListener('load',function(){ disable(); setTimeout(disable,500); setTimeout(disable,1500); });
+  setTimeout(disable,2500);
+})();
+</script>
 </body>
 </html>
