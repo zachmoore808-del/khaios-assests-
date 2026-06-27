@@ -3014,5 +3014,19 @@ var cv=document.getElementById('bgstars'),x=cv.getContext('2d');function rs(){cv
   setTimeout(build,1400);
 })();
 </script>
+<script>
+(function(){
+  /* Carousel shows ALL apps directly; App Store removed */
+  window.renderCarousel=function(){var t=document.getElementById('carouselTrack');if(!t)return;carouselOffset=0;t.style.transform='translateX(0)';var h='';for(var i=0;i<APP_CATALOG.length;i++){var a=APP_CATALOG[i];if(!a)continue;h+='<div class="carousel-app-tile" onclick="launchApp(\''+a.id+'\')"><span>'+a.icon+'</span>'+a.name+'</div>';}t.innerHTML=h;};
+  try{window.openStore=function(){};}catch(e){}
+  function killStore(){
+    try{var tb=document.querySelectorAll('.tb-icon');for(var i=0;i<tb.length;i++){var oc=tb[i].getAttribute('onclick')||'';if(oc.indexOf('openStore')>-1&&tb[i].parentNode){tb[i].parentNode.removeChild(tb[i]);}}}catch(e){}
+    try{var sw=document.getElementById('window-store');if(sw)sw.style.display='none';}catch(e){}
+    try{renderCarousel();}catch(e){}
+  }
+  if(document.readyState!=='loading')killStore();else document.addEventListener('DOMContentLoaded',killStore);
+  setTimeout(killStore,500);setTimeout(killStore,1500);
+})();
+</script>
 </body>
 </html>
