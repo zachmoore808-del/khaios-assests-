@@ -3028,5 +3028,29 @@ var cv=document.getElementById('bgstars'),x=cv.getContext('2d');function rs(){cv
   setTimeout(killStore,500);setTimeout(killStore,1500);
 })();
 </script>
+<style>
+#avatarHolo.mgr-dock{left:26px!important;top:50%!important;transform:translateY(-50%) scale(0.82)!important;transform-origin:left center;}
+#avatarHolo.mgr-dock #avatarCaption{bottom:120px;}
+</style>
+<script>
+(function(){
+  function avatar(){return document.getElementById('avatarHolo');}
+  function shortFor(t){t=(t||'').replace(/\s+/g,' ').trim();if(t.length<=200)return t;var cut=t.slice(0,200);var m=cut.match(/^[\s\S]*[.!?]/);return (m?m[0]:cut);}
+  function positionManager(){var fw=document.getElementById('fw-manager');if(!fw)return;var w=560;var h=Math.min(600,(window.innerHeight||700)-90);fw.style.width=w+'px';fw.style.height=h+'px';fw.style.left=Math.max(430,(window.innerWidth||1100)-w-40)+'px';fw.style.top='60px';}
+  function dock(welcome){var a=avatar();if(a)a.classList.add('mgr-dock');try{if(window.avatarSay)window.avatarSay(welcome||'');}catch(e){}try{if(window.avatarSetCaption)window.avatarSetCaption('MANAGER');}catch(e){}}
+  function undock(){var a=avatar();if(a)a.classList.remove('mgr-dock');try{if(window.dismissAvatar)window.dismissAvatar();}catch(e){}}
+  function speakReply(txt){if(!txt)return;var a=avatar();if(a)a.classList.add('mgr-dock');try{if(window.avatarSay)window.avatarSay(shortFor(txt));}catch(e){}try{if(window.avatarSetCaption)window.avatarSetCaption('MANAGER');}catch(e){}}
+  function watch(){var log=document.getElementById('mgrLog');if(!log||log._mgrW)return;log._mgrW=1;
+    var obs=new MutationObserver(function(muts){for(var j=0;j<muts.length;j++){var an=muts[j].addedNodes;for(var i=0;i<an.length;i++){var n=an[i];if(!n||n.nodeType!==1||!n.classList||!n.classList.contains('a'))continue;var b=n.querySelector?n.querySelector('.mgr-bubble'):null;if(!b||b.classList.contains('think'))continue;var t=(b.textContent||'').trim();if(!t||t==='\u2026')continue;speakReply(t);}}});
+    obs.observe(log,{childList:true});
+  }
+  var _open=window.openApp;
+  window.openApp=function(n){if(_open)_open(n);if(n==='manager'){setTimeout(function(){positionManager();watch();if(!window._mgrAvHi){window._mgrAvHi=1;dock('Manager online. What are we working on?');}else{dock('');}},140);}};
+  var _close=window.closeApp;
+  window.closeApp=function(n){if(n==='manager'){undock();}if(_close)_close(n);};
+  var _min=window.minimizeApp;
+  window.minimizeApp=function(n){if(n==='manager'){undock();}if(_min)_min(n);};
+})();
+</script>
 </body>
 </html>
