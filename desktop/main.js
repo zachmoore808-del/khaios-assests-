@@ -123,19 +123,19 @@ function startUpdateFlow() {
   setTimeout(() => { if (!updating) launchApp(); }, 12000);
 }
 
-const GAME_HOSTS = ['play.geforcenow.com', 'xbox.com', 'luna.amazon.com', 'boosteroid.com', 'now.gg'];
+const ALLOWED_HOSTS = ['play.geforcenow.com', 'xbox.com', 'luna.amazon.com', 'boosteroid.com', 'now.gg', 'iheart.com', 'pandora.com', 'youtube.com', 'soundcloud.com', 'bandcamp.com', 'tunein.com', 'somafm.com', 'radioparadise.com'];
 function createGameWindow(url) {
   let u;
   try { u = new URL(url); } catch (e) { return false; }
   if (u.protocol !== 'https:') return false;
-  const ok = GAME_HOSTS.some((h) => u.hostname === h || u.hostname.endsWith('.' + h));
+  const ok = ALLOWED_HOSTS.some((h) => u.hostname === h || u.hostname.endsWith('.' + h));
   if (!ok) return false;
   const gw = new BrowserWindow({
     width: 1280,
     height: 800,
     backgroundColor: '#000000',
     autoHideMenuBar: true,
-    title: 'KHAIOS \u2014 Cloud Gaming',
+    title: 'KHAIOS',
     webPreferences: {
       preload: path.join(__dirname, 'game-preload.js'),
       contextIsolation: true,
