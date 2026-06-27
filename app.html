@@ -2378,6 +2378,7 @@ var cv=document.getElementById('bgstars'),x=cv.getContext('2d');function rs(){cv
       {id:'browser',icon:'&#127760;',name:'Browser'},
       {id:'conference',icon:'&#129681;',name:'Conference Room'},
       {id:'cloudgaming',icon:'&#127918;',name:'Cloud Gaming'},
+      {id:'music',icon:'&#127925;',name:'Music'},
       {id:'invaders',icon:'&#128126;',name:'Invaders'},
       {id:'calculator',icon:'&#128290;',name:'Calculator'},
       {id:'notes',icon:'&#128203;',name:'Notes'},
@@ -2849,6 +2850,62 @@ var cv=document.getElementById('bgstars'),x=cv.getContext('2d');function rs(){cv
   }
   if(document.readyState!=='loading') build(); else document.addEventListener('DOMContentLoaded',build);
   setTimeout(build,1500);
+})();
+</script>
+<div class="fwindow" id="fw-music" style="left:160px;top:90px;width:560px;height:470px;">
+  <div class="fw-titlebar" onmousedown="dragStart(event,'fw-music')">
+    <div class="fw-title-left"><span class="fw-icon">&#127925;</span><span class="fw-name">MUSIC</span></div>
+    <div class="fw-controls">
+      <button class="fw-btn" onclick="minimizeApp('music')">&#9472;</button>
+      <button class="fw-btn" onclick="maximizeApp('fw-music')">&#9633;</button>
+      <button class="fw-btn close" onclick="closeApp('music')">&#10005;</button>
+    </div>
+  </div>
+  <div class="fw-body">
+    <div class="mu-wrap">
+      <div class="mu-head">
+        <div class="mu-eyebrow">KHAIOS // MUSIC</div>
+        <div class="mu-title">TUNE IN</div>
+        <div class="mu-sub">Pick a service to open. They launch in your browser so everything plays cleanly.</div>
+      </div>
+      <div class="mu-grid" id="muGrid"></div>
+      <div class="mu-status" id="muStatus"></div>
+    </div>
+  </div>
+</div>
+<style>
+#fw-music .fw-body{padding:0;overflow:auto;background:linear-gradient(180deg,#04101f 0%,#02060f 100%);}
+#fw-music .mu-wrap{min-height:100%;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;padding:26px 20px 30px;}
+#fw-music .mu-head{text-align:center;max-width:520px;margin-bottom:22px;}
+#fw-music .mu-eyebrow{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:4px;color:#3fa9ff;margin-bottom:9px;}
+#fw-music .mu-title{font-family:'Orbitron',sans-serif;font-weight:700;font-size:22px;letter-spacing:3px;color:#bfe4ff;text-shadow:0 0 20px rgba(63,169,255,0.4);margin-bottom:9px;}
+#fw-music .mu-sub{font-size:12px;color:#8aa4c0;line-height:1.55;}
+#fw-music .mu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;width:100%;max-width:520px;}
+#fw-music .mu-card{display:flex;flex-direction:column;align-items:center;text-align:center;background:linear-gradient(180deg,rgba(11,30,68,0.6),rgba(5,12,30,0.55));border:1px solid rgba(63,169,255,0.18);border-radius:15px;padding:18px 14px 15px;cursor:pointer;transition:border-color .2s,transform .15s,box-shadow .2s;color:inherit;font-family:inherit;}
+#fw-music .mu-card:hover{border-color:rgba(63,169,255,0.6);transform:translateY(-3px);box-shadow:0 14px 34px rgba(0,40,120,0.4);}
+#fw-music .mu-icon{width:48px;height:48px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:24px;background:rgba(63,169,255,0.1);border:1px solid rgba(63,169,255,0.28);margin-bottom:12px;}
+#fw-music .mu-name{font-family:'Orbitron',sans-serif;font-weight:700;font-size:15px;color:#eaf4ff;letter-spacing:.4px;margin-bottom:6px;}
+#fw-music .mu-tag{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;color:#3fa9ff;text-transform:uppercase;margin-bottom:10px;}
+#fw-music .mu-desc{font-size:11.5px;color:#8aa4c0;line-height:1.5;flex:1;margin-bottom:14px;}
+#fw-music .mu-btn{width:100%;font-family:'Orbitron',sans-serif;font-weight:700;font-size:11px;letter-spacing:1px;padding:9px 12px;border-radius:9px;background:linear-gradient(135deg,#3fa9ff,#7f5af0);color:#04101f;border:0;cursor:pointer;}
+#fw-music .mu-status{margin-top:16px;font-family:'Share Tech Mono',monospace;font-size:11px;color:#7fd6ff;min-height:14px;text-align:center;}
+</style>
+<script>
+(function(){
+  var SERVICES=[
+    {name:'iHeartRadio',tag:'Free radio',url:'https://www.iheart.com/',icon:'\u2764\uFE0F',desc:'Live stations, podcasts, and playlists. Free.'},
+    {name:'Pandora',tag:'Personalized radio',url:'https://www.pandora.com/',icon:'\uD83D\uDCFB',desc:'Stations tuned to your taste. Free with ads.'},
+    {name:'Spotify',tag:'Songs & playlists',url:'https://open.spotify.com/',icon:'\uD83C\uDFA7',desc:'Millions of songs and playlists.'},
+    {name:'YouTube',tag:'Music & video',url:'https://www.youtube.com/',icon:'\u25B6\uFE0F',desc:'Music videos, live sets, and everything else.'}
+  ];
+  function render(){
+    var g=document.getElementById('muGrid'); if(!g||g.getAttribute('data-mu'))return; g.setAttribute('data-mu','1');
+    g.innerHTML=SERVICES.map(function(n){return '<button class="mu-card" data-url="'+n.url+'"><div class="mu-icon">'+n.icon+'</div><div class="mu-name">'+n.name+'</div><div class="mu-tag">'+n.tag+'</div><div class="mu-desc">'+n.desc+'</div><div class="mu-btn">&#9654; Open</div></button>';}).join('');
+    var btns=g.querySelectorAll('.mu-card');
+    for(var i=0;i<btns.length;i++){ (function(c){ c.addEventListener('click',function(){ var s=document.getElementById('muStatus'); var url=c.getAttribute('data-url'); var label=url.replace(/^https?:\/\//,'').replace(/\/$/,''); try{window.open(url,'_blank');}catch(e){} if(s)s.textContent='> Opening '+label+' ...'; }); })(btns[i]); }
+  }
+  if(document.readyState!=='loading')render(); else document.addEventListener('DOMContentLoaded',render);
+  setTimeout(render,1200);
 })();
 </script>
 </body>
