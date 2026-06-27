@@ -2379,6 +2379,7 @@ var cv=document.getElementById('bgstars'),x=cv.getContext('2d');function rs(){cv
       {id:'conference',icon:'&#129681;',name:'Conference Room'},
       {id:'cloudgaming',icon:'&#127918;',name:'Cloud Gaming'},
       {id:'music',icon:'&#127925;',name:'Music'},
+      {id:'manager',icon:'&#129517;',name:'Manager'},
       {id:'invaders',icon:'&#128126;',name:'Invaders'},
       {id:'calculator',icon:'&#128290;',name:'Calculator'},
       {id:'notes',icon:'&#128203;',name:'Notes'},
@@ -2927,6 +2928,90 @@ var cv=document.getElementById('bgstars'),x=cv.getContext('2d');function rs(){cv
   }
   if(document.readyState!=='loading')render(); else document.addEventListener('DOMContentLoaded',render);
   setTimeout(render,1200);
+})();
+</script>
+<div class="fwindow" id="fw-manager" style="left:120px;top:60px;width:580px;height:570px;">
+  <div class="fw-titlebar" onmousedown="dragStart(event,'fw-manager')">
+    <div class="fw-title-left"><span class="fw-icon">&#129517;</span><span class="fw-name">MANAGER</span></div>
+    <div class="fw-controls">
+      <button class="fw-btn" onclick="minimizeApp('manager')">&#9472;</button>
+      <button class="fw-btn" onclick="maximizeApp('fw-manager')">&#9633;</button>
+      <button class="fw-btn close" onclick="closeApp('manager')">&#10005;</button>
+    </div>
+  </div>
+  <div class="fw-body">
+    <div class="mgr-chips" id="mgrChips"></div>
+    <div class="mgr-log" id="mgrLog"></div>
+    <div class="mgr-irow">
+      <input class="mgr-input" id="mgrInput" placeholder="Ask your manager anything..." autocomplete="off">
+      <button class="mgr-send" id="mgrSend">&#10148;</button>
+    </div>
+  </div>
+</div>
+<style>
+#fw-manager .fw-body{padding:0;display:flex;flex-direction:column;background:linear-gradient(180deg,#04101f 0%,#02060f 100%);}
+#fw-manager .mgr-chips{display:flex;flex-wrap:wrap;gap:7px;padding:12px 12px 10px;border-bottom:1px solid rgba(63,169,255,0.14);}
+#fw-manager .mgr-chip{font-family:'Share Tech Mono',monospace;font-size:11px;color:#bfe4ff;background:rgba(12,30,66,0.7);border:1px solid rgba(63,169,255,0.28);border-radius:16px;padding:6px 11px;cursor:pointer;transition:all .15s;}
+#fw-manager .mgr-chip:hover{border-color:#3fa9ff;background:rgba(20,50,110,0.8);transform:translateY(-1px);}
+#fw-manager .mgr-log{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:11px;}
+#fw-manager .mgr-msg{display:flex;}
+#fw-manager .mgr-msg.u{justify-content:flex-end;}
+#fw-manager .mgr-bubble{max-width:82%;white-space:pre-wrap;line-height:1.5;font-size:13px;padding:10px 13px;border-radius:14px;}
+#fw-manager .mgr-msg.a .mgr-bubble{background:rgba(12,30,66,0.85);color:#dcefff;border-radius:4px 14px 14px 14px;}
+#fw-manager .mgr-msg.u .mgr-bubble{background:linear-gradient(135deg,#2f7fd6,#1c5bb0);color:#fff;border-radius:14px 4px 14px 14px;}
+#fw-manager .mgr-bubble.think{opacity:.6;letter-spacing:3px;}
+#fw-manager .mgr-irow{display:flex;gap:8px;align-items:center;padding:10px;background:rgba(0,8,24,0.7);border-top:1px solid rgba(63,169,255,0.18);}
+#fw-manager .mgr-input{flex:1;background:rgba(0,12,34,0.8);border:1px solid rgba(63,169,255,0.3);border-radius:20px;padding:9px 14px;color:#e8f4ff;font-size:13px;outline:none;}
+#fw-manager .mgr-input:focus{border-color:#3fa9ff;box-shadow:0 0 12px rgba(63,169,255,0.4);}
+#fw-manager .mgr-send{width:38px;height:38px;border-radius:50%;border:none;background:linear-gradient(135deg,#3fa9ff,#1c6fd0);color:#fff;cursor:pointer;font-size:15px;box-shadow:0 0 14px rgba(63,169,255,0.5);}
+</style>
+<script>
+(function(){
+  var MGR_SYS="You are the KHAIOS Manager - the Commander's personal chief-of-staff and life coach. You help with the practical basics of a good life: meal planning, workout and fitness scheduling, organizing a weekly schedule around a 40-hour work week, money (budgeting on that income, side hustles, side businesses, and general investing and trading education), grounded life advice, and book recommendations. Style: warm, direct, motivating, concrete - like a sharp chief of staff who has the Commander's back. Give short, doable steps, not lectures. Ask a quick clarifying question only when you truly need it. Keep food and fitness advice healthy, balanced and sustainable - never crash diets, calorie restriction, extreme cutting, or overtraining; encourage rest, recovery and moderation. For money: give general, educational guidance and ideas only. You are NOT a licensed financial advisor - never give personalized investment or specific buy/sell trade recommendations, and remind the Commander to do their own research or consult a professional for big financial decisions. Be encouraging without being fake. Keep replies concise.";
+  var QUICK=[
+    {label:'\uD83C\uDF7D\uFE0F Meal plan',prompt:'Help me plan healthy, simple meals for the week on a normal budget. Keep it balanced and sustainable.'},
+    {label:'\uD83D\uDCAA Workout plan',prompt:'Build me a realistic weekly workout schedule that fits around a 40-hour work week. Balanced and sustainable, with rest days.'},
+    {label:'\uD83D\uDDD3\uFE0F Plan my week',prompt:'Help me organize my week around a 40-hour job - work, side-hustle time, workouts, meals, and rest. Give me a simple structure.'},
+    {label:'\uD83D\uDCB8 Side hustles',prompt:'Give me a few realistic side hustle or side business ideas I could start around a full-time job, with first steps for each.'},
+    {label:'\uD83D\uDCCA Money & budget',prompt:'Help me build a simple, practical budget and money plan around a 40-hour-a-week income.'},
+    {label:'\uD83D\uDCC8 Investing 101',prompt:'Explain the basics of investing and trading for a beginner - core concepts and how to start safely. Educational only.'},
+    {label:'\uD83D\uDCA1 Life advice',prompt:'Give me grounded advice to get more focused and disciplined. A few concrete things to work on.'},
+    {label:'\uD83D\uDCDA Book picks',prompt:'Recommend a few books on money, discipline, and self-improvement, each with a one-line reason.'}
+  ];
+  var hist=[];
+  function el(id){return document.getElementById(id);}
+  function add(role,text){var log=el('mgrLog');if(!log)return null;var m=document.createElement('div');m.className='mgr-msg '+(role==='user'?'u':'a');var b=document.createElement('div');b.className='mgr-bubble';b.textContent=text;m.appendChild(b);log.appendChild(m);log.scrollTop=log.scrollHeight;return m;}
+  function thinking(){var log=el('mgrLog');var m=document.createElement('div');m.className='mgr-msg a';var b=document.createElement('div');b.className='mgr-bubble think';b.textContent='\u2026';m.appendChild(b);log.appendChild(m);log.scrollTop=log.scrollHeight;return m;}
+  async function ask(text){
+    if(!text||window._mgrBusy)return;window._mgrBusy=true;
+    add('user',text);hist.push({role:'user',content:text});
+    var t=thinking();
+    try{
+      var reply=await callAPI([{role:'system',content:MGR_SYS}].concat(hist));
+      hist.push({role:'assistant',content:reply});
+      if(t)t.remove();add('ai',reply);
+    }catch(e){if(t)t.remove();add('ai','My core is waking up, Commander - give it about 30 seconds and try again.');}
+    window._mgrBusy=false;
+  }
+  function build(){
+    var w=el('fw-manager');if(!w)return;
+    var chips=el('mgrChips');
+    if(chips&&!chips.getAttribute('data-m')){chips.setAttribute('data-m','1');
+      chips.innerHTML=QUICK.map(function(q,i){return '<button class="mgr-chip" data-i="'+i+'">'+q.label+'</button>';}).join('');
+      var cb=chips.querySelectorAll('.mgr-chip');
+      for(var i=0;i<cb.length;i++){(function(btn){btn.addEventListener('click',function(){ask(QUICK[+btn.getAttribute('data-i')].prompt);});})(cb[i]);}
+    }
+    var sb=el('mgrSend'),inp=el('mgrInput');
+    if(sb&&!sb.getAttribute('data-m')){sb.setAttribute('data-m','1');
+      sb.addEventListener('click',function(){var v=inp.value.trim();if(v){ask(v);inp.value='';}});
+      inp.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();var v=inp.value.trim();if(v){ask(v);inp.value='';}}});
+    }
+    if(!window._mgrGreeted){window._mgrGreeted=true;add('ai','Hey Commander. I\u2019m your manager \u2014 here to keep your meals, training, schedule, money, and goals on track. Tap a button below or just tell me what\u2019s on your plate.');}
+  }
+  var _o=window.openApp;
+  window.openApp=function(n){if(_o)_o(n);if(n==='manager')setTimeout(build,50);};
+  if(document.readyState!=='loading')build();else document.addEventListener('DOMContentLoaded',build);
+  setTimeout(build,1400);
 })();
 </script>
 </body>
