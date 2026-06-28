@@ -3052,5 +3052,124 @@ var cv=document.getElementById('bgstars'),x=cv.getContext('2d');function rs(){cv
   window.minimizeApp=function(n){if(n==='manager'){undock();}if(_min)_min(n);};
 })();
 </script>
+<div class="fwindow" id="fw-hq" style="left:0;top:0;width:100%;height:100%;">
+  <div class="fw-titlebar" onmousedown="dragStart(event,'fw-hq')">
+    <div class="fw-title-left"><span class="fw-icon">&#129504;</span><span class="fw-name">KHAIOS HQ</span></div>
+    <div class="fw-controls">
+      <button class="fw-btn" onclick="minimizeApp('hq')">&#9472;</button>
+      <button class="fw-btn close" onclick="closeApp('hq')">&#10005;</button>
+    </div>
+  </div>
+  <div class="fw-body">
+    <div id="hqStage"></div>
+    <div id="hqHint">TAP A SPECIALIST</div>
+    <div id="hqChat">
+      <div id="hqChatHead"><span id="hqWho">SPECIALIST</span><span id="hqBack">&#8592; Back to HQ</span></div>
+      <div id="hqLog"></div>
+      <div id="hqIrow"><input id="hqInput" placeholder="Ask your specialist..." autocomplete="off"><button id="hqSend">&#10148;</button></div>
+    </div>
+  </div>
+</div>
+<style>
+#fw-hq{position:fixed!important;inset:0!important;left:0!important;top:0!important;width:100%!important;height:100%!important;max-width:none!important;border-radius:0!important;border:none!important;}
+#fw-hq .fw-body{position:relative;padding:0;overflow:hidden;background:radial-gradient(circle at 50% 45%,rgba(10,30,70,0.55),rgba(2,6,18,0.94));}
+#hqStage{position:absolute;inset:0;}
+.hq-bot{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;width:90px;transition:opacity .3s;z-index:2;}
+.hq-bot-ic{width:62px;height:62px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#1c4f96,#06122c);border:1px solid rgba(63,169,255,0.6);display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 0 18px rgba(0,60,160,0.4);transition:all .15s;}
+.hq-bot:hover .hq-bot-ic{box-shadow:0 0 26px rgba(63,169,255,0.95);transform:scale(1.1);border-color:#3fa9ff;}
+.hq-bot-nm{font-family:'Orbitron',sans-serif;font-size:10px;letter-spacing:1px;color:#cfeaff;text-align:center;}
+#hqHint{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:3px;color:#6f9fd0;z-index:2;}
+#fw-hq.chatting .hq-bot{opacity:0.12;pointer-events:none;}
+#fw-hq.chatting #hqHint{display:none;}
+#hqChat{position:absolute;left:50%;bottom:0;transform:translateX(-50%) translateY(106%);width:min(720px,94%);height:46%;min-height:300px;background:linear-gradient(180deg,rgba(6,16,38,0.97),rgba(2,8,22,0.98));border:1px solid rgba(63,169,255,0.4);border-bottom:none;border-radius:16px 16px 0 0;display:flex;flex-direction:column;transition:transform .35s cubic-bezier(.2,.85,.25,1);z-index:6;box-shadow:0 -10px 40px rgba(0,30,100,0.5);}
+#fw-hq.chatting #hqChat{transform:translateX(-50%) translateY(0);}
+#hqChatHead{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid rgba(63,169,255,0.18);}
+#hqWho{font-family:'Orbitron',sans-serif;font-size:14px;letter-spacing:2px;color:#bfe4ff;}
+#hqBack{font-family:'Share Tech Mono',monospace;font-size:11px;color:#7fc4ff;border:1px solid rgba(63,169,255,0.4);border-radius:12px;padding:5px 12px;cursor:pointer;background:rgba(0,12,34,0.6);}
+#hqBack:hover{background:rgba(63,169,255,0.2);}
+#hqLog{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;}
+.hq-msg{display:flex;}.hq-msg.u{justify-content:flex-end;}
+.hq-bubble{max-width:84%;white-space:pre-wrap;line-height:1.5;font-size:13px;padding:10px 13px;border-radius:14px;}
+.hq-msg.a .hq-bubble{background:rgba(12,30,66,0.85);color:#dcefff;border-radius:4px 14px 14px 14px;}
+.hq-msg.u .hq-bubble{background:linear-gradient(135deg,#2f7fd6,#1c5bb0);color:#fff;border-radius:14px 4px 14px 14px;}
+.hq-bubble.think{opacity:.6;letter-spacing:3px;}
+#hqIrow{display:flex;gap:8px;align-items:center;padding:10px 12px;background:rgba(0,8,24,0.7);border-top:1px solid rgba(63,169,255,0.18);}
+#hqInput{flex:1;background:rgba(0,12,34,0.8);border:1px solid rgba(63,169,255,0.3);border-radius:20px;padding:9px 14px;color:#e8f4ff;font-size:13px;outline:none;}
+#hqInput:focus{border-color:#3fa9ff;box-shadow:0 0 12px rgba(63,169,255,0.4);}
+#hqSend{width:38px;height:38px;border-radius:50%;border:none;background:linear-gradient(135deg,#3fa9ff,#1c6fd0);color:#fff;cursor:pointer;font-size:15px;}
+#avatarHolo.hq-center{left:50%!important;top:48%!important;transform:translate(-50%,-50%) scale(0.72)!important;}
+#avatarHolo.hq-top{left:50%!important;top:27%!important;transform:translate(-50%,-50%) scale(0.5)!important;}
+</style>
+<script>
+(function(){
+  var SUF=" You serve the Commander as a specialist inside KHAIOS HQ. Stay in character, warm and motivating, and keep replies concise with concrete, doable steps.";
+  var SPECS=[
+    {id:'chef',ic:'\uD83C\uDF7D\uFE0F',name:'CHEF',sys:"You are CHEF, KHAIOS's meal-planning specialist. You help plan simple, healthy, balanced, budget-friendly meals, groceries and prep. Keep everything sustainable - never crash diets, calorie restriction or extreme cutting."+SUF,greet:"Chef here. Tell me your week, your budget, and any foods you love or avoid, and I'll plan it out."},
+    {id:'coach',ic:'\uD83D\uDCAA',name:'COACH',sys:"You are COACH, KHAIOS's fitness specialist. You build realistic, balanced workout schedules that fit around a 40-hour work week, with proper rest and recovery. Never push overtraining or extreme programs."+SUF,greet:"Coach here. What's your goal and how many days a week can you train? Let's build something you'll stick to."},
+    {id:'planner',ic:'\uD83D\uDDD3\uFE0F',name:'PLANNER',sys:"You are PLANNER, KHAIOS's scheduling specialist. You organize the week around a 40-hour job - work, side-hustle time, workouts, meals and rest - into simple, realistic structures."+SUF,greet:"Planner here. Walk me through your week and I'll help you lay it out so nothing falls through the cracks."},
+    {id:'hustle',ic:'\uD83D\uDCB8',name:'HUSTLE',sys:"You are HUSTLE, KHAIOS's side-income specialist. You suggest realistic side hustles and small businesses someone can start around a full-time job, with concrete first steps and honest expectations."+SUF,greet:"Hustle here. What are you good at, and how much time can you spare each week? Let's find you extra income."},
+    {id:'ledger',ic:'\uD83D\uDCCA',name:'LEDGER',sys:"You are LEDGER, KHAIOS's budgeting specialist. You help build simple, practical budgets and money plans on a normal income. You give general educational guidance only - you are NOT a licensed financial advisor."+SUF,greet:"Ledger here. Roughly what comes in and what goes out? I'll help you build a budget that breathes."},
+    {id:'market',ic:'\uD83D\uDCC8',name:'MARKET',sys:"You are MARKET, KHAIOS's investing specialist. You explain investing and trading basics for beginners - concepts, risk, and how to start safely. Educational only: never give personalized buy/sell or trade recommendations, and remind the Commander you are not a licensed financial advisor."+SUF,greet:"Market here. New to investing? I'll keep it plain and honest. What do you want to understand first?"},
+    {id:'mentor',ic:'\uD83D\uDCA1',name:'MENTOR',sys:"You are MENTOR, KHAIOS's life-coach specialist. You give grounded, encouraging advice on focus, discipline, habits and getting unstuck - concrete, not preachy."+SUF,greet:"Mentor here. What's on your mind - what are you trying to get better at or push through?"},
+    {id:'sage',ic:'\uD83D\uDCDA',name:'SAGE',sys:"You are SAGE, KHAIOS's book specialist. You recommend books on money, discipline, health, mindset and self-improvement, each with a one-line reason, tuned to what the Commander wants."+SUF,greet:"Sage here. What are you in the mood to learn or work on? I'll point you to the right books."}
+  ];
+  var hist={},active=null;
+  function el(id){return document.getElementById(id);}
+  function avatar(){return el('avatarHolo');}
+  function avCenter(){var a=avatar();if(a){a.classList.remove('mgr-dock','hq-top');a.classList.add('hq-center');}}
+  function avTop(){var a=avatar();if(a){a.classList.remove('mgr-dock','hq-center');a.classList.add('hq-top');}}
+  function avClear(){var a=avatar();if(a){a.classList.remove('hq-center','hq-top');}}
+  function shortFor(t){t=(t||'').replace(/\s+/g,' ').trim();if(t.length<=200)return t;var cut=t.slice(0,200);var mm=cut.match(/^[\s\S]*[.!?]/);return (mm?mm[0]:cut);}
+  function say(t){try{if(window.avatarSay)window.avatarSay(t||'');}catch(e){}}
+  function cap(t){try{if(window.avatarSetCaption)window.avatarSetCaption(t);}catch(e){}}
+  function renderRing(){
+    var stage=el('hqStage');if(!stage)return;
+    var old=stage.querySelectorAll('.hq-bot');for(var k=0;k<old.length;k++)old[k].parentNode.removeChild(old[k]);
+    var W=stage.clientWidth||900,H=stage.clientHeight||600;var cx=W/2,cy=H/2;var R=Math.min(W,H)*0.37;if(R<150)R=150;
+    SPECS.forEach(function(s,i){
+      var ang=(i/SPECS.length)*Math.PI*2-Math.PI/2;var x=cx+Math.cos(ang)*R,y=cy+Math.sin(ang)*R;
+      var node=document.createElement('div');node.className='hq-bot';node.style.left=x+'px';node.style.top=y+'px';
+      node.innerHTML='<div class="hq-bot-ic">'+s.ic+'</div><div class="hq-bot-nm">'+s.name+'</div>';
+      node.addEventListener('click',function(){selectBot(i);});
+      stage.appendChild(node);
+    });
+  }
+  function add(role,text){var log=el('hqLog');if(!log)return null;var m=document.createElement('div');m.className='hq-msg '+(role==='user'?'u':'a');var b=document.createElement('div');b.className='hq-bubble';b.textContent=text;m.appendChild(b);log.appendChild(m);log.scrollTop=log.scrollHeight;return m;}
+  function thinking(){var log=el('hqLog');var m=document.createElement('div');m.className='hq-msg a';var b=document.createElement('div');b.className='hq-bubble think';b.textContent='\u2026';m.appendChild(b);log.appendChild(m);log.scrollTop=log.scrollHeight;return m;}
+  function selectBot(i){
+    active=i;var s=SPECS[i];var w=el('fw-hq');if(w)w.classList.add('chatting');avTop();
+    el('hqWho').textContent=s.ic+'  '+s.name;el('hqLog').innerHTML='';if(!hist[s.id])hist[s.id]=[];
+    add('a',s.greet);say(shortFor(s.greet));cap(s.name);
+    var inp=el('hqInput');if(inp)inp.focus();
+  }
+  function backToRing(){active=null;var w=el('fw-hq');if(w)w.classList.remove('chatting');avCenter();cap('KHAIOS HQ');}
+  async function ask(text){
+    if(active===null||!text||window._hqBusy)return;window._hqBusy=true;var s=SPECS[active];
+    add('user',text);hist[s.id].push({role:'user',content:text});var t=thinking();
+    try{
+      var reply=await callAPI([{role:'system',content:s.sys}].concat(hist[s.id]));
+      hist[s.id].push({role:'assistant',content:reply});if(t)t.remove();add('a',reply);say(shortFor(reply));cap(s.name);
+    }catch(e){if(t)t.remove();add('a','My core is waking up - give it about 30 seconds and try again.');}
+    window._hqBusy=false;
+  }
+  function wire(){
+    var sb=el('hqSend'),inp=el('hqInput'),bk=el('hqBack');
+    if(sb&&!sb._w){sb._w=1;sb.addEventListener('click',function(){var v=inp.value.trim();if(v){ask(v);inp.value='';}});}
+    if(inp&&!inp._w){inp._w=1;inp.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();var v=inp.value.trim();if(v){ask(v);inp.value='';}}});}
+    if(bk&&!bk._w){bk._w=1;bk.addEventListener('click',backToRing);}
+  }
+  function openHQ(){
+    var w=el('fw-hq');if(!w)return;w.classList.remove('chatting');active=null;renderRing();wire();setTimeout(renderRing,80);
+    if(!window._hqHi){window._hqHi=1;avCenter();say("KHAIOS HQ online. Pick a specialist and let's get to work.");}else{avCenter();say('');}
+    cap('KHAIOS HQ');
+  }
+  var _open=window.openApp;window.openApp=function(n){if(_open)_open(n);if(n==='hq')setTimeout(openHQ,120);};
+  var _close=window.closeApp;window.closeApp=function(n){if(n==='hq'){avClear();try{if(window.dismissAvatar)window.dismissAvatar();}catch(e){}}if(_close)_close(n);};
+  var _min=window.minimizeApp;window.minimizeApp=function(n){if(n==='hq'){avClear();try{if(window.dismissAvatar)window.dismissAvatar();}catch(e){}}if(_min)_min(n);};
+  function mergeCatalog(){try{if(typeof APP_CATALOG!=='undefined'){APP_CATALOG=APP_CATALOG.filter(function(a){return a.id!=='manager'&&a.id!=='conference';});if(!APP_CATALOG.some(function(a){return a.id==='hq';}))APP_CATALOG.push({id:'hq',icon:'&#129504;',name:'HQ'});if(typeof renderCarousel==='function')renderCarousel();}}catch(e){}}
+  if(document.readyState!=='loading')mergeCatalog();else document.addEventListener('DOMContentLoaded',mergeCatalog);
+  setTimeout(mergeCatalog,600);setTimeout(mergeCatalog,1600);
+})();
+</script>
 </body>
 </html>
