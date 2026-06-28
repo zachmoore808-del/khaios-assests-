@@ -282,6 +282,39 @@ html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-fami
   <div id="bootTitle">K H A I O S</div>
   <div id="bootSub">A.I.O.S. &nbsp; MULTITOOL</div>
   <div id="bootBar"><div id="bootBarFill"></div></div>
+  <div id="cockpit">
+    <svg id="ckSvg" viewBox="0 0 1280 800" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="ckMetal" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0c1c3a"/><stop offset="1" stop-color="#03091c"/></linearGradient>
+        <linearGradient id="ckConsole" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0a1830"/><stop offset="0.5" stop-color="#06122a"/><stop offset="1" stop-color="#020815"/></linearGradient>
+        <filter id="ckGlow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <radialGradient id="ckScreenFill" cx="0.5" cy="0.45" r="0.6"><stop offset="0" stop-color="rgba(20,60,130,0.30)"/><stop offset="1" stop-color="rgba(2,10,28,0.10)"/></radialGradient>
+      </defs>
+      <path d="M0,0 L320,0 L150,800 L0,800 Z" fill="url(#ckMetal)"/>
+      <path d="M320,0 L150,800" stroke="#3fa9ff" stroke-width="2.5" opacity="0.55" fill="none" filter="url(#ckGlow)"/>
+      <path d="M1280,0 L960,0 L1130,800 L1280,800 Z" fill="url(#ckMetal)"/>
+      <path d="M960,0 L1130,800" stroke="#3fa9ff" stroke-width="2.5" opacity="0.55" fill="none" filter="url(#ckGlow)"/>
+      <path d="M0,640 L1280,640 L1280,800 L0,800 Z" fill="url(#ckConsole)"/>
+      <path d="M120,648 Q640,600 1160,648" stroke="#2f7fd6" stroke-width="2" opacity="0.5" fill="none" filter="url(#ckGlow)"/>
+      <g opacity="0.85">
+        <rect x="150" y="690" width="60" height="6" rx="3" fill="#3fa9ff" opacity="0.7"/>
+        <rect x="150" y="704" width="90" height="6" rx="3" fill="#1c6fd0" opacity="0.6"/>
+        <rect x="150" y="718" width="44" height="6" rx="3" fill="#3fa9ff" opacity="0.5"/>
+        <circle cx="300" cy="710" r="10" fill="none" stroke="#3fa9ff" stroke-width="2" opacity="0.7"/>
+        <circle cx="336" cy="710" r="10" fill="none" stroke="#2f7fd6" stroke-width="2" opacity="0.6"/>
+        <rect x="1070" y="690" width="60" height="6" rx="3" fill="#3fa9ff" opacity="0.7"/>
+        <rect x="1040" y="704" width="90" height="6" rx="3" fill="#1c6fd0" opacity="0.6"/>
+        <rect x="1086" y="718" width="44" height="6" rx="3" fill="#3fa9ff" opacity="0.5"/>
+        <circle cx="980" cy="710" r="10" fill="none" stroke="#3fa9ff" stroke-width="2" opacity="0.7"/>
+        <circle cx="944" cy="710" r="10" fill="none" stroke="#2f7fd6" stroke-width="2" opacity="0.6"/>
+      </g>
+      <g filter="url(#ckGlow)"><path d="M520,210 L760,210 L788,250 L788,470 L760,510 L520,510 L492,470 L492,250 Z" fill="url(#ckScreenFill)" stroke="#3fa9ff" stroke-width="2.5" opacity="0.92"/></g>
+      <path d="M520,210 L760,210 L788,250 L788,470 L760,510 L520,510 L492,470 L492,250 Z" fill="none" stroke="#9fd8ff" stroke-width="1" opacity="0.5"/>
+      <line x1="520" y1="226" x2="760" y2="226" stroke="#3fa9ff" stroke-width="1" opacity="0.4"/>
+      <line x1="520" y1="494" x2="760" y2="494" stroke="#3fa9ff" stroke-width="1" opacity="0.4"/>
+    </svg>
+    <div class="ck-screen-label">PILOT // COMMANDER</div>
+  </div>
 </div>
 
 <!-- MATRIX ENTER -->
@@ -3208,6 +3241,27 @@ var cv=document.getElementById('bgstars'),x=cv.getContext('2d');function rs(){cv
     raf=requestAnimationFrame(frame);
   }
   raf=requestAnimationFrame(frame);
+})();
+</script>
+<style>
+#boot{background:rgba(1,4,12,0.15)!important;}
+#bootTitle{position:absolute;top:7%;left:50%;transform:translateX(-50%);font-size:38px;letter-spacing:14px;}
+#bootSub{position:absolute;top:calc(7% + 52px);left:50%;transform:translateX(-50%);}
+#bootBar{position:absolute;bottom:8.5%;left:50%;transform:translateX(-50%);margin-top:0;border-radius:2px;}
+#bootTitle,#bootSub,#bootBar{z-index:5;}
+#cockpit{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden;}
+#ckSvg{width:100%;height:100%;display:block;}
+.ck-screen-label{position:absolute;top:60%;left:50%;transform:translateX(-50%);font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:3px;color:#7fd6ff;z-index:5;text-shadow:0 0 8px #0088ff;}
+#avatarHolo.boot-cockpit{left:50%!important;top:44%!important;transform:translate(-50%,-50%) scale(0.42)!important;}
+</style>
+<script>
+(function(){
+  function av(){return document.getElementById('avatarHolo');}
+  function showInCockpit(){var a=av();if(!a)return;a.classList.add('boot-cockpit');try{if(window.initAvatar)window.initAvatar();}catch(e){}try{if(window.avatarSay)window.avatarSay('');}catch(e){}}
+  function cleanup(){var a=av();if(a)a.classList.remove('boot-cockpit');try{if(window.dismissAvatar)window.dismissAvatar();}catch(e){}}
+  setTimeout(showInCockpit,700);
+  var b=document.getElementById('boot');
+  if(b){var mo=new MutationObserver(function(){if(b.style.display==='none'||b.style.opacity==='0'){cleanup();mo.disconnect();}});mo.observe(b,{attributes:true,attributeFilter:['style']});}
 })();
 </script>
 </body>
