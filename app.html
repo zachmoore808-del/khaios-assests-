@@ -285,35 +285,83 @@ html,body{height:100%;overflow:hidden;background:#000510;color:#e8f4ff;font-fami
   <div id="cockpit">
     <svg id="ckSvg" viewBox="0 0 1280 800" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <linearGradient id="ckMetal" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0c1c3a"/><stop offset="1" stop-color="#03091c"/></linearGradient>
-        <linearGradient id="ckConsole" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0a1830"/><stop offset="0.5" stop-color="#06122a"/><stop offset="1" stop-color="#020815"/></linearGradient>
-        <filter id="ckGlow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-        <radialGradient id="ckScreenFill" cx="0.5" cy="0.45" r="0.6"><stop offset="0" stop-color="rgba(20,60,130,0.30)"/><stop offset="1" stop-color="rgba(2,10,28,0.10)"/></radialGradient>
+        <linearGradient id="mtl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0e2042"/><stop offset="1" stop-color="#03091c"/></linearGradient>
+        <linearGradient id="con" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0c1a36"/><stop offset="0.45" stop-color="#08142c"/><stop offset="1" stop-color="#020713"/></linearGradient>
+        <linearGradient id="cone" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(80,210,255,0)"/><stop offset="1" stop-color="rgba(80,210,255,0.22)"/></linearGradient>
+        <radialGradient id="holoG" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="rgba(90,215,255,0.5)"/><stop offset="1" stop-color="rgba(90,215,255,0)"/></radialGradient>
+        <radialGradient id="scope" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="rgba(20,80,150,0.55)"/><stop offset="1" stop-color="rgba(4,20,44,0.85)"/></radialGradient>
+        <filter id="glw" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
       </defs>
-      <path d="M0,0 L320,0 L150,800 L0,800 Z" fill="url(#ckMetal)"/>
-      <path d="M320,0 L150,800" stroke="#3fa9ff" stroke-width="2.5" opacity="0.55" fill="none" filter="url(#ckGlow)"/>
-      <path d="M1280,0 L960,0 L1130,800 L1280,800 Z" fill="url(#ckMetal)"/>
-      <path d="M960,0 L1130,800" stroke="#3fa9ff" stroke-width="2.5" opacity="0.55" fill="none" filter="url(#ckGlow)"/>
-      <path d="M0,640 L1280,640 L1280,800 L0,800 Z" fill="url(#ckConsole)"/>
-      <path d="M120,648 Q640,600 1160,648" stroke="#2f7fd6" stroke-width="2" opacity="0.5" fill="none" filter="url(#ckGlow)"/>
-      <g opacity="0.85">
-        <rect x="150" y="690" width="60" height="6" rx="3" fill="#3fa9ff" opacity="0.7"/>
-        <rect x="150" y="704" width="90" height="6" rx="3" fill="#1c6fd0" opacity="0.6"/>
-        <rect x="150" y="718" width="44" height="6" rx="3" fill="#3fa9ff" opacity="0.5"/>
-        <circle cx="300" cy="710" r="10" fill="none" stroke="#3fa9ff" stroke-width="2" opacity="0.7"/>
-        <circle cx="336" cy="710" r="10" fill="none" stroke="#2f7fd6" stroke-width="2" opacity="0.6"/>
-        <rect x="1070" y="690" width="60" height="6" rx="3" fill="#3fa9ff" opacity="0.7"/>
-        <rect x="1040" y="704" width="90" height="6" rx="3" fill="#1c6fd0" opacity="0.6"/>
-        <rect x="1086" y="718" width="44" height="6" rx="3" fill="#3fa9ff" opacity="0.5"/>
-        <circle cx="980" cy="710" r="10" fill="none" stroke="#3fa9ff" stroke-width="2" opacity="0.7"/>
-        <circle cx="944" cy="710" r="10" fill="none" stroke="#2f7fd6" stroke-width="2" opacity="0.6"/>
+      <path d="M0,0 L250,0 L120,560 L0,560 Z" fill="url(#mtl)"/>
+      <path d="M1280,0 L1030,0 L1160,560 L1280,560 Z" fill="url(#mtl)"/>
+      <path d="M250,0 L120,560" stroke="#3fa9ff" stroke-width="2" opacity="0.5" fill="none" filter="url(#glw)"/>
+      <path d="M1030,0 L1160,560" stroke="#3fa9ff" stroke-width="2" opacity="0.5" fill="none" filter="url(#glw)"/>
+      <line x1="210" y1="120" x2="150" y2="470" stroke="#2a5a9a" stroke-width="1.5" opacity="0.5"/>
+      <line x1="1070" y1="120" x2="1130" y2="470" stroke="#2a5a9a" stroke-width="1.5" opacity="0.5"/>
+      <circle cx="60" cy="120" r="4" fill="#2a5a9a"/><circle cx="60" cy="300" r="4" fill="#2a5a9a"/><circle cx="60" cy="480" r="4" fill="#2a5a9a"/>
+      <circle cx="1220" cy="120" r="4" fill="#2a5a9a"/><circle cx="1220" cy="300" r="4" fill="#2a5a9a"/><circle cx="1220" cy="480" r="4" fill="#2a5a9a"/>
+      <path d="M250,0 Q640,140 1030,0 L1280,0 L1280,-20 L0,-20 L0,0 Z" fill="url(#mtl)"/>
+      <path d="M250,0 Q640,140 1030,0" stroke="#3fa9ff" stroke-width="2" opacity="0.45" fill="none" filter="url(#glw)"/>
+      <g opacity="0.7" stroke="#5fd0ff" stroke-width="1.5">
+        <line x1="470" y1="92" x2="810" y2="92"/>
+        <line x1="500" y1="86" x2="500" y2="98"/><line x1="570" y1="86" x2="570" y2="98"/><line x1="710" y1="86" x2="710" y2="98"/><line x1="780" y1="86" x2="780" y2="98"/>
+        <path d="M634,80 L640,90 L646,80" fill="none"/>
       </g>
-      <g filter="url(#ckGlow)"><path d="M520,210 L760,210 L788,250 L788,470 L760,510 L520,510 L492,470 L492,250 Z" fill="url(#ckScreenFill)" stroke="#3fa9ff" stroke-width="2.5" opacity="0.92"/></g>
-      <path d="M520,210 L760,210 L788,250 L788,470 L760,510 L520,510 L492,470 L492,250 Z" fill="none" stroke="#9fd8ff" stroke-width="1" opacity="0.5"/>
-      <line x1="520" y1="226" x2="760" y2="226" stroke="#3fa9ff" stroke-width="1" opacity="0.4"/>
-      <line x1="520" y1="494" x2="760" y2="494" stroke="#3fa9ff" stroke-width="1" opacity="0.4"/>
+      <g stroke="#5fd0ff" stroke-width="2" fill="none" opacity="0.6">
+        <path d="M300,150 L300,120 L340,120"/><path d="M980,150 L980,120 L940,120"/>
+        <path d="M300,500 L300,530 L340,530"/><path d="M980,500 L980,530 L940,530"/>
+      </g>
+      <g stroke="#5fd0ff" stroke-width="1.4" opacity="0.5">
+        <line x1="250" y1="250" x2="280" y2="250"/><line x1="250" y1="290" x2="270" y2="290"/><line x1="250" y1="330" x2="280" y2="330"/><line x1="250" y1="370" x2="270" y2="370"/><line x1="250" y1="410" x2="280" y2="410"/>
+        <line x1="1000" y1="250" x2="1030" y2="250"/><line x1="1010" y1="290" x2="1030" y2="290"/><line x1="1000" y1="330" x2="1030" y2="330"/><line x1="1010" y1="370" x2="1030" y2="370"/><line x1="1000" y1="410" x2="1030" y2="410"/>
+      </g>
+      <g stroke="#7fe8ff" stroke-width="2.5" fill="none" opacity="0.8" filter="url(#glw)">
+        <path d="M512,250 L482,250 L482,290"/><path d="M768,250 L798,250 L798,290"/>
+        <path d="M512,470 L482,470 L482,430"/><path d="M768,470 L798,470 L798,430"/>
+      </g>
+      <path d="M0,560 L1280,560 L1280,800 L0,800 Z" fill="url(#con)"/>
+      <path d="M0,560 L1280,560" stroke="#2f7fd6" stroke-width="2.5" opacity="0.55" filter="url(#glw)"/>
+      <path d="M150,560 L120,800 M1130,560 L1160,800" stroke="#16345e" stroke-width="2" opacity="0.6"/>
+      <g>
+        <circle cx="250" cy="650" r="40" fill="#06142c" stroke="#2f7fd6" stroke-width="2"/>
+        <circle cx="250" cy="650" r="40" fill="none" stroke="#3fa9ff" stroke-width="1" opacity="0.4" stroke-dasharray="3 6"/>
+        <line x1="250" y1="650" x2="272" y2="628" stroke="#7fe0ff" stroke-width="2.5"/>
+        <circle cx="350" cy="700" r="30" fill="#06142c" stroke="#2f7fd6" stroke-width="2"/>
+        <line x1="350" y1="700" x2="334" y2="682" stroke="#7fe0ff" stroke-width="2"/>
+      </g>
+      <g>
+        <rect x="150" y="700" width="120" height="56" rx="6" fill="#081830" stroke="#1c3a66" stroke-width="1.5"/>
+        <rect x="162" y="712" width="14" height="14" rx="2" fill="#3fa9ff" opacity="0.85"/><rect x="184" y="712" width="14" height="14" rx="2" fill="#16345e"/><rect x="206" y="712" width="14" height="14" rx="2" fill="#3fa9ff" opacity="0.85"/><rect x="228" y="712" width="14" height="14" rx="2" fill="#16345e"/>
+        <rect x="162" y="732" width="14" height="14" rx="2" fill="#16345e"/><rect x="184" y="732" width="14" height="14" rx="2" fill="#3fa9ff" opacity="0.85"/><rect x="206" y="732" width="14" height="14" rx="2" fill="#16345e"/><rect x="228" y="732" width="14" height="14" rx="2" fill="#ff5a3c" opacity="0.8"/>
+      </g>
+      <g>
+        <circle cx="1020" cy="660" r="56" fill="url(#scope)" stroke="#2f7fd6" stroke-width="2"/>
+        <circle cx="1020" cy="660" r="38" fill="none" stroke="#2f7fd6" stroke-width="1" opacity="0.4"/>
+        <circle cx="1020" cy="660" r="20" fill="none" stroke="#2f7fd6" stroke-width="1" opacity="0.4"/>
+        <line x1="1020" y1="660" x2="1020" y2="604" stroke="#5fd0ff" stroke-width="1.5" opacity="0.6"/>
+        <line x1="1020" y1="660" x2="1064" y2="636" stroke="#7fe8ff" stroke-width="2.5" opacity="0.85" filter="url(#glw)"/>
+        <circle cx="1044" cy="640" r="3" fill="#5fffa0"/><circle cx="1000" cy="690" r="3" fill="#5fffa0"/>
+      </g>
+      <g>
+        <rect x="1090" y="700" width="120" height="56" rx="6" fill="#081830" stroke="#1c3a66" stroke-width="1.5"/>
+        <rect x="1102" y="712" width="40" height="8" rx="3" fill="#5fffa0" opacity="0.85"/><rect x="1102" y="726" width="40" height="8" rx="3" fill="#3fa9ff" opacity="0.85"/><rect x="1102" y="740" width="40" height="8" rx="3" fill="#ffd24a" opacity="0.85"/>
+        <rect x="1158" y="710" width="14" height="40" rx="6" fill="#06142c" stroke="#2f7fd6" stroke-width="1.5"/><rect x="1156" y="714" width="18" height="10" rx="3" fill="#7fe0ff"/>
+      </g>
+      <ellipse cx="640" cy="560" rx="110" ry="22" fill="url(#holoG)"/>
+      <polygon points="585,560 695,560 800,330 480,330" fill="url(#cone)" opacity="0.85"/>
+      <ellipse cx="640" cy="560" rx="70" ry="15" fill="none" stroke="#5fd0ff" stroke-width="2.5" opacity="0.85" filter="url(#glw)"/>
+      <ellipse cx="640" cy="560" rx="44" ry="9" fill="none" stroke="#7fe8ff" stroke-width="1.5" opacity="0.7"/>
+      <ellipse cx="640" cy="455" rx="120" ry="20" fill="none" stroke="#5fd0ff" stroke-width="1" opacity="0.3"/>
+      <ellipse cx="640" cy="400" rx="150" ry="24" fill="none" stroke="#5fd0ff" stroke-width="1" opacity="0.22"/>
+      <g>
+        <rect x="632" y="700" width="16" height="100" rx="7" fill="#0a1c3a" stroke="#1c3a66" stroke-width="2"/>
+        <path d="M610,700 Q640,672 670,700 L662,712 Q640,694 618,712 Z" fill="#0e2548" stroke="#2f7fd6" stroke-width="2"/>
+        <circle cx="624" cy="704" r="5" fill="#ff5a3c"/><circle cx="656" cy="704" r="5" fill="#3fa9ff"/>
+      </g>
     </svg>
-    <div class="ck-screen-label">PILOT // COMMANDER</div>
+    <div class="hud l">SPD 4500<br>ALT 0288<br>PWR &#9608;&#9608;&#9608;&#9608;&#9617;</div>
+    <div class="hud r">SHLD 100%<br>HULL 100%<br>NAV LOCK</div>
+    <div class="holo-label">// K H A I O S //</div>
   </div>
 </div>
 
@@ -3244,22 +3292,26 @@ var cv=document.getElementById('bgstars'),x=cv.getContext('2d');function rs(){cv
 })();
 </script>
 <style>
-#boot{background:rgba(1,4,12,0.15)!important;}
-#bootTitle{position:absolute;top:7%;left:50%;transform:translateX(-50%);font-size:38px;letter-spacing:14px;}
-#bootSub{position:absolute;top:calc(7% + 52px);left:50%;transform:translateX(-50%);}
-#bootBar{position:absolute;bottom:8.5%;left:50%;transform:translateX(-50%);margin-top:0;border-radius:2px;}
-#bootTitle,#bootSub,#bootBar{z-index:5;}
+#boot{background:rgba(1,4,12,0.12)!important;}
+#bootTitle{position:absolute;top:5.5%;left:50%;transform:translateX(-50%);font-size:34px;letter-spacing:13px;z-index:6;}
+#bootSub{position:absolute;top:calc(5.5% + 46px);left:50%;transform:translateX(-50%);font-size:13px;letter-spacing:6px;z-index:6;}
+#bootBar{position:absolute;bottom:6%;left:50%;transform:translateX(-50%);margin-top:0;width:280px;height:3px;border-radius:2px;z-index:6;}
 #cockpit{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden;}
 #ckSvg{width:100%;height:100%;display:block;}
-.ck-screen-label{position:absolute;top:60%;left:50%;transform:translateX(-50%);font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:3px;color:#7fd6ff;z-index:5;text-shadow:0 0 8px #0088ff;}
-#avatarHolo.boot-cockpit{left:50%!important;top:44%!important;transform:translate(-50%,-50%) scale(0.42)!important;}
+.hud{position:absolute;font-family:'Share Tech Mono',monospace;color:#7fe0ff;z-index:5;text-shadow:0 0 8px #00aaff;letter-spacing:1px;line-height:1.6;}
+.hud.l{top:30%;left:7%;font-size:11px;}
+.hud.r{top:30%;right:7%;font-size:11px;text-align:right;}
+.holo-label{position:absolute;top:62%;left:50%;transform:translateX(-50%);font-family:'Orbitron',monospace;font-size:13px;letter-spacing:5px;color:#8fe8ff;z-index:5;text-shadow:0 0 12px #00bbff;}
+#avatarHolo.holo-cockpit{left:50%!important;top:43%!important;transform:translate(-50%,-50%) scale(0.44)!important;animation:holoFlicker 4s infinite;}
+#avatarHolo.holo-cockpit::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(120,225,255,0.10) 0,rgba(120,225,255,0.10) 1px,transparent 2px,transparent 4px);pointer-events:none;}
+@keyframes holoFlicker{0%,100%{opacity:.92}49%{opacity:.88}50%{opacity:.72}52%{opacity:.92}79%{opacity:.93}80%{opacity:.8}81%{opacity:.92}}
 </style>
 <script>
 (function(){
   function av(){return document.getElementById('avatarHolo');}
-  function showInCockpit(){var a=av();if(!a)return;a.classList.add('boot-cockpit');try{if(window.initAvatar)window.initAvatar();}catch(e){}try{if(window.avatarSay)window.avatarSay('');}catch(e){}}
-  function cleanup(){var a=av();if(a)a.classList.remove('boot-cockpit');try{if(window.dismissAvatar)window.dismissAvatar();}catch(e){}}
-  setTimeout(showInCockpit,700);
+  function show(){var a=av();if(!a)return;a.classList.add('holo-cockpit');try{if(window.initAvatar)window.initAvatar();}catch(e){}try{if(window.avatarSay)window.avatarSay('');}catch(e){}}
+  function cleanup(){var a=av();if(a)a.classList.remove('holo-cockpit');try{if(window.dismissAvatar)window.dismissAvatar();}catch(e){}}
+  setTimeout(show,700);
   var b=document.getElementById('boot');
   if(b){var mo=new MutationObserver(function(){if(b.style.display==='none'||b.style.opacity==='0'){cleanup();mo.disconnect();}});mo.observe(b,{attributes:true,attributeFilter:['style']});}
 })();
